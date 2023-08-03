@@ -1,30 +1,58 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+<RouterView/>
 </template>
-
+<script>
+import HomeView from './views/HomeView.vue';
+export default{
+	components:{
+		HomeView
+	}
+}
+</script>
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "swiper/css";
+@import "swiper/css/pagination";
+@import "@/assets/styles/global.scss";
+
+.swiper {
+   z-index: 0 !important;
+		
+	.swiper-pagination-bullet-active {
+   	background-color: #fff;
+   	width: 40px;
+   	height: 8px;
+   	border-radius: 3px;		
+	}
 }
 
-nav {
-  padding: 30px;
+.home__navigation{
+	.swiper{
+		.swiper-button-prev{
+			display: none;
+		}
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+		.swiper-button-next {
+		background-color: #fff;
+		padding: 0 10px;
+		right: -1px;
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+		&:after {
+			font-size: 35px;
+			font-weight: 700;
+			color: $main-color;
+			@media(max-width:1050px){
+				font-size: 25px;
+			}
+			@media(max-width:820px){
+				font-size: 20px;
+			}
+			@media(max-width:400px){
+				font-size: 16px;
+			}
+		}
+	}
+	}
 }
+
 </style>
