@@ -41,9 +41,9 @@
                      </ul>
                   </div>
                   <div class="header__info">
-                     <a class="phone" href="tel:+78312826000">
+                     <a class="phone" href="tel:+998903385677">
                         <img src="@/assets/images/nav-phone.svg" alt="" />
-                        <span>+7 (831) 282-60-00</span>
+                        <span>+998 (90) 338-56-77</span>
                      </a>
                      <a
                         href="#"

@@ -2,7 +2,10 @@
   <!-- <navbar-header :categories="categories"/> -->
   <home-banner/>
   <home-nav :categories="categories" @sort="SortP"/>
-  <product-list :responce="SortProducts" :page="page" :pageLimit="pageLimit" @activePage="activePage"/>
+  <product-list :category="category" :responce="SortProducts" :page="page" :pageLimit="pageLimit" @activePage="activePage"/>
+  <home-video/>
+  <home-delivery/>
+  <home-footer/>
 </template>
 
 <script>

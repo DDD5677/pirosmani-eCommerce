@@ -7,6 +7,9 @@ import ProductList from "@/components/ProductList";
 import Product from "@/components/Product";
 import ProductRating from "@/components/UI/ProductRating";
 import Pagination from "@/components/UI/Pagination";
+import HomeVideo from "@/components/HomeVideo";
+import HomeDelivery from "@/components/HomeDelivery";
+import Footer from "@/components/Footer";
 export default [
    NavbarHeader,
    DropdownMenu,
@@ -16,5 +19,8 @@ export default [
    ProductList,
    Product,
    ProductRating,
-	Pagination
+   Pagination,
+   HomeVideo,
+   HomeDelivery,
+   Footer,
 ];

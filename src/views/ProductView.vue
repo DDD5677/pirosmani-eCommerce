@@ -40,5 +40,8 @@ import useProducts from '@/hooks/useProduct'
 <style lang="scss" scoped>
 	.home__products{
 		padding-top: 130px;
+		@media (max-width: 819px){
+		padding-top: 80px;
+	}
 	}
 </style>

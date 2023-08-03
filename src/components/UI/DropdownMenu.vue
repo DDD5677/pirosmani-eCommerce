@@ -1,14 +1,14 @@
 <template>
 	<ul class="dropdown-menu">
-                              <li v-for="item in dropdownItems" :key="item.title">
-                                 <a class="dropdown-item"
-											@click="$router.push(`/products/${item.category}`)"
-                                    >
-												<img :src="item.icon">
-                                    <span> {{ item.title }}</span></a
-                                 >
-                              </li>
-                           </ul>
+       <li v-for="item in dropdownItems" :key="item.title">
+          <a class="dropdown-item"
+				@click="$router.push(`/products/${item.category}`)"
+          >
+			<img :src="item.icon">
+          <span> {{ item.title }}</span></a
+   		>
+   	</li>
+	</ul>
 </template>
 
 <script>
