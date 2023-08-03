@@ -1,11 +1,19 @@
 <template>
+	<navbar-header :categories="categories"/>
 <RouterView/>
 </template>
 <script>
 import HomeView from './views/HomeView.vue';
+import useProduct from './hooks/useProduct';
 export default{
 	components:{
 		HomeView
+	},
+	setup(props){
+		const {categories}=useProduct();
+		return{
+			categories
+		}
 	}
 }
 </script>

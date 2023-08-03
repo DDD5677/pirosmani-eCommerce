@@ -1,5 +1,5 @@
 <template>
-  <navbar-header :categories="categories"/>
+  <!-- <navbar-header :categories="categories"/> -->
   <home-banner/>
   <home-nav :categories="categories" @sort="SortP"/>
   <product-list :responce="SortProducts" :page="page" :pageLimit="pageLimit" @activePage="activePage"/>
@@ -162,5 +162,7 @@ import icon_13 from '@/assets/images/dropdown-13.svg';
 	}
 	}
 }
-
+.home__products{
+	padding: 30px 0 60px;
+}
 </style>

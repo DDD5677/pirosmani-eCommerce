@@ -4,7 +4,7 @@
             <nav class="navbar navbar-expand-lg">
                <div class="container-fluid">
                   <div class="logo-wrapper">
-                     <a class="navbar-brand" href="index.html"
+                     <a class="navbar-brand" @click="$router.push('/')"
                         ><img src="@/assets/images/logo.svg" alt=""
                      /></a>
                      <button
@@ -116,7 +116,6 @@ import item_5 from '@/assets/images/nav-item-5.svg'
 		methods: {
 			toggleActive(index) {
 			this.activeIndex=index;
-			console.log(this.nav_item[index].img)
 }
 	}
 	}

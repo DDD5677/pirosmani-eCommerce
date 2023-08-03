@@ -1,7 +1,8 @@
 <template>
 	<ul class="dropdown-menu">
                               <li v-for="item in dropdownItems" :key="item.title">
-                                 <a class="dropdown-item" href="#"
+                                 <a class="dropdown-item"
+											@click="$router.push(`/products/${item.category}`)"
                                     >
 												<img :src="item.icon">
                                     <span> {{ item.title }}</span></a
@@ -97,7 +98,7 @@
 <style lang="scss" scoped>
 .dropdown-menu{
 	.dropdown-item {
-
+		cursor: pointer;
 		display: flex;
 		align-items: center;
 		height: 29px;

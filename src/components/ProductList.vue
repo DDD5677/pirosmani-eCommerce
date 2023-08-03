@@ -59,7 +59,6 @@
 
 <style lang="scss" scoped>
 .home__products {
-   padding: 30px 0 60px;
 
    .title {
       font-weight: 500;
