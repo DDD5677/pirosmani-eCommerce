@@ -1,8 +1,8 @@
 <template>
-	<ul class="dropdown-menu">
-       <li v-for="item in dropdownItems" :key="item.title">
+	<ul class="dropdown-menu" @click.stop>
+       <li v-for="item in categories" :key="item.title">
           <a class="dropdown-item"
-				@click="$router.push(`/products/${item.category}`)"
+				@click="categoryHandler(item.category)"
           >
 			<img :src="item.icon">
           <span> {{ item.title }}</span></a
@@ -12,84 +12,22 @@
 </template>
 
 <script>
- 
+ import {mapState,mapMutations} from 'vuex';
 	export default {
 		name:'dropdown-menu',
-		props:{
-			categories:{
-				type: Array,
-				required:true
-			}
+		computed:{
+			...mapState({
+      	categories: state=>state.product.categories,
+			}),
 		},
-		data(){
-			return{
-				dropdownItems:this.categories
-				// dropdownItems:[
-				// {
-				// 	title:'Лучшая еда',
-				// 	icon:icon_1,
-				// 	category:'best-foods'
-				// },
-				// {
-				// 	title:'Гамбургер',
-				// 	icon:icon_2,
-				// 	category:'burgers'
-				// },
-				// {
-				// 	title:'Пицца',
-				// 	icon:icon_3,
-				// 	category:'pizzas'
-				// }
-				// ,
-				// {
-				// 	title:'Бутерброд',
-				// 	icon:icon_4
-				// },
-				// {
-				// 	title:'Барбекю',
-				// 	icon:icon_5,
-				// 	category:'bbqs'
-				// },
-				// {
-				// 	title:'Стейк',
-				// 	icon:icon_6,
-				// 	category:'drinks'
-				// },
-				// {
-				// 	title:'Сосиска',
-				// 	icon:icon_7
-				// },
-				// {
-				// 	title:'Жареный цыпленок',
-				// 	icon:icon_8,
-				// 	category:'fried-chicken'
-				// },
-				// {
-				// 	title:'Хлеб',
-				// 	icon:icon_9,
-				// 	category:'breads'
-				// },
-				// {
-				// 	title:'Десерт',
-				// 	icon:icon_10,
-				// 	category:'ice-cream'
-				// },
-				// {
-				// 	title:'Мороженое',
-				// 	icon:icon_11,
-				// 	category:'ice-cream'
-				// },
-				// {
-				// 	title:'Шоколад',
-				// 	icon:icon_12,
-				// 	category:'ice-cream'
-				// },
-				// {
-				// 	title:'Напитки',
-				// 	icon:icon_13,
-				// 	category:'drinks'
-				// }
-				// ]
+		methods:{
+			...mapMutations({
+				SortP:'product/SortP',
+			}),
+			categoryHandler(category){
+				this.SortP(category)
+				this.$router.push(`/products/${category}`)
+				window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
 			}
 		}
 	}

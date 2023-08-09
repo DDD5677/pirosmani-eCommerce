@@ -67,8 +67,6 @@
    .home__products {
       .home__products-wrapper {
          .card {
-
-
             .green__btn {
                margin-right: 45px;
             }
@@ -125,8 +123,9 @@
 
    .home__products {
       .home__products-wrapper {
+
          .card {
-            flex: 0 0 23%;
+
             margin-bottom: 30px;
 
             .green__btn {
@@ -715,13 +714,7 @@
       }
 
       .home__products-wrapper {
-         justify-content: flex-start;
-
-
          .card {
-            flex: 0 0 30%;
-            margin-right: 12px;
-            margin-left: 12px;
 
             .green__btn {
                margin-right: 45px;
@@ -954,14 +947,9 @@
 @media (max-width: 780px) {
    .home__products {
       .home__products-wrapper {
-         justify-content: flex-start;
 
 
          .card {
-            flex: 0 0 30%;
-            margin-right: 9px;
-            margin-left: 9px;
-
             .green__btn {
                margin-right: 45px;
             }
@@ -1175,8 +1163,6 @@
    .home__products {
       .home__products-wrapper {
          .card {
-            flex: 0 0 29%;
-
             .card__price {
                line-height: 15px;
 
@@ -1342,17 +1328,6 @@
          font-size: 24px;
          margin-bottom: 20px;
       }
-
-      .home__products-wrapper {
-         justify-content: space-between;
-
-         .card {
-            flex: 0 0 45%;
-            margin-right: 0;
-            margin-left: 0;
-
-         }
-      }
    }
 
    .home__video {
@@ -1362,23 +1337,6 @@
          }
       }
    }
-
-   // .home__delivery {
-   //    .delivery__body {
-   //       padding: 30px 20px 40px 20px;
-   //       background-size: 70%;
-
-   //       .title {
-   //          font-size: 20px;
-   //          line-height: 30px;
-   //       }
-
-   //       .green__btn {
-   //          font-size: 20px;
-   //          line-height: 20px;
-   //       }
-   //    }
-   // }
 
    .page__product {
       padding-bottom: 0;
@@ -1666,12 +1624,6 @@
             }
          }
       }
-
-      .home__products-wrapper {
-         .card {
-            flex: 0 0 48%;
-         }
-      }
    }
 
    .home__video {
@@ -1685,49 +1637,6 @@
          }
       }
    }
-
-   // .home__delivery {
-   //    padding: 20px 0;
-
-   //    .delivery__body {
-   //       padding: 20px;
-   //       background-size: 60%;
-
-   //       .title {
-   //          font-size: 18px;
-   //          line-height: 25px;
-   //       }
-
-   //       .green__btn {
-   //          font-size: 16px;
-   //          line-height: 20px;
-   //       }
-   //    }
-   // }
-
-   // .footer {
-   //    border-radius: 8px 8px 0 0;
-
-   //    .footer__wrapper {
-   //       .footer__info {
-   //          flex-direction: column;
-   //          gap: 0;
-   //       }
-
-   //       .info__social {
-   //          flex-direction: column;
-   //          gap: 0;
-   //       }
-   //    }
-
-   //    .footer__rules {
-   //       .rules__link {
-   //          margin-right: 15px;
-   //          font-size: 12px;
-   //          line-height: 18px;
-   //       }
-   //    }
-   // }
 
    .page__delivery {
       padding-bottom: 20px;

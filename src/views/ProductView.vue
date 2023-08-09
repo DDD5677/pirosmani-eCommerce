@@ -1,47 +1,50 @@
 <template>
-	  <product-list :responce="SortProducts" :page="page" :pageLimit="pageLimit" @activePage="activePage"/>
+		<div class="container wrapper">
+			<h2 class="title">{{CategoryName}}</h2>
+	  		
+		</div>
+		<product-list />
 </template>
 
 <script>
-import useProducts from '@/hooks/useProduct'
+import {mapState} from 'vuex'
 	export default {
 		data(){
 			return{
-				page:1,
-				pageLimit:10
-			}
-		},
-		methods:{
-			activePage(activeP){
-				this.page=activeP;
-			}
-			
-		},
-		computed:{
-			SortProducts(){
-				if(this.$route.params.category===''||this.$route.params.category==='all'){
-					return products
-				}
-				return this.products.filter(p=>p.category===this.$route.params.category)
 				
 			}
 		},
-		setup(props){
-			const {products,categories}=useProducts()
-
-			return{
-				products,
-				categories
+		computed:{
+			...mapState({
+      	categories: state=>state.product.categories,
+			category:state=>state.product.category
+			}),
+			CategoryName(){
+				return this.categories.filter(item=>item.category===this.category)[0].title
 			}
+		},
+		methods:{
+			statusProductList(){
+				this.$store.state.product.page=1
+				this.$store.state.product.category=this.$route.params.category
+				this.$store.state.product.pageLimit=10
+			}
+		},
+		mounted(){
+			this.statusProductList()
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
-	.home__products{
+	.wrapper{
 		padding-top: 130px;
 		@media (max-width: 819px){
 		padding-top: 80px;
-	}
+		
+		}
+		.title{
+			//margin-left: 25px;;
+		}
 	}
 </style>

@@ -1,55 +1,29 @@
 <template>
 	<section class="home__products">
          <div class="container">
-            <h2 class="title">{{ category }}</h2>
+            
             <div class="home__products-wrapper">
                <product v-for="product in renderProducts" :product="product" :key="product.id"/>
                
             </div>
             
          </div>
-			<product-pagination :page="page" :pageSize="calcPageSize" @activePage="pageNumber" />
+			<product-pagination />
       </section>
 </template>
 
 <script>
+import {mapState, mapGetters} from 'vuex';
+
 	export default {
 		name:'product-list',
-		props:{
-			responce:{
-				type:Array,
-				required:true,
-			},
-			page:{
-				type:Number,
-				required:true,
-			},
-			pageLimit:{
-				type: Number,
-				required:true
-			},
-			category:{
-				type:String,
-				required:true
-			}
-
-		},
-		data(){
-			return{
-			}
-		},
-		methods:{
-			pageNumber(activeP){
-				this.$emit('activePage',activeP)
-			}
-		},
 		computed:{
-			calcPageSize(){
-				return Math.ceil(this.responce.length/this.pageLimit)
-			},
-			renderProducts(){
-				return this.responce.slice((this.page-1)*this.pageLimit,this.page*this.pageLimit )
-			}
+			...mapState({
+      	categories: state=>state.product.categories,
+			}),
+			...mapGetters({
+				renderProducts:'product/renderProducts'
+			}),
 		},
 	}
 	
@@ -66,10 +40,23 @@
    }
 
    .home__products-wrapper {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-		@media (max-width: 350px){
+      display: grid;
+		grid-template-columns: repeat(5,1fr);
+      grid-column-gap:15px;
+		@media (max-width: 1030px){
+			grid-template-columns: repeat(4, 1fr);
+
+		}
+		@media (max-width: 819px){
+			grid-template-columns: repeat(3, 1fr);
+
+		}
+		@media (max-width: 540px){
+			grid-template-columns: repeat(2, 1fr);
+
+		}
+		@media(max-width: 380px){
+			grid-template-columns: repeat(1, 0.9fr);
 			justify-content: center;
 		}
       

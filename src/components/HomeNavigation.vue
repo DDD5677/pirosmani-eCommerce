@@ -36,7 +36,7 @@
                   <swiper-slide class="swiper-slide" v-for="(item, index) in categories" :key="item.title">
 							<span 
 							@click.stop="toggleActive(index)"
-							@click="$emit('sort',item.category)" 
+							@click="SortP(item.category)"
 							:class="{'active':activeIndex===index,}" 
 							
                      >{{ item.title }}</span
@@ -47,11 +47,12 @@
 </template>
 
 <script>
-import 'swiper/css';
+//import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import { Navigation,FreeMode } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/vue';
+import {mapState, mapMutations} from 'vuex';
 
 	export default {
 		name:'home-nav',
@@ -59,20 +60,21 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
       	Swiper,
       	SwiperSlide,
     	},
-		props:{
-			categories:{
-				type:Array,
-				required:true
-			}
-		},
 		data(){
 			return{
 				activeIndex:0
 			}
 			
 		},
-		
+		computed:{
+			...mapState({
+      	categories: state=>state.product.categories,
+			}),
+		},
 		methods: {
+			...mapMutations({
+				SortP:'product/SortP',
+			}),
 			toggleActive(index) {
 			this.activeIndex=index;
 			}

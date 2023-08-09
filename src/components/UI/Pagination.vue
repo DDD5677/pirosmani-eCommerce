@@ -1,10 +1,10 @@
 <template>
 	<ul class="pagination">
-               <li v-for="pageNum in pageSize" class="page-item" @click.prevent.stop="$emit('activePage',pageNum)">
+               <li v-for="pageNum in calcPageSize" class="page-item" @click.prevent.stop="activePage(pageNum)">
                   <a class="page-link" :class="{'active':pageNum===page}" href="#">{{ pageNum }}</a>
                </li>
                
-               <li class="page-item" @click.prevent.stop="$emit('activePage',increamentPage())">
+               <li class="page-item" @click.prevent.stop="activePage(increamentPage())">
                   <a class="page-link" href="#"
                      ><img src="@/assets/images/pagination-arrow.svg" alt=""
                   /></a>
@@ -13,28 +13,29 @@
 </template>
 
 <script>
+import {mapState, mapGetters, mapMutations} from 'vuex';
+
 	export default {
 		name:"product-pagination",
-		props:{
-			page:{
-				type:Number,
-				required:true,
-				default:1
-			},
-			pageSize:{
-				type:Number,
-				required:true,
-				default:1
-			}
-		},
 		methods:{
+			...mapMutations({
+				activePage:'product/activePage'
+			}),
 			increamentPage(){
-				if(this.page===this.pageSize){
+				if(this.page===this.calcPageSize){
 					return 1
 				}
 				return this.page+1
 				
 			}
+		},
+		computed:{
+			...mapState({
+			page:state=>state.product.page,
+			}),
+			...mapGetters({
+				calcPageSize:'product/calcPageSize',
+			}),
 		}
 	}
 </script>

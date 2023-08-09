@@ -35,7 +35,7 @@
                                  :alt="item.title" 
                               />{{item.title}}</a
                            >
-									<dropdown-menu :categories="categories" v-if="index===0"/>
+									<dropdown-menu v-if="index===0"/>
                         </li>
                         
                      </ul>
@@ -70,12 +70,6 @@ import item_4 from '@/assets/images/nav-item-4.svg'
 import item_5 from '@/assets/images/nav-item-5.svg'
 	export default{
 		name:'navbar-header',
-		props:{
-			categories:{
-				type:Array,
-				required:true
-			}
-		},
 		data(){
 			return {
 				active_item:false,

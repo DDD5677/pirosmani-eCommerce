@@ -51,6 +51,7 @@
 			}
          &__img {
             width: 100%;
+				//object-fit: contain;
             height: 125.83px;
             background-image: url(@/assets/images/card__bg.svg);
             background-repeat: no-repeat;
@@ -59,7 +60,9 @@
             border-radius: 5px;
             overflow: hidden;
             margin-bottom: 10px;
-
+				@media(max-width: 380px){
+					height: 160px;
+				}
             img:hover {
                transform: scale(1.2);
             }
