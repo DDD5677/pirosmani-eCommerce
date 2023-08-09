@@ -21,23 +21,59 @@
                   </div>
                   <div class="collapse navbar-collapse" id="navbarNavDropdown">
                      <ul class="navbar-nav">
-                        <li v-for="(item, index) in nav_item" class="nav-item" :class="{'dropdown':index===0,'nav-item__support':item.hide_lg}" :key="index">
+                        <li class="nav-item dropdown">
                            <a
-                              :class="[activeIndex===index?'nav-link active':'nav-link',!index&&'dropdown-toggle']"
-                              aria-current="page"
+                              class="nav-link dropdown-toggle"
                               href="#"
-										:role="index===0?'button':''"
-										:data-bs-toggle="index===0?'dropdown':''"
-                              :aria-expanded="index===0?'false':''"
-										@click.stop="toggleActive(index)"
-                              ><img
-                                 :src ="item.img"
-                                 :alt="item.title" 
-                              />{{item.title}}</a
+                              role="button"
+                              data-bs-toggle="dropdown"
+                              aria-expanded="false"
                            >
-									<dropdown-menu v-if="index===0"/>
+                              <img src="@/assets/images/nav-item-1.svg" alt="" /> Меню
+                           </a>
+									<dropdown-menu/>
                         </li>
-                        
+                        <li class="nav-item">
+                           <router-link class="nav-link" :to="{name:'delivery'}">
+										<img
+                                 src="@/assets/images/nav-item-2.svg"
+                                 alt=""
+                              />
+										Доставка
+									</router-link>
+                        </li>
+                        <li class="nav-item">
+                           <router-link class="nav-link" href="#" :to="{name:'payment'}">
+										<img
+                                 src="@/assets/images/nav-item-3.svg"
+                                 alt=""
+										/>
+										Оплата
+									</router-link>
+                        </li>
+                        <li class="nav-item">
+                           <a class="nav-link" href="#"
+                              ><img
+                                 src="@/assets/images/nav-item-4.svg"
+                                 alt=""
+                              />Вакансии</a
+                           >
+                        </li>
+                        <li class="nav-item nav-item__booking">
+                           <a
+                              class="nav-link"
+                              href=""
+                              data-bs-toggle="modal"
+                              data-bs-target="#tableReservation"
+                              >Бронь стола</a
+                           >
+                        </li>
+                        <li class="nav-item nav-item__support">
+                           <a class="nav-link" href="#">
+                              <img src="@/assets/images/nav-item-5.svg" alt="" />
+                              Поддержка</a
+                           >
+                        </li>
                      </ul>
                   </div>
                   <div class="header__info">
@@ -63,55 +99,8 @@
 </template>
 
 <script>
-import item_1 from '@/assets/images/nav-item-1.svg'
-import item_2 from '@/assets/images/nav-item-2.svg'
-import item_3 from '@/assets/images/nav-item-3.svg'
-import item_4 from '@/assets/images/nav-item-4.svg'
-import item_5 from '@/assets/images/nav-item-5.svg'
 	export default{
-		name:'navbar-header',
-		data(){
-			return {
-				active_item:false,
-				nav_item:[
-				{
-					title:'Меню',
-					img:item_1,
-					hide_lg:false
-
-				},
-				{
-					title:'Доставка',
-					img:item_2,
-					hide_lg:false
-				},
-				{
-					title:'Оплата',
-					img:item_3,
-					hide_lg:false
-				},
-				{
-					title:'Вакансии',
-					img:item_4,
-					hide_lg:false
-				},
-				{
-					title:'Поддержка',
-					img:item_5,
-					hide_lg:true
-				}
-				
-				],
-				activeIndex: undefined,
-			}
-			
-
-		},
-		methods: {
-			toggleActive(index) {
-			this.activeIndex=index;
-}
-	}
+		name:'navbar-header'
 	}
 </script>
 
@@ -141,7 +130,7 @@ import item_5 from '@/assets/images/nav-item-5.svg'
       line-height: 22px;
       color: #333333;
 
-      &.active,
+      &:focus,
 		&:hover {
          color: $main-color;
       }

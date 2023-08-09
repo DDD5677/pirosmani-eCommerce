@@ -2,6 +2,7 @@ import NavbarHeader from "@/components/NavbarHeader";
 import HomeBanner from "@/components/HomeBanner";
 import DropdownMenu from "@/components/UI/DropdownMenu";
 import GreenButton from "@/components/UI/GreenButton";
+import TransparentButton from "@/components/UI/TransparentButton";
 import HomeNavigation from "@/components/HomeNavigation";
 import ProductList from "@/components/ProductList";
 import Product from "@/components/Product";
@@ -15,6 +16,7 @@ export default [
    DropdownMenu,
    HomeBanner,
    GreenButton,
+   TransparentButton,
    HomeNavigation,
    ProductList,
    Product,

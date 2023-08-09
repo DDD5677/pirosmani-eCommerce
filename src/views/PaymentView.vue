@@ -1,7 +1,7 @@
 <template>
 	<section class="page__delivery">
          <div class="container">
-            <h1 class="title">Доставка</h1>
+            <h1 class="title">Оплата</h1>
             <p class="text">
                Нашим гостям мы предлагаем жаркую парилку, разогретую до
                оптимального температурного режима и душистые веники. Благодаря
@@ -41,7 +41,7 @@
 </script>
 
 <style lang="scss" scoped>
-.page__delivery {
+	.page__delivery {
    padding: 145px 0 60px;
 		@media (max-width: 819px){
      	 padding: 85px 0 60px;

@@ -39,7 +39,7 @@
             </div>
             <a href="support.html" class="support">Поддержка</a>
             <div class="footer__rules">
-               <a href="" class="rules__link">©2020. Пиросмани</a
+               <a href="" class="rules__link">©2023. Пиросмани</a
                ><a href="" class="rules__link">Условия и соглашения</a
                ><a href="" class="rules__link">Политика конфиденциальности</a>
             </div>

@@ -16,6 +16,7 @@ export default{
 @import "swiper/css";
 @import "swiper/css/pagination";
 @import "@/assets/styles/global.scss";
+
 .swiper {
    z-index: 0 !important;
 		

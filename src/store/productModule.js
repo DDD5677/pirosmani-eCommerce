@@ -127,6 +127,7 @@ export const productModule = {
       },
       activePage(state, activeP) {
          state.page = activeP;
+         window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
       },
    },
    actions: {

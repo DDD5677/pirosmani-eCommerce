@@ -4,6 +4,8 @@ import router from "./router";
 import store from "./store";
 import components from "@/components/UI";
 import bootstrap from "bootstrap/dist/js/bootstrap.bundle.js";
+import "@/assets/fonts/TT_Hoves.css";
+import "@/assets/fonts/TT_Norms_Pro.css";
 import "@/assets/styles/media.scss";
 
 const app = createApp(App);

@@ -18,12 +18,7 @@
    display: inline-block;
    text-decoration: none;
    text-align: center;
-   color: #FFFFFF;
+   color: #fff;
    border-radius: 5px;
-
-   &:hover {
-      color: #fff;
-
-   }
 }
 </style>
