@@ -19,7 +19,7 @@
                      {{ product.price }} ₽/кг<span>За 500гр.</span>
 							
                   </div>
-                  <green-btn @click.prevent.stop="console.log(product)">В корзину</green-btn>
+                  <green-btn @click.prevent.stop="productDetail">В корзину</green-btn>
 						</div>
                </div>
 </template>
@@ -32,6 +32,12 @@
 				type:Object,
 				required:true
 			}
+		},
+		methods:{
+			productDetail(){
+				this.$router.push(`/product/${this.product.id}`);
+				window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+			}
 		}
 	}
 </script>
@@ -41,7 +47,6 @@
          margin-bottom: 50px;
          color: #000000;
 			background-color: #ececf670;
-         flex: 0 0 18%;
          border: 2px solid #ececf670;
 			display: flex;
 			flex-direction: column;

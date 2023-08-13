@@ -23,11 +23,15 @@
 		methods:{
 			...mapMutations({
 				SortP:'product/SortP',
+				toggleDropdown:'navbar/toggleDropdown',
+				showNavbarHandler:'navbar/showNavbarHandler'
 			}),
 			categoryHandler(category){
-				this.SortP(category)
-				this.$router.push(`/products/${category}`)
+				this.SortP(category);
+				this.$router.push(`/products/${category}`);
 				window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+				this.toggleDropdown(false);
+				this.showNavbarHandler(false);
 			}
 		}
 	}
@@ -35,14 +39,19 @@
 
 <style lang="scss" scoped>
 .dropdown-menu{
+	background-color: #fff;
+	list-style: none;
 	.dropdown-item {
 		cursor: pointer;
 		display: flex;
 		align-items: center;
 		height: 29px;
-		padding-right: 15px;
+		padding-right: 27px;
 		padding-left: 27px;
-
+		white-space: nowrap;
+		&:hover{
+			background-color: #f3f3fc;
+		}
 		img {
 			max-width: 17px;
 			max-height: 18px;

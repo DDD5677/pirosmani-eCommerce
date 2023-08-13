@@ -1,8 +1,8 @@
 <template>
 	<a
-   href=""
    class="green__btn"
-    ><slot></slot></a>
+    ><slot></slot>
+	 </a>
 </template>
 
 <script>
@@ -20,5 +20,6 @@
    text-align: center;
    color: #fff;
    border-radius: 5px;
+	cursor: pointer;
 }
 </style>

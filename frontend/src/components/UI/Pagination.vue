@@ -42,8 +42,10 @@ import {mapState, mapGetters, mapMutations} from 'vuex';
 
 <style lang="scss" scoped>
 	.pagination {
+		display: flex;
       margin-top: -14px;
       justify-content: center;
+
       --bs-pagination-focus-box-shadow: 0;
 
       .page-item {
@@ -65,7 +67,9 @@ import {mapState, mapGetters, mapMutations} from 'vuex';
             &:focus {
                outline: none;
             }
-
+				&:hover{
+					background-color: #f3f3fc
+				}
             &.active {
                background-color: $main-color;
                color: #fff;

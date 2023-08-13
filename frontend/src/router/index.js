@@ -3,6 +3,9 @@ import HomeView from "../views/HomeView.vue";
 import ProductView from "../views/ProductView.vue";
 import DeliveryView from "../views/DeliveryView.vue";
 import PaymentView from "../views/PaymentView.vue";
+import VacationView from "../views/VacationView.vue";
+import SupportView from "../views/SupportView.vue";
+import ProductByIdView from "../views/ProductByIdView.vue";
 
 const routes = [
    {
@@ -24,6 +27,21 @@ const routes = [
       path: "/payment",
       name: "payment",
       component: PaymentView,
+   },
+   {
+      path: "/vacation",
+      name: "vacation",
+      component: VacationView,
+   },
+   {
+      path: "/support",
+      name: "support",
+      component: SupportView,
+   },
+   {
+      path: "/product/:id",
+      name: "product",
+      component: ProductByIdView,
    },
 ];
 

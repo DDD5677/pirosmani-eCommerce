@@ -1,9 +1,9 @@
 <template>
-		<div class="container wrapper">
+		<div class=" wrapper">
 			<h2 class="title">{{CategoryName}}</h2>
-	  		
+			<product-list />
 		</div>
-		<product-list />
+		
 </template>
 
 <script>
@@ -44,7 +44,10 @@ import {mapState} from 'vuex'
 		
 		}
 		.title{
-			//margin-left: 25px;;
+			font-weight: 500;
+    		font-size: 27.1585px;
+    		line-height: 19px;
+			margin-left: 25px;
 		}
 	}
 </style>

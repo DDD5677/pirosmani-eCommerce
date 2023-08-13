@@ -37,7 +37,7 @@
                   >
                </div>
             </div>
-            <a href="support.html" class="support">Поддержка</a>
+            <router-link :to="{name:'support'}" @click="scrollTop" class="support">Поддержка</router-link>
             <div class="footer__rules">
                <a href="" class="rules__link">©2023. Пиросмани</a
                ><a href="" class="rules__link">Условия и соглашения</a
@@ -49,7 +49,12 @@
 
 <script>
 	export default {
-		name:'home-footer'
+		name:'home-footer',
+		methods:{
+			scrollTop(){
+				window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+			}
+		}
 	}
 </script>
 

@@ -1,23 +1,8 @@
 @media (max-width: 1200px) {
-   .header {
-      .navbar {
-         .nav-link {
-            margin-right: 25px;
-         }
-      }
-   }
 
-   .page__product {
-      .product__bottom {
-         .product__tab {
-            .tab-content {
-               width: 660px;
-            }
-         }
-
-         .product__bonus {
-            padding: 30px 20px;
-         }
+   .navbar {
+      .nav-link {
+         margin-right: 25px;
       }
    }
 
@@ -101,14 +86,15 @@
 
 @media (max-width: 1030px) {
    .header {
-      .navbar {
-         .dropdown-menu {
-            position: absolute;
-         }
-      }
+      // .navbar {
+      //    .dropdown-menu {
+      //       position: absolute;
+      //    }
+      // }
 
       .header__info {
          .phone {
+
             img {
                width: 28px;
                height: 28px;
@@ -131,65 +117,6 @@
             .green__btn {
                margin-right: 50px;
             }
-         }
-      }
-   }
-
-   .page__product {
-      .product__top {
-         .product__img {
-            height: 400px;
-         }
-
-         .product__info {
-            height: 400px;
-            padding: 20px;
-
-            .card__rating {
-               margin-bottom: 0;
-            }
-
-            .product__reviews {
-               margin-bottom: 15px;
-            }
-
-            .product__price {
-               margin-bottom: 15px;
-            }
-
-            .total__price {
-               margin-top: 30px;
-            }
-
-            .product__btns {
-               margin-top: 35px;
-            }
-         }
-      }
-
-      .product__bottom {
-         .product__tab {
-            .tab-content {
-               width: 560px;
-
-               .tab-pane__reviews {
-                  .slider__reviews {
-                     width: 100%;
-
-                     .reviews__item {
-                        padding: 12px;
-                     }
-                  }
-               }
-
-               .swiper-button-next {
-                  display: none;
-               }
-            }
-         }
-
-         .product__bonus {
-            padding: 30px 20px;
          }
       }
    }
@@ -299,61 +226,7 @@
    //    }
    // }
 
-   .page__product {
-      padding: 130px 0 35px;
 
-      .product__top {
-         .product__img {
-            height: 350px;
-            flex: 0 0 60%;
-         }
-
-         .product__info {
-            flex: 0 0 37%;
-            height: 350px;
-            padding: 20px;
-
-
-            .product__amount {
-               margin-bottom: 10px;
-            }
-
-
-
-
-            .total__price {
-               margin-top: 25px;
-               margin-bottom: 0;
-            }
-
-            .product__btns {
-               margin-top: 10px;
-            }
-         }
-      }
-
-      .product__bottom {
-         margin-top: 40px;
-
-         .product__tab {
-            flex: 0 0 60%;
-
-            .nav {
-               .nav-link {
-                  font-size: 24px;
-               }
-            }
-
-            .tab-content {
-               width: 460px;
-            }
-         }
-
-         .product__bonus {
-            flex: 0 0 37%;
-         }
-      }
-   }
 
    .page__basket {
 
@@ -508,17 +381,16 @@
                justify-content: center;
                align-items: center;
                padding: 0;
+               background-color: #fff;
+               position: relative;
 
                &.collapsed {
+                  span.first {
+                     opacity: 1;
+                  }
 
-
-
-                  span {
-                     background-color: white;
-                     width: 1.5rem;
-                     height: 1.5rem;
-                     background-image: url(@/assets/images/burger-bg.svg);
-                     background-size: contain;
+                  span.second {
+                     opacity: 0;
                   }
                }
 
@@ -526,9 +398,15 @@
                   box-shadow: none;
                }
 
-
-
                span {
+                  position: absolute;
+                  top: 50%;
+                  left: 50%;
+                  transform: translate(-50%, -50%);
+               }
+
+               span.first {
+
                   background-color: $main-color;
                   display: inline-block;
                   padding: 10px;
@@ -538,8 +416,23 @@
                   background-repeat: no-repeat;
                   background-size: 30%;
                   background-position: center;
+                  opacity: 0;
                   border-radius: 5px;
                }
+
+               span.second {
+                  opacity: 1;
+                  background-color: white;
+                  background-repeat: no-repeat;
+                  display: inline-block;
+                  width: 30px;
+                  height: 30px;
+                  background-position: center;
+                  background-image: url(@/assets/images/burger-bg.svg);
+                  background-size: contain;
+               }
+
+
             }
          }
 
@@ -584,6 +477,9 @@
             .navbar-nav {
                max-height: calc(100vh - 60px);
                overflow: auto;
+               flex-direction: column;
+               width: 100%;
+               justify-content: flex-start;
 
                .nav-item__booking {
                   display: none;
@@ -595,6 +491,7 @@
 
                .nav-item {
                   margin-top: 25px;
+                  width: 100%;
 
                   img {
                      display: inline-block;
@@ -609,6 +506,8 @@
                         }
                      }
 
+                     display: inline-block;
+                     width: 100%;
                      margin-right: 0;
                      padding: 10px 20px 10px 30px;
                      font-weight: 400;
@@ -722,32 +621,6 @@
          }
       }
    }
-
-   // .footer {
-   //    .footer__wrapper {
-   //       flex-direction: column;
-   //       margin-bottom: 25px;
-
-   //       .footer__info {
-   //          display: flex;
-   //          gap: 80px;
-
-   //          .info__phones {
-   //             flex-direction: column;
-   //             gap: 0;
-   //          }
-   //       }
-
-   //       .info__social {
-   //          display: flex;
-   //          gap: 70px;
-   //       }
-   //    }
-
-   //    .support {
-   //       display: none;
-   //    }
-   // }
 
    .page__support {
       padding: 95px 0 60px;
@@ -970,84 +843,7 @@
 }
 
 @media (max-width: 750px) {
-   .page__product {
-      padding: 100px 0 35px;
 
-      .product__top {
-         flex-direction: column;
-
-         .product__img {
-            margin-bottom: 20px;
-
-            img {
-               height: 380px;
-            }
-         }
-
-         .product__info {
-            display: flex;
-            flex-wrap: wrap;
-            padding: 30px;
-
-            &-left,
-            &-right {
-               flex: 0 0 50%;
-            }
-
-            .product__reviews {
-               margin-top: 10px;
-            }
-
-            .product__amount {
-               margin-bottom: 10px;
-            }
-
-            .amount__calc {
-               margin-bottom: 0;
-            }
-
-
-            .total__price {
-               flex: 0 0 50%;
-               margin-top: 10px;
-               margin-bottom: 10px;
-            }
-
-            .product__btns {
-               flex: 0 0 51%;
-               margin-top: 10px;
-
-               .product__basket {
-                  margin-left: 20px;
-                  margin-right: 10px;
-               }
-            }
-         }
-      }
-
-      .product__bottom {
-         flex-direction: column;
-
-         .product__tab {
-
-            .nav {
-               .nav-link {
-                  margin-left: 20px;
-               }
-            }
-
-            .tab-content {
-               width: 100%;
-               margin-bottom: 20px;
-               padding: 0 20px;
-            }
-         }
-
-         .product__bonus {
-            padding: 30px 40px 40px;
-         }
-      }
-   }
 
    .page__basket {
       .page__basket-wrapper {
@@ -1263,42 +1059,7 @@
       }
    }
 
-   .page__product {
-      padding-bottom: 0;
 
-      .product__top {
-         .product__img {
-
-            img {
-               height: 300px;
-            }
-         }
-
-         .product__info {
-            flex-direction: column;
-            padding: 20px 30px;
-
-            .total__price {
-               margin-top: 15px;
-               margin-bottom: 5px;
-            }
-         }
-      }
-
-      .product__bottom {
-         .product__tab {
-            .nav {
-               .nav-link {
-                  margin-right: 0;
-               }
-            }
-         }
-
-         .product__bonus {
-            padding: 20px 30px 40px;
-         }
-      }
-   }
 
    .reviewsModal {
       .modal-content {
@@ -1545,7 +1306,7 @@
       .pagination {
          .page-item {
             .page-link {
-               padding: var(--bs-pagination-padding-y) var(--bs-pagination-padding-x);
+               padding: 5px 15px
             }
          }
       }
@@ -1581,49 +1342,7 @@
       }
    }
 
-   .page__product {
-      padding-top: 80px;
 
-      .product__top {
-         .product__img {
-            img {
-               height: 100%;
-            }
-         }
-
-         .product__info {
-            padding: 20px;
-         }
-      }
-
-      .product__bottom {
-         .product__tab {
-            .nav {
-               margin-bottom: 10px;
-
-               .nav-link {
-                  margin-left: 0;
-                  font-size: 18px;
-               }
-            }
-
-            .tab-content {
-               padding: 0;
-
-               .tab-pane__title {
-                  font-size: 18px;
-               }
-
-               .product__param {
-                  div {
-                     font-size: 14px;
-                  }
-               }
-            }
-         }
-
-      }
-   }
 
    .reviewsModal {
       .modal-content {
@@ -1989,82 +1708,7 @@
       }
    }
 
-   .page__product {
-      .product__top {
-         .product__info {
-            padding: 20px 15px;
 
-            .title {
-               font-size: 18px;
-            }
-
-            .product__reviews {
-               margin: 5px 0;
-            }
-
-            .product__price {
-               margin-bottom: 10px;
-
-               .num {
-                  font-size: 16px;
-               }
-            }
-
-            .product__amount {
-               .num {
-                  font-size: 16px;
-               }
-            }
-
-            .product__counter {
-
-               .items__control,
-               .items__current {
-                  padding: 5px 16px;
-               }
-            }
-
-            .total__price {
-               margin-top: 20px;
-
-               .total__price-num {
-                  font-size: 16px;
-               }
-            }
-
-            .product__btns {
-               .product__basket {
-                  margin: 0px;
-               }
-            }
-         }
-      }
-
-      .product__bottom {
-         .product__tab {
-            .nav {
-
-               .nav-link {
-                  padding-right: 0;
-               }
-            }
-         }
-
-         .product__bonus {
-            padding: 20px 10px 40px;
-
-            .grey__line {
-               width: 76%;
-            }
-
-            .title,
-            .bonus {
-               margin-bottom: 15px;
-            }
-         }
-
-      }
-   }
 
    .reviewsModal {
       .modal-content {

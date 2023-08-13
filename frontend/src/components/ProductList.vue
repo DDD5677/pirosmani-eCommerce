@@ -6,9 +6,9 @@
                <product v-for="product in renderProducts" :product="product" :key="product.id"/>
                
             </div>
-            
+				<product-pagination />
+
          </div>
-			<product-pagination />
       </section>
 </template>
 

@@ -16,6 +16,10 @@ import { computed } from 'vue';
 			rating:{
 				type:Number,
 				required:true
+			},
+			width:{
+				type:String,
+				default:'14px'
 			}
 		},
 		computed:{
@@ -42,8 +46,8 @@ import { computed } from 'vue';
 		}
       margin-bottom: 3px;
 		.star {
-         width: 14px;
-         height: 14px;
+         width: v-bind(width);
+         height: v-bind(width);
          display: inline-block;
 			flex-shrink: 0;
          background-position: center;
