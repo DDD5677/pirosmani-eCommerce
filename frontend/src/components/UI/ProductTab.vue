@@ -37,12 +37,7 @@
 				class="tab-pane"
 			>
 				<h3 class="tab-pane__title">Описание</h3>
-				<p class="tab-pane__text">
-					Полутвердый пластичный однородный сыр, слегка ломкий
-					на изгибе. Пажитник придает легкое ореховое
-					послевкусие. В Италии считается столовым сыром,
-					который подходит к любому времени суток и к любому
-					блюду и к вину
+				<p class="tab-pane__text">{{product.richDsc }}
 				</p>
 				<p class="tab-pane__text">
 					Вес головки 500 г. +/-10%. Цена за 1 кг.
@@ -102,7 +97,7 @@
 										/>
 									</h4>
 									
-									<product-rating :width="'10px'" :rating="productById.rate"></product-rating>
+									<product-rating :width="'10px'" :rating="product.rate"></product-rating>
 									<a href="" class="top__info-link"
 										>vk.com/anatoliy</a
 									>
@@ -154,7 +149,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
       	SwiperSlide,
     	},
 		props:{
-			productById:{
+			product:{
 				type:Object,
 				required:true
 			}

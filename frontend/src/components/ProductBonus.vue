@@ -18,22 +18,21 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 	export default {
 		name:'product-bonus',
-		props:{
-			totalSumm:{
-				type:Number,
-				required:true
-			}
-		},
 		data(){
 			return{
 			}
 		},
 		computed:{
+			...mapState({
+				totalSumm:state=>state.singleProduct.totalSumm
+			}),
 			beforeContent(){
 				if(this.totalSumm<3000){
-				return `'Осталось ${3000-this.totalSumm} RUB до бесплатной доставки'`
+				return `'Осталось ${(3000-this.totalSumm).toFixed(2)} RUB до бесплатной доставки'`
 				}else{
 					return '"Поздравляем, вы получили бонус!"'
 				}
@@ -130,10 +129,12 @@
          &::after {
             content: v-bind(beforeContent);
             position: absolute;
+				display: inline-block;
+    			width: 100%;
             font-weight: 400;
             font-size: 9px;
             line-height: 10px;
-            bottom: -15px;
+            bottom: -25px;
             left: 5px;
          }
 

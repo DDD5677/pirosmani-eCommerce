@@ -6,6 +6,7 @@ import PaymentView from "../views/PaymentView.vue";
 import VacationView from "../views/VacationView.vue";
 import SupportView from "../views/SupportView.vue";
 import ProductByIdView from "../views/ProductByIdView.vue";
+import notFoundView from "../views/notFoundView.vue";
 
 const routes = [
    {
@@ -14,7 +15,7 @@ const routes = [
       component: HomeView,
    },
    {
-      path: "/products/:category",
+      path: "/products",
       name: "products",
       component: ProductView,
    },
@@ -42,6 +43,11 @@ const routes = [
       path: "/product/:id",
       name: "product",
       component: ProductByIdView,
+   },
+   {
+      path: "/:pathMatch(.*)*",
+      name: "not-found",
+      component: notFoundView,
    },
 ];
 

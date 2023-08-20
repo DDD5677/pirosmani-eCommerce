@@ -10,6 +10,8 @@ import Product from "@/components/Product";
 import ProductRating from "@/components/UI/ProductRating";
 import Pagination from "@/components/UI/Pagination";
 import ProductTab from "@/components/UI/ProductTab";
+import error from "@/components/UI/error";
+import Loading from "@/components/UI/Loading";
 import HomeVideo from "@/components/HomeVideo";
 import HomeDelivery from "@/components/HomeDelivery";
 import ProductBonus from "@/components/ProductBonus";
@@ -39,4 +41,6 @@ export default [
    SignIn,
    ModalLayout,
    ForgotPassword,
+   error,
+   Loading,
 ];

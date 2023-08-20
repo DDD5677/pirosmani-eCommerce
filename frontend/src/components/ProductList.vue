@@ -1,11 +1,12 @@
 <template>
 	<section class="home__products">
          <div class="container">
-            
-            <div class="home__products-wrapper">
-               <product v-for="product in renderProducts" :product="product" :key="product.id"/>
-               
+				
+            <div  class="home__products-wrapper">
+						<product  v-for="product in products" :product="product" :key="product.id"/>
+						
             </div>
+			
 				<product-pagination />
 
          </div>
@@ -14,15 +15,17 @@
 
 <script>
 import {mapState, mapGetters} from 'vuex';
-
 	export default {
 		name:'product-list',
 		computed:{
 			...mapState({
       	categories: state=>state.product.categories,
+			products:state=>state.product.products,
+			isLoading:state=>state.product.isLoading,
+
 			}),
 			...mapGetters({
-				renderProducts:'product/renderProducts'
+				//renderProducts:'product/renderProducts'
 			}),
 		},
 	}

@@ -121,8 +121,8 @@ import { mapState,mapMutations } from 'vuex';
 				showModal:state=>state.modal.showModal,
 				signUp:state=>state.modal.signUp,
 				signIn:state=>state.modal.signIn,
-				forgotPassword:state=>state.modal.forgotPassword
-
+				forgotPassword:state=>state.modal.forgotPassword,
+				category:state=>state.product.category
 			})
 		},
 		methods:{
@@ -149,6 +149,13 @@ import { mapState,mapMutations } from 'vuex';
 				}
 				this.toggleMobile(false)
 				this.showNavbarHandler(false)
+			},
+			getProduct(){
+				this.closeNavbarDropdown()
+				this.$store.dispatch('getProductByCategory',{
+					id:this.categories,
+					page:1
+				})
 			}
 		}
 	}

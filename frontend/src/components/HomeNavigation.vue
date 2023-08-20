@@ -33,13 +33,13 @@
 				:navigation="true"
 				:modules="modules"
 				class="swiper home__navigationSwiper ">
-                  <swiper-slide class="swiper-slide" v-for="(item, index) in categories" :key="item.title">
+                  <swiper-slide class="swiper-slide" v-for="(item, index) in categories" :key="item._id">
 							<span 
 							@click.stop="toggleActive(index)"
-							@click="SortP(item.category)"
+							@click="categoryHandler(item)"
 							:class="{'active':activeIndex===index,}" 
 							
-                     >{{ item.title }}</span
+                     >{{ item.name }}</span
                   ></swiper-slide>
             </swiper>
          </div>
@@ -69,16 +69,24 @@ import {mapState, mapMutations} from 'vuex';
 		computed:{
 			...mapState({
       	categories: state=>state.product.categories,
+			page:state=>state.product.page
 			}),
 		},
 		methods: {
 			...mapMutations({
-				SortP:'product/SortP',
+				changeCategory:'product/changeCategory'
 			}),
 			toggleActive(index) {
 			this.activeIndex=index;
+			},
+			categoryHandler(item){
+				this.changeCategory(item._id)
+				this.$store.dispatch('product/getProductByCategory',{
+					id:item._id,
+					page:1})				
 			}
 		},
+		
 		setup() {
 			
       	const onSwiper = (swiper) => {

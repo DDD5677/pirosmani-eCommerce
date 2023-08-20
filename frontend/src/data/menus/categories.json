@@ -1,0 +1,67 @@
+[
+	{
+		"name": "Лучшая еда",
+		"icon": "icon_1",
+		"title": "best-foods"
+	},
+	{
+		"name": "Гамбургер",
+		"icon": "icon_2",
+		"title": "burgers"
+	},
+	{
+		"name": "Пицца",
+		"icon": "icon_3",
+		"title": "pizzas"
+	},
+	{
+		"name": "Бутерброд",
+		"icon": "icon_4",
+		"title": "sandwiches"
+	},
+	{
+		"name": "Барбекю",
+		"icon": "icon_5",
+		"title": "bbqs"
+	},
+	{
+		"name": "Стейк",
+		"icon": "icon_6",
+		"title": "steaks"
+	},
+	{
+		"name": "Сосиска",
+		"icon": "icon_7",
+		"title": "sausages"
+	},
+	{
+		"name": "Жареный цыпленок",
+		"icon": "icon_8",
+		"title": "fried-chicken"
+	},
+	{
+		"name": "Хлеб",
+		"icon": "icon_9",
+		"title": "breads"
+	},
+	{
+		"name": "Десерт",
+		"icon": "icon_10",
+		"title": "desserts"
+	},
+	{
+		"name": "Мороженое",
+		"icon": "icon_11",
+		"title": "ice-cream"
+	},
+	{
+		"name": "Шоколад",
+		"icon": "icon_12",
+		"title": "chocolates"
+	},
+	{
+		"name": "Напитки",
+		"icon": "icon_13",
+		"title": "drinks"
+	}
+]

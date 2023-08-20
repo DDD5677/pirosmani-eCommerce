@@ -1,27 +1,27 @@
 <template>
 	<div  class="card">
                   
-                  <div>
-							<div class="card__img">
-                     <img
-								:src="product.img"
-                        :alt="product.name"
-                     />
-                  	</div>
-							<h5 class="card__title">{{ product.name }}</h5>
-                  	<p class="card__desc">
-                     {{ product.dsc }}
-                  	</p>
-						</div>
-                  <div class="card__box">
-							<product-rating :rating="product.rate"/>
-                  <div class="card__price">
-                     {{ product.price }} ₽/кг<span>За 500гр.</span>
-							
-                  </div>
-                  <green-btn @click.prevent.stop="productDetail">В корзину</green-btn>
-						</div>
-               </div>
+		<div>
+			<div class="card__img">
+			<img
+				:src="product.img"
+				:alt="product.name"
+			/>
+			</div>
+			<h5 class="card__title">{{ product.name }}</h5>
+			<p class="card__desc">
+			{{ product.dsc }}
+			</p>
+		</div>
+		<div class="card__box">
+			<product-rating :rating="product.rate"/>
+		<div class="card__price">
+			{{ product.price }} ₽/кг<span>За 500гр.</span>
+			
+		</div>
+		<green-btn @click.prevent.stop="productDetail">В корзину</green-btn>
+		</div>
+	</div>
 </template>
 
 <script>

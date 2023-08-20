@@ -1,7 +1,10 @@
 <template>
-		<div class=" wrapper">
-			<h2 class="title">{{CategoryName}}</h2>
-			<product-list />
+		<div class="wrapper">
+			<error v-if="errors" :error="errors"></error>
+			
+			<h2 v-if="!isLoading&&!errors" class="title">{{ currentCategory }}</h2>
+			<loading v-if="isLoading"/>
+			<product-list v-if="!isLoading&&!errors" />
 		</div>
 		
 </template>
@@ -11,28 +14,31 @@ import {mapState} from 'vuex'
 	export default {
 		data(){
 			return{
-				
 			}
 		},
 		computed:{
 			...mapState({
       	categories: state=>state.product.categories,
-			category:state=>state.product.category
+      	//products: state=>state.product.products,
+			//category:state=>state.product.category,
+			isLoading:state=>state.product.isLoading,
+			errors:state=>state.product.errors,
+			//page:state=>state.product.page
 			}),
-			CategoryName(){
-				return this.categories.filter(item=>item.category===this.category)[0].title
-			}
-		},
-		methods:{
-			statusProductList(){
-				this.$store.state.product.page=1
-				this.$store.state.product.category=this.$route.params.category
-				this.$store.state.product.pageLimit=10
+			currentCategory(){
+				if(this.$route.query.categories){
+					return this.categories.filter(c=>c._id===this.$route.query.categories)[0].name
+				}else{
+					return 'All'
+				}
 			}
 		},
 		mounted(){
-			this.statusProductList()
-		}
+			this.$store.dispatch('product/getProductByCategory',{
+				id:this.$route.query.categories,
+				page:this.$route.query.page})
+			this.$store.commit('product/changeCategory',null)
+		},
 	}
 </script>
 

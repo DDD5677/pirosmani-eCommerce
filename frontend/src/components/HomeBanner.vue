@@ -3,8 +3,6 @@
          <div class="container">
             <button
                class="tableReservation__btn"
-               data-bs-toggle="modal"
-               data-bs-target="#tableReservation"
             >
                Забронировать стол
                <img src="@/assets/images/tableReservation__btn-arrow.svg" alt="" />
@@ -64,6 +62,10 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 				]
 			}
 	 	},
+		methods:{
+			
+			
+		},
     	setup() {
       	const onSwiper = (swiper) => {
         console.log(swiper);

@@ -1,24 +1,27 @@
 <template>
 	<section class="page__product">
          <div class="container">
-            <div class="product__top">
+				<error v-if="errors" :error="errors"></error>
+				<loading v-if="isLoading"/>
+            <div v-if="!isLoading&&!errors">
+					<div class="product__top">
                <div class="product__img">
                   <img
-							:src="productById.img"
-                     :alt="productById.name"
+							:src="product.img"
+                     :alt="product.name"
                   />
                </div>
                <div class="product__info">
                   <div class="product__info-left">
-                     <h3 class="title">{{ productById.name }}</h3>
-                     <product-rating :rating="productById.rate"></product-rating>
+                     <h3 class="title">{{ product.name }}</h3>
+                     <product-rating :rating="product.rate"></product-rating>
                      <div class="product__reviews">
                         Кол-во отзывов: <span>23</span>
                      </div>
                   </div>
                   <div class="product__info-right">
                      <div class="product__price">
-                        <span>Цена за уп.</span><span class="num">{{productById.price}} ₽</span>
+                        <span>Цена за уп.</span><span class="num">{{product.price}} ₽</span>
                      </div>
                      <div class="product__amount">
                         <span>Кол-во шт в упаковке</span
@@ -34,7 +37,7 @@
                      <span class="total__price-num">{{ totalSumm }} ₽</span>
                   </div>
                   <div class="product__btns">
-                     <green-btn @click.prevent.stop="console.log(productById)" class="product__buy">Купить</green-btn>
+                     <green-btn @click.prevent.stop="console.log(product)" class="product__buy">Купить</green-btn>
                      <a href="" class="product__basket"
                         ><img src="@/assets/images/shopping-cart-white.svg" alt=""
                      /></a>
@@ -42,42 +45,43 @@
                </div>
             </div>
             <div class="product__bottom">
-               <product-tab :productById="productById"/>
+               <product-tab :product="product"/>
                <product-bonus :totalSumm="totalSumm"/>
             </div>
+				</div>
          </div>
       </section>
 </template>
 
 <script>
-import {mapState} from 'vuex';
+import {mapMutations, mapState} from 'vuex';
 	export default {
 		data(){
 			return{
 				productId:this.$route.params.id,
-				totalSumm:0
+				
 			}
 		},
 		computed:{
 			...mapState({
-				products: state=>state.product.products,
+				product: state=>state.singleProduct.product,
+				totalSumm: state=>state.singleProduct.totalSumm,
+				isLoading: state=>state.singleProduct.isLoading,
+				errors: state=>state.singleProduct.errors,
 			}),
-			productById(){
-				return this.products.filter((p)=>p.id===this.productId)[0]
-			},
+			...mapMutations({
+				changeTotalSumm:'singleProduct/changeTotalSumm'
+			}),
 			
 		},
 		methods:{
 			totalSummHandler(counter){
-				const summ =counter*this.productById.price;
-				this.totalSumm = summ.toFixed(2)
+				const summ =counter*this.product.price;
+				this.$store.commit('singleProduct/changeTotalSumm',summ.toFixed(2))
 			},
-			totalSummDefault(){
-				this.totalSumm=this.productById.price
-			}
 		},
 		mounted(){
-			this.totalSummDefault()
+			this.$store.dispatch('singleProduct/getProductById',this.productId);
 		}
 	}
 </script>

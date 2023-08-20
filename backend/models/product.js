@@ -22,7 +22,7 @@ const productSchema = new mongoose.Schema({
          type: String,
       },
    ],
-   brand: {
+   country: {
       type: String,
       default: "",
    },
@@ -41,14 +41,6 @@ const productSchema = new mongoose.Schema({
       min: 0,
       max: 255,
    },
-   rate: {
-      type: Number,
-      default: 0,
-   },
-   numReviews: {
-      type: Number,
-      default: 0,
-   },
    isFeatured: {
       type: Boolean,
       default: false,
@@ -56,6 +48,10 @@ const productSchema = new mongoose.Schema({
    dateCreated: {
       type: Date,
       default: Date.now,
+   },
+   reviews: {
+      type: Array,
+      default: [],
    },
 });
 

@@ -9,6 +9,12 @@ export default{
 	components:{
 		HomeView
 	},
+	methods:{
+		
+	},
+	mounted(){
+		this.$store.dispatch('product/getCategory');
+	},
 }
 </script>
 <style lang="scss">

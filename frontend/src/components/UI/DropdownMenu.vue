@@ -1,11 +1,11 @@
 <template>
 	<ul class="dropdown-menu" @click.stop>
-       <li v-for="item in categories" :key="item.title">
+       <li v-for="item in categories" :key="item.name">
           <a class="dropdown-item"
-				@click="categoryHandler(item.category)"
+				@click="categoryHandler(item)"
           >
-			<img :src="item.icon">
-          <span> {{ item.title }}</span></a
+			<img src="">
+          <span> {{ item.name }}</span></a
    		>
    	</li>
 	</ul>
@@ -18,17 +18,26 @@
 		computed:{
 			...mapState({
       	categories: state=>state.product.categories,
+			page:state=>state.product.page
 			}),
 		},
 		methods:{
 			...mapMutations({
-				SortP:'product/SortP',
+				changeCategory:'product/changeCategory',
+				changePage:'product/changePage',
 				toggleDropdown:'navbar/toggleDropdown',
-				showNavbarHandler:'navbar/showNavbarHandler'
+				showNavbarHandler:'navbar/showNavbarHandler',
+				//assignCurrenCategory:'product/assignCurrentCategory'
 			}),
-			categoryHandler(category){
-				this.SortP(category);
-				this.$router.push(`/products/${category}`);
+			categoryHandler(item){
+				this.$store.dispatch('product/getProductByCategory',{
+					page:1,
+					id:item._id
+				})
+				console.log(item._id)
+				this.changePage(1)
+				//this.changeCategory(item._id);
+				this.$router.push({ path: "/products", query: { categories: item._id, page:1} });
 				window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
 				this.toggleDropdown(false);
 				this.showNavbarHandler(false);

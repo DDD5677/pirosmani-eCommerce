@@ -16,30 +16,88 @@ const mongoose = require("mongoose");
 // });
 
 router.get(`/`, async (req, res) => {
-   let filter = {};
-   if (req.query.categories) {
-      filter = { category: req.query.categories.split(",") };
-   }
+   try {
+      let filter = {};
+      let page = 1;
+      let limit = 4;
+      let totalProducts = 0;
+      let pageSize = 1;
 
-   const productList = await Product.find(filter).populate("category");
+      if (req.query.page) {
+         page = req.query.page;
+      }
+      if (req.query.limit) {
+         limit = req.query.limit;
+      }
+      if (req.query.categories) {
+         const category = await Category.findById(req.query.categories);
+         if (!category)
+            return res.status(400).json({
+               success: false,
+               message: "Invalid Category",
+            });
+         filter = { category: req.query.categories };
+      }
 
-   if (!productList) {
+      totalProducts = await Product.countDocuments(filter).exec();
+      pageSize = Math.ceil(totalProducts / limit);
+      if (page > pageSize) {
+         return res.status(404).json({
+            success: false,
+            message: "Page is not found!",
+         });
+      }
+      const productList = await Product.find(filter)
+         .skip((page - 1) * limit)
+         .limit(limit)
+         .populate("category")
+         .exec();
+      if (!productList) {
+         res.status(404).json({
+            success: false,
+            message: "Products is not found!",
+         });
+      }
+      res.send({
+         productList: productList,
+         pagination: {
+            pageSize: pageSize,
+            limit: limit,
+            page: page,
+         },
+      });
+   } catch (error) {
       res.status(500).json({
          success: false,
+         message: error.message,
       });
    }
-   res.send(productList);
 });
 
 router.get(`/:id`, async (req, res) => {
-   const product = await Product.findById(req.params.id).populate("category");
+   try {
+      if (!mongoose.isValidObjectId(req.params.id)) {
+         return res.status(400).json({
+            success: false,
+            message: "Invalid Id",
+         });
+      }
+      const product = await Product.findById(req.params.id).populate(
+         "category"
+      );
 
-   if (!product) {
+      if (!product) {
+         res.status(500).json({
+            success: false,
+         });
+      }
+      res.send(product);
+   } catch (error) {
       res.status(500).json({
          success: false,
+         error: error,
       });
    }
-   res.send(product);
 });
 
 router.post(`/`, async (req, res) => {
@@ -52,13 +110,12 @@ router.post(`/`, async (req, res) => {
       richDsc: req.body.richDsc,
       img: req.body.img,
       images: req.body.images,
-      brand: req.body.brand,
+      country: req.body.country,
       price: req.body.price,
       category: req.body.category,
       countInStock: req.body.countInStock,
-      rate: req.body.rate,
-      numReviews: req.body.numReviews,
       isFeatured: req.body.isFeatured,
+      reviews: req.body.reviews,
    });
 
    product = await product.save();
@@ -84,7 +141,7 @@ router.put("/:id", async (req, res) => {
          richDsc: req.body.richDsc,
          img: req.body.img,
          images: req.body.images,
-         brand: req.body.brand,
+         country: req.body.country,
          price: req.body.price,
          category: req.body.category,
          countInStock: req.body.countInStock,

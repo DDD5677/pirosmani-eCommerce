@@ -1,29 +1,44 @@
 <template>
   <home-banner/>
-  <home-nav />
-  <product-list/>
+  <home-nav /> 
+  <loading v-if="isLoading"/>
+  <product-list v-if="!isLoading"/>
   <home-video/>
   <home-delivery/>
   
 </template>
 
 <script>
+import { mapState } from 'vuex'
 	export default {
 		name:"home-view",
-		methods:{
-			statusProductList(){
-				this.$store.state.product.page=1
-				this.$store.state.product.category='best-foods'
-				this.$store.state.product.pageLimit=5
+		data(){
+			return{
+				
+			}
+		},
+		computed:{
+			...mapState({
+      	categories: state=>state.product.categories,
+			page:state=>state.product.page,
+			isLoading:state=>state.product.isLoading,
+
+			}),
+			queryProduct(){
+				return{
+					page:this.page,
+					id:this.categories[0]._id
+				}
 			}
 		},
 		mounted(){
-			this.statusProductList()
+			this.$store.dispatch('product/getCategoryAndProduct');
 		}
 	}
 </script>
 
 <style lang="scss">
+
 .swiper {
    z-index: 0 !important;
 		
