@@ -11,7 +11,9 @@ const api = process.env.API_URL;
 const productsRouter = require("./routers/products");
 const categoriesRouter = require("./routers/categories");
 const usersRouter = require("./routers/users");
-const ordersRouter = require("./routers/users");
+const ordersRouter = require("./routers/orders");
+const { authJwt } = require("./helpers/jwt");
+const errorHandler = require("./helpers/error-handler");
 
 app.use(cors());
 app.options("*", cors());
@@ -19,6 +21,8 @@ app.options("*", cors());
 //*TODO:middleware
 app.use(bodyParser.json());
 app.use(morgan("tiny"));
+app.use(authJwt());
+app.use(errorHandler);
 
 //*TODO:routers
 app.use(`${api}/products`, productsRouter);

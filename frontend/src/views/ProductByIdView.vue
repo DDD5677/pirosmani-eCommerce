@@ -37,7 +37,7 @@
                      <span class="total__price-num">{{ totalSumm }} ₽</span>
                   </div>
                   <div class="product__btns">
-                     <green-btn @click.prevent.stop="console.log(product)" class="product__buy">Купить</green-btn>
+                     <green-btn @click.prevent.stop="addProduct(order)" class="product__buy">Купить</green-btn>
                      <a href="" class="product__basket"
                         ><img src="@/assets/images/shopping-cart-white.svg" alt=""
                      /></a>
@@ -59,7 +59,11 @@ import {mapMutations, mapState} from 'vuex';
 		data(){
 			return{
 				productId:this.$route.params.id,
-				
+				order:{
+					product:null,
+					cost:0,
+					amount:0
+				}
 			}
 		},
 		computed:{
@@ -69,19 +73,23 @@ import {mapMutations, mapState} from 'vuex';
 				isLoading: state=>state.singleProduct.isLoading,
 				errors: state=>state.singleProduct.errors,
 			}),
-			...mapMutations({
-				changeTotalSumm:'singleProduct/changeTotalSumm'
-			}),
-			
 		},
 		methods:{
+			...mapMutations({
+				changeTotalSumm:'singleProduct/changeTotalSumm',
+				addProduct:'order/addProduct'
+			}),
 			totalSummHandler(counter){
 				const summ =counter*this.product.price;
-				this.$store.commit('singleProduct/changeTotalSumm',summ.toFixed(2))
+				this.order.amount=counter;
+				this.order.cost=summ;
+				this.changeTotalSumm(summ.toFixed(2))
 			},
 		},
 		mounted(){
-			this.$store.dispatch('singleProduct/getProductById',this.productId);
+			this.$store.dispatch('singleProduct/getProductById',this.productId).then(product=>{
+				this.order.product=product
+			});
 		}
 	}
 </script>

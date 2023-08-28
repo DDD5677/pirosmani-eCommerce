@@ -78,11 +78,13 @@
                         <span>+998 (90) 338-56-77</span>
                      </a>
                      <a
+							v-if="!isLogged"
                      class="user"
 							@click="toggleModal(true)"
                      >
 								<img src="@/assets/images/nav-person.svg" alt=""/>
 							</a>
+							<div v-if="isLogged" class="avatar">{{user.user.name[0]}}</div>
                      <a 
 							href="basket.html" 
 							class="shopping-cart"
@@ -94,9 +96,9 @@
          </div>
    </header>
 	<modal-layout v-if="showModal" >
-	<sign-up v-if="signUp"/>
-	<sign-in v-if="signIn"/>
-	<forgot-password v-if="forgotPassword"/>
+	<sign-up v-if="signUp" />
+	<sign-in v-if="signIn" />
+	<forgot-password v-if="forgotPassword" />
 	</modal-layout>
 </template>
 
@@ -118,11 +120,13 @@ import { mapState,mapMutations } from 'vuex';
 				showDropdown:state=>state.navbar.showDropdown,
 				showNavbar: state=>state.navbar.showNavbar,
 				mobile: state=>state.navbar.mobile,
-				showModal:state=>state.modal.showModal,
-				signUp:state=>state.modal.signUp,
-				signIn:state=>state.modal.signIn,
-				forgotPassword:state=>state.modal.forgotPassword,
-				category:state=>state.product.category
+				showModal:state=>state.auth.showModal,
+				signUp:state=>state.auth.signUp,
+				signIn:state=>state.auth.signIn,
+				forgotPassword:state=>state.auth.forgotPassword,
+				category:state=>state.product.category,
+				user:state=>state.auth.user,
+				isLogged:state=>state.auth.isLogged
 			})
 		},
 		methods:{
@@ -130,7 +134,7 @@ import { mapState,mapMutations } from 'vuex';
 				toggleDropdown:'navbar/toggleDropdown',
 				showNavbarHandler:'navbar/showNavbarHandler',
 				toggleMobile:'navbar/toggleMobile',
-				toggleModal:'modal/toggleModal'
+				toggleModal:'auth/toggleModal'
 			}),
 			scrollTop(){
 				window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -265,6 +269,21 @@ import { mapState,mapMutations } from 'vuex';
 				margin-right: 20px;
 			}
       }
+		.avatar{
+			width: 30px;
+			height: 30px;
+			border-radius: 50%;
+			background-color: $main-color;
+			color: white;
+			text-transform: uppercase;
+			text-align: center;
+			line-height: 30px;
+			margin-right: 30px;
+			@media(max-width:1080px){
+				margin-right: 20px;
+			}
+			cursor: pointer;
+		}
    }
 }
 

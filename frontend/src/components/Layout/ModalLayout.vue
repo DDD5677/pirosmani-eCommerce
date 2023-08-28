@@ -12,7 +12,7 @@
 				<div class="img-box">
 					<img src="@/assets/images/log__in-grey.svg" alt="" />
 				</div>
-				<h5 class="title">Регистрация</h5>
+				
 			</div>
 			<slot></slot>
 		</div>
@@ -23,12 +23,6 @@
 	import { mapState,mapMutations} from 'vuex';
 		export default {
 			name:'modal-layout',
-			// props:{
-			// 	title:{
-			// 		type:String,
-			// 		required:true
-			// 	}
-			// }
 			computed:{
 				...mapState({
 					showModal:state=>state.navbar.showModal,
@@ -36,7 +30,7 @@
 			},
 			methods:{
 				...mapMutations({
-					toggleModal:'modal/toggleModal',
+					toggleModal:'auth/toggleModal',
 			}),
 			}
 		}
@@ -83,13 +77,7 @@
 					margin-bottom: 14px;
 				}
 	
-				.title {
-					margin-bottom: 30px;
-					font-weight: 500;
-					font-size: 17.4636px;
-					line-height: 22px;
-					text-align: center;
-				}
+				
 			}
 	
 		}

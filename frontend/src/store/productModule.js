@@ -156,7 +156,6 @@ export const productModule = {
             CategoryService.getCategory()
                .then((responce) => {
                   context.commit("assignCategory", responce.data);
-                  console.log(responce.data[0]._id);
                   context.dispatch("getProductByCategory", {
                      id: responce.data[0]._id,
                      page: 1,

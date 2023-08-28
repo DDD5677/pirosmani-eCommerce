@@ -28,11 +28,12 @@ export const singleProductModule = {
    },
    actions: {
       getProductById(context, payload) {
-         return new Promise(() => {
+         return new Promise((resolve) => {
             context.commit("productStart");
             ProductSevice.getProductById(payload)
                .then((responce) => {
                   context.commit("productSuccess", responce.data);
+                  resolve(responce.data);
                })
                .catch((err) => {
                   context.commit("productFailure", err);

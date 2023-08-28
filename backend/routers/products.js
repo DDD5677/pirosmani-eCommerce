@@ -3,6 +3,7 @@ const router = express.Router();
 const Product = require("../models/product");
 const Category = require("../models/category");
 const mongoose = require("mongoose");
+const { authAdmin } = require("../helpers/jwt");
 
 // router.get(`/`, async (req, res) => {
 //    const productList = await Product.find();
@@ -74,7 +75,7 @@ router.get(`/`, async (req, res) => {
    }
 });
 
-router.get(`/:id`, async (req, res) => {
+router.get(`/:id`, authAdmin, async (req, res) => {
    try {
       if (!mongoose.isValidObjectId(req.params.id)) {
          return res.status(400).json({
@@ -190,13 +191,17 @@ router.get(`/get/count`, async (req, res) => {
 });
 
 router.get(`/get/featured/:count`, async (req, res) => {
-   const count = req.params.count ? req.params.count : 0;
-   const products = await Product.find({ isFeatured: true }).limit(count);
-   if (!products) {
-      res.status(500).json({
-         success: false,
-      });
+   try {
+      const count = req.params.count ? req.params.count : 0;
+      const products = await Product.find({ isFeatured: true }).limit(count);
+      if (!products) {
+         res.status(500).json({
+            success: false,
+         });
+      }
+      res.send(products);
+   } catch (err) {
+      return res.status(400).json({ success: false, error: err });
    }
-   res.send(products);
 });
 module.exports = router;

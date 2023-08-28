@@ -1,63 +1,112 @@
 <template>
+	<h5 class="title">Регистрация</h5>
 	<div class="modal__body">
-		<form action="">
-		<input class="phone" type="tel" placeholder="Телефон" />
+		<form >
+		<input class="" type="text" placeholder="Name"  v-model="name"/>
+		<div class="error__message" v-if="errors&&errors.name">{{ errors.name }}</div>
+		<input class="" type="email" placeholder="Email" v-model="email"/>
+		<div class="error__message" v-if="errors&&errors.email">{{ errors.email }}</div>
+
+		<input class="phone" type="tel" placeholder="Телефон" v-model="phone"/>
+		<div class="error__message" v-if="errors&&errors.phone">{{ errors.phone }}</div>
+
 		<input
 			class="password"
 			type="password"
 			placeholder="Пароль"
+			v-model="password"
 		/>
+		<div class="error__message" v-if="errors&&errors.password">{{ errors.password }}</div>
+
 		<input
 			class="password"
 			type="password"
 			placeholder="Подтвердите пароль"
+			v-model="confirmPassword"
 		/>
-		<span class="error__text"
-			>Пользователь с таким номером телефона уже
-			зарегистрирован.</span
-		>
+		<span class="error__text">
+			Пользователь с таким номером телефона уже
+			зарегистрирован.
+		</span>
 		<div class="checkbox">
 			<input id="reg_check-1" type="checkbox" />
 			<label for="reg_check-1"
 				>Хочу получать выгодные предложения от
-				магазина</label
-			>
+				магазина
+			</label>
 		</div>
 		<div class="checkbox">
 			<input id="reg_check-2" type="checkbox" />
-			<label for="reg_check-2"
-				>Принимаю условия
+			<label for="reg_check-2">
+				Принимаю условия
 				<a href="">Пользовательского соглашения</a>,
-				<a href="">Политики конфиденциальности</a></label
-			>
+				<a href="">Политики конфиденциальности</a>
+			</label>
 		</div>
 		<green-btn
 			class="green__btn"
-			@click="toggleSignIn"
-			>
-			Зарегистрироваться
+			@click="submitHandler">
+		Зарегистрироваться
 		</green-btn>
 	</form>
 	</div>
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 	export default {
 		name:'sign-up',
+		data(){
+			return{
+				name:'',
+				email:'',
+				phone:'',
+				password:'',
+				confirmPassword:''
+			}
+		},
+		computed:{
+			...mapState({
+				errors:state=>state.auth.errors
+			})
+		},
 		methods:{
 			...mapMutations({
 				toggleSignIn:'modal/toggleSignIn'
-			})
+			}),
+			submitHandler(){
+			const data={
+				name:this.name,
+				email:this.email,
+				phone:this.phone,
+				password:this.password
+			}
+			// if(!this.errors){
+			// this.toggleSignIn()}
+			this.$store.dispatch('auth/register',data);
 		}
+		}
+		
 	}
 </script>
 
 <style lang="scss" scoped>
+.title {
+	margin-bottom: 30px;
+	font-weight: 500;
+	font-size: 17.4636px;
+	line-height: 22px;
+	text-align: center;
+}
+.error__message{
+	font-size: 14px;
+	color: red;
+	margin-top: -15px;
+}
 	.modal__body {
 		input {
-			margin-bottom: 25px;
+			margin-bottom: 15px;
 			width: 100%;
 			background: #FCFCFC;
 			border: 0.873181px solid #EBEBEB;
@@ -150,7 +199,7 @@ import { mapMutations } from 'vuex';
 		}
 
 		.green__btn {
-			margin-top: 25px;
+			margin-top: 15px;
 		}
 	}
 </style>

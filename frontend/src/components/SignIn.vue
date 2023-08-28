@@ -1,56 +1,84 @@
 <template>
 	<div>
-		<div class="modal__body">
-			<form action="">
-				<input class="phone" type="tel" placeholder="Телефон" />
+		<h5 class="title">Войти</h5>
+		<form >
+			<div class="modal__body">
+				<input class="email" type="email" placeholder="Email" v-model="email" />
 				<input
 					class="password"
 					type="password"
 					placeholder="Пароль"
+					v-model="password"
 				/>
-			</form>
-			<span class="error__text active"
-				>Не правильный логин или пароль</span
-			>
-			<div class="forgot__password">
-				<a
-				@click="toggleForgotPassword"
+				<span class="error__text active"
+					>{{ errors }}</span
 				>
-				Забыли пароль?
+				<div class="forgot__password">
+					<a
+					@click="toggleForgotPassword"
+					>
+					Забыли пароль?
+					</a>
+				</div>
+				<green-btn  class="green__btn enter__profile" @click="submitHandler" >
+				Войти
+				</green-btn>
+			</div>
+			<div class="modal__footer">
+				<span>Впервые у нас? </span>
+				<a
+					class="registr"
+					@click="toggleSignUp"
+				>
+				Зарегистрироваться
 				</a>
 			</div>
-			<green-btn  
-			class="green__btn enter__profile"
-			>
-			Войти
-			</green-btn>
-		</div>
-		<div class="modal__footer">
-			<span>Впервые у нас? </span>
-			<a
-				class="registr"
-				@click="toggleSignUp"
-			>
-			Зарегистрироваться
-			</a>
-		</div>
+		</form>
 	</div>
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
-	export default {
-		name:'sign-in',
-		methods:{
-			...mapMutations({
-				toggleSignUp:'modal/toggleSignUp',
-				toggleForgotPassword:'modal/toggleForgotPassword'
-			})
+import { mapMutations, mapState } from 'vuex';
+export default {
+	name:'sign-in',
+	data(){
+		return{
+			email:'',
+			password:''
+		}
+	},
+	computed:{
+		...mapState({
+			errors:state=>state.auth.errors
+		})
+	},
+	methods:{
+		...mapMutations({
+			toggleSignUp:'auth/toggleSignUp',
+			toggleForgotPassword:'auth/toggleForgotPassword'
+		}),
+		submitHandler(){
+			const data={
+				email:this.email,
+				password:this.password
+			}
+			
+			this.$store.dispatch('auth/login',data).then(user=>{
+				//window.location.reload()
+			});
 		}
 	}
+}
 </script>
 
 <style lang="scss" scoped>
+.title {
+		margin-bottom: 30px;
+		font-weight: 500;
+		font-size: 17.4636px;
+		line-height: 22px;
+		text-align: center;
+	}
 	.modal__body {
 			text-align: center;
 			margin-bottom: 24px;

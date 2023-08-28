@@ -9,12 +9,13 @@ export default{
 	components:{
 		HomeView
 	},
-	methods:{
-		
-	},
-	mounted(){
+	created(){
+		console.log('created');
 		this.$store.dispatch('product/getCategory');
+		this.$store.dispatch('auth/refresh');
+
 	},
+	
 }
 </script>
 <style lang="scss">

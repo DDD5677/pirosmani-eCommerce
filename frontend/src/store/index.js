@@ -2,13 +2,15 @@ import { createStore } from "vuex";
 import { productModule } from "@/store/productModule";
 import { singleProductModule } from "@/store/singleProductModule";
 import { navbarModule } from "@/store/navbarModule";
-import { modalModule } from "./modalModule";
+import { authModule } from "./authModule";
+import { orderModule } from "./orderModule";
 
 export default createStore({
    modules: {
       product: productModule,
       navbar: navbarModule,
-      modal: modalModule,
       singleProduct: singleProductModule,
+      auth: authModule,
+      order: orderModule,
    },
 });
