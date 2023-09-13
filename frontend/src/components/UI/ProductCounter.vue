@@ -17,9 +17,15 @@
 <script>
 	export default {
 		name:'product-counter',
+		props:{
+			quantity:{
+				type:Number,
+				default:1
+			}
+		},
 		data(){
 			return{
-				counter:1,
+				counter:this.quantity,
 			}
 		},
 		methods:{
@@ -39,6 +45,7 @@
 <style lang="scss" scoped>
 	 .product__counter {
             cursor: pointer;
+				font-weight: 500;
             display: flex;
             background: #FCFCFC;
             border: 0.903636px solid #EBEBEB;

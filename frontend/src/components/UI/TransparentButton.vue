@@ -1,5 +1,5 @@
 <template>
-	<a href="#" class="transparent__btn">
+	<a class="transparent__btn">
 		<span><slot></slot></span>
 		<img src="@/assets/images/transparent_btn-arrow.svg" alt=""/>
 	</a>
@@ -20,7 +20,7 @@
          line-height: 29px;
          text-align: center;
          color: $main-color;
-
+			cursor: pointer;
          img {
             margin-left: 10px;
          }

@@ -58,11 +58,10 @@
                         <li class="nav-item nav-item__booking">
                            <a
                               class="nav-link"
-                              href=""
-                              data-bs-toggle="modal"
-                              data-bs-target="#tableReservation"
-                              >Бронь стола</a
+										@click.prevent="toggleBookTableHandler"
                            >
+									Бронь стола
+									</a>
                         </li>
                         <li class="nav-item nav-item__support">
                            <router-link class="nav-link" :to="{name:'support'}" @click="closeNavbarDropdown">
@@ -80,17 +79,14 @@
                      <a
 							v-if="!isLogged"
                      class="user"
-							@click="toggleModal(true)"
+							@click="toggleModalHandler"
                      >
 								<img src="@/assets/images/nav-person.svg" alt=""/>
 							</a>
-							<div v-if="isLogged" class="avatar">{{user.user.name[0]}}</div>
-                     <a 
-							href="basket.html" 
-							class="shopping-cart"
-                     >
+							<div v-if="isLogged" :style="{ backgroundImage: 'url(' + user.user.image + ')'}" class="avatar"><router-link class="avatar-link" :to="{name:'personal'}">{{user.user.image? '':user.user.name[0]}}</router-link></div>
+                     <router-link :to="{name:'basket'}" class="shopping-cart">
 								<img src="@/assets/images/nav-shopping-cart.svg" alt=""/>
-							</a>
+							</router-link>
                   </div>
             </nav>
          </div>
@@ -99,6 +95,8 @@
 	<sign-up v-if="signUp" />
 	<sign-in v-if="signIn" />
 	<forgot-password v-if="forgotPassword" />
+	<add-reviews v-if="addReviews"/>
+	<book-table v-if="bookTable"/>
 	</modal-layout>
 </template>
 
@@ -120,22 +118,42 @@ import { mapState,mapMutations } from 'vuex';
 				showDropdown:state=>state.navbar.showDropdown,
 				showNavbar: state=>state.navbar.showNavbar,
 				mobile: state=>state.navbar.mobile,
-				showModal:state=>state.auth.showModal,
-				signUp:state=>state.auth.signUp,
-				signIn:state=>state.auth.signIn,
-				forgotPassword:state=>state.auth.forgotPassword,
+				showModal:state=>state.navbar.showModal,
+				signUp:state=>state.navbar.signUp,
+				signIn:state=>state.navbar.signIn,
+				addReviews:state=>state.navbar.addReviews,
+				bookTable:state=>state.navbar.bookTable,
+				forgotPassword:state=>state.navbar.forgotPassword,
 				category:state=>state.product.category,
 				user:state=>state.auth.user,
-				isLogged:state=>state.auth.isLogged
-			})
+				isLogged:state=>state.auth.isLogged,
+				orderProducts:state=>state.order.userOrder.orderProducts,
+
+			}),
+			afterShoppingCard(){
+				if(this.orderProducts.length===0){
+					return ''
+				}else{
+				return `' ${this.orderProducts.length}'`}
+			}
 		},
 		methods:{
 			...mapMutations({
 				toggleDropdown:'navbar/toggleDropdown',
 				showNavbarHandler:'navbar/showNavbarHandler',
 				toggleMobile:'navbar/toggleMobile',
-				toggleModal:'auth/toggleModal'
+				toggleModal:'navbar/toggleModal',
+				toggleSignIn:'navbar/toggleSignIn',
+				toggleBookTable:'navbar/toggleBookTable'
 			}),
+			toggleModalHandler(){
+				this.toggleModal(true)
+				this.toggleSignIn()
+			},
+			toggleBookTableHandler(){
+				this.toggleModal(true)
+				this.toggleBookTable()
+			},
 			scrollTop(){
 				window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
 			},
@@ -263,6 +281,23 @@ import { mapState,mapMutations } from 'vuex';
 			}
       }
 
+		.shopping-cart{
+		position: relative;
+			&::after{
+				content:  v-bind(afterShoppingCard);
+				position: absolute;
+				top: 0;
+				right: 0;
+				display: inline-block;
+				font-size: 10px;
+				color: white;
+				background-color: $main-color;
+				width: 15px;
+				text-align: center;
+				line-height: 15px;
+				border-radius: 50%;
+			}
+		}
       .user {
          margin-right: 30px;
 			@media(max-width:1080px){
@@ -273,14 +308,24 @@ import { mapState,mapMutations } from 'vuex';
 			width: 30px;
 			height: 30px;
 			border-radius: 50%;
+			border:1px solid $main-color;
 			background-color: $main-color;
 			color: white;
 			text-transform: uppercase;
 			text-align: center;
 			line-height: 30px;
 			margin-right: 30px;
+			background-repeat: no-repeat;
+			background-size: cover;
+			background-position: center;
 			@media(max-width:1080px){
 				margin-right: 20px;
+			}
+			&-link{
+				width: 30px;
+				height: 30px;
+				display: inline-block;
+				color: #fff;
 			}
 			cursor: pointer;
 		}

@@ -1,4 +1,9 @@
 <template>
+	<div class="modal__header">
+		<div class="img-box">
+			<img src="@/assets/images/log__in-grey.svg" alt="" />
+		</div>
+	</div>
 	<div>
 		<h5 class="title">Войти</h5>
 		<form >
@@ -54,8 +59,8 @@ export default {
 	},
 	methods:{
 		...mapMutations({
-			toggleSignUp:'auth/toggleSignUp',
-			toggleForgotPassword:'auth/toggleForgotPassword'
+			toggleSignUp:'navbar/toggleSignUp',
+			toggleForgotPassword:'navbar/toggleForgotPassword'
 		}),
 		submitHandler(){
 			const data={
@@ -72,6 +77,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.modal__header {
+	.img-box {
+		text-align: center;
+		margin-bottom: 14px;
+	}
+}
 .title {
 		margin-bottom: 30px;
 		font-weight: 500;

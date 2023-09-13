@@ -5,31 +5,31 @@ const orderSchema = new mongoose.Schema({
       {
          type: mongoose.Schema.Types.ObjectId,
          ref: "OrderItem",
-         required: true,
+         required: [true, "Basket is empty!"],
       },
    ],
+   name: {
+      type: String,
+      required: [true, "Please enter a name"],
+   },
    shippingAdress1: {
       type: String,
-      required: true,
+      required: [true, "Please enter your adress"],
    },
    shippingAdress2: {
       type: String,
    },
    city: {
       type: String,
-      required: true,
+      required: [true, "Please enter your city"],
    },
-   zip: {
+   comment: {
       type: String,
-      required: true,
-   },
-   country: {
-      type: String,
-      required: true,
+      default: "",
    },
    phone: {
       type: String,
-      required: true,
+      required: [true, "Please enter your phone"],
    },
    status: {
       type: String,

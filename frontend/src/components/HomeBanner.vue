@@ -3,6 +3,7 @@
          <div class="container">
             <button
                class="tableReservation__btn"
+					@click.prevent="toggleBookTableHandler"
             >
                Забронировать стол
                <img src="@/assets/images/tableReservation__btn-arrow.svg" alt="" />
@@ -34,13 +35,14 @@
 import { Pagination} from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 
- import img1 from '@/assets/images/home__banner-bg.png';
+import { mapState,mapMutations } from 'vuex';
+import img1 from '@/assets/images/home__banner-bg.png';
 	export default {
 		name:'home-banner',
 		components: {
-      	Swiper,
+			Swiper,
       	SwiperSlide,
-    	},
+		},
 	 	data(){
 			return{
 				home_banner:[
@@ -63,7 +65,14 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 			}
 	 	},
 		methods:{
-			
+			...mapMutations({
+				toggleModal:'navbar/toggleModal',
+				toggleBookTable:'navbar/toggleBookTable'
+			}),
+			toggleBookTableHandler(){
+				this.toggleModal(true)
+				this.toggleBookTable()
+			},
 			
 		},
     	setup() {

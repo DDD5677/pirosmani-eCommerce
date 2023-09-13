@@ -22,13 +22,9 @@ import { mapState } from 'vuex';
 
 	export default {
 		name:'product-bonus',
-		data(){
-			return{
-			}
-		},
 		computed:{
 			...mapState({
-				totalSumm:state=>state.singleProduct.totalSumm
+				totalSumm:state=>state.order.userOrder.totalSumm,
 			}),
 			beforeContent(){
 				if(this.totalSumm<3000){

@@ -1,4 +1,9 @@
 <template>
+	<div class="modal__header">
+		<div class="img-box">
+			<img src="@/assets/images/log__in-grey.svg" alt="" />
+		</div>
+	</div>
 	<h5 class="title">Регистрация</h5>
 	<div class="modal__body">
 		<form >
@@ -76,22 +81,27 @@ import { mapMutations, mapState } from 'vuex';
 				toggleSignIn:'modal/toggleSignIn'
 			}),
 			submitHandler(){
-			const data={
-				name:this.name,
-				email:this.email,
-				phone:this.phone,
-				password:this.password
+				const data={
+					name:this.name,
+					email:this.email,
+					phone:this.phone,
+					password:this.password
+				}
+			
+				this.$store.dispatch('auth/register',data);
 			}
-			// if(!this.errors){
-			// this.toggleSignIn()}
-			this.$store.dispatch('auth/register',data);
-		}
 		}
 		
 	}
 </script>
 
 <style lang="scss" scoped>
+.modal__header {
+	.img-box {
+		text-align: center;
+		margin-bottom: 14px;
+	}
+}
 .title {
 	margin-bottom: 30px;
 	font-weight: 500;

@@ -8,12 +8,7 @@
 				class="btn-close"
 				@click="toggleModal(false)"
 			></button>
-			<div class="modal__header">
-				<div class="img-box">
-					<img src="@/assets/images/log__in-grey.svg" alt="" />
-				</div>
-				
-			</div>
+			
 			<slot></slot>
 		</div>
 	</div>
@@ -30,7 +25,7 @@
 			},
 			methods:{
 				...mapMutations({
-					toggleModal:'auth/toggleModal',
+					toggleModal:'navbar/toggleModal',
 			}),
 			}
 		}
@@ -70,16 +65,6 @@
 				opacity: 1;
 				cursor: pointer;
 			}
-	
-			.modal__header {
-				.img-box {
-					text-align: center;
-					margin-bottom: 14px;
-				}
-	
-				
-			}
-	
 		}
 	
 		}

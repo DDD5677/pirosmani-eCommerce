@@ -1,5 +1,10 @@
 <template>
 	<div>
+		<div class="modal__header">
+			<div class="img-box">
+				<img src="@/assets/images/log__in-grey.svg" alt="" />
+			</div>
+		</div>
 		<div class="modal__body">
 			<form action="">
 				<input class="phone" type="tel" placeholder="Телефон" />
@@ -29,6 +34,12 @@
 </script>
 
 <style lang="scss" scoped>
+	.modal__header {
+		.img-box {
+			text-align: center;
+			margin-bottom: 14px;
+		}
+	}
 	.modal__body {
 		input {
 			margin-bottom: 25px;

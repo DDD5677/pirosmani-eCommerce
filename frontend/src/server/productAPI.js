@@ -15,6 +15,12 @@ const ProductService = {
    getProductById(id) {
       return axios.get(`products/${id}`);
    },
+   postReviews(data) {
+      return axios.put("reviews", data);
+   },
+   getReviewsByUserId(id) {
+      return axios.get(`reviews/${id}`);
+   },
 };
 
 export default ProductService;

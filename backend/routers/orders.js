@@ -3,6 +3,23 @@ const router = express.Router();
 const Order = require("../models/order");
 const OrderItem = require("../models/order-items");
 
+const orderErrors = (err) => {
+   console.log(err.message, err.code);
+   let errors = {
+      name: "",
+      shippingAdress1: "",
+      city: "",
+      phone: "",
+   };
+   if (err.message.includes("Order validation failed")) {
+      Object.values(err.errors).forEach(({ properties }) => {
+         errors[properties.path] = properties.message;
+      });
+   }
+
+   return errors;
+};
+
 router.get(`/`, async (req, res) => {
    const orderList = await Order.find({})
       .populate("user", "name")
@@ -33,52 +50,62 @@ router.get(`/:id`, async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-   const orderItemsIds = await Promise.all(
-      req.body.orderItems.map(async (orderItem) => {
-         let newOrderItem = new OrderItem({
-            quantity: orderItem.quantity,
-            product: orderItem.product,
-         });
+   try {
+      if (req.body.orderItems.length === 0) {
+         return res.status(404).json({ orderItems: "the basket is empty!" });
+      }
+      const orderItemsIds = await Promise.all(
+         req.body.orderItems.map(async (orderItem) => {
+            let newOrderItem = new OrderItem({
+               quantity: orderItem.quantity,
+               product: orderItem.product,
+            });
 
-         newOrderItem = await newOrderItem.save();
+            newOrderItem = await newOrderItem.save();
 
-         return newOrderItem._id;
-      })
-   );
+            return newOrderItem._id;
+         })
+      );
 
-   const totalPrices = await Promise.all(
-      orderItemsIds.map(async (orderItemId) => {
-         const orderItem = await OrderItem.findById(orderItemId).populate(
-            "product",
-            "price"
-         );
-         const totalPrice = orderItem.product.price * orderItem.quantity;
-         return totalPrice;
-      })
-   );
+      const totalPrices = await Promise.all(
+         orderItemsIds.map(async (orderItemId) => {
+            const orderItem = await OrderItem.findById(orderItemId).populate(
+               "product",
+               "price"
+            );
+            const totalPrice = orderItem.product.price * orderItem.quantity;
+            return totalPrice;
+         })
+      );
 
-   const totalPrice = totalPrices.reduce((a, b) => a + b, 0);
+      const totalPrice = totalPrices.reduce((a, b) => a + b, 0);
 
-   let order = new Order({
-      orderItems: orderItemsIds,
-      shippingAdress1: req.body.shippingAdress1,
-      shippingAdress2: req.body.shippingAdress2,
-      city: req.body.city,
-      zip: req.body.zip,
-      country: req.body.country,
-      phone: req.body.phone,
-      status: req.body.status,
-      totalPrice: totalPrice,
-      user: req.body.user,
-   });
+      let order = new Order({
+         orderItems: orderItemsIds,
+         name: req.body.name,
+         shippingAdress1: req.body.shippingAdress1,
+         shippingAdress2: req.body.shippingAdress2,
+         city: req.body.city,
+         comment: req.body.comment,
+         phone: req.body.phone,
+         status: req.body.status,
+         totalPrice: totalPrice,
+         user: req.body.user,
+      });
 
-   order = await order.save();
+      order = await order.save();
 
-   if (!order) {
-      return res.status(404).send("the order cannot be created!");
+      if (!order) {
+         return res.status(404).send("the order cannot be created!");
+      }
+
+      res.send(order);
+   } catch (error) {
+      console.log(error);
+      const errors = orderErrors(error);
+      console.log(errors);
+      res.status(500).json(errors);
    }
-
-   res.send(order);
 });
 
 router.put("/:id", async (req, res) => {
@@ -143,19 +170,23 @@ router.get(`/get/count`, async (req, res) => {
 });
 
 router.get(`/get/userorders/:userid`, async (req, res) => {
-   const userOrderList = await Order.find({ user: req.params.userid })
-      .populate({
-         path: "orderItems",
-         populate: { path: "product", populate: "category" },
-      })
-      .sort({ dateOrdered: -1 });
+   try {
+      const userOrderList = await Order.find({ user: req.params.userid })
+         .populate({
+            path: "orderItems",
+            populate: { path: "product", populate: "category" },
+         })
+         .sort({ dateOrdered: -1 });
 
-   if (!userOrderList) {
-      res.status(500).json({
-         success: false,
-      });
+      if (!userOrderList) {
+         res.status(500).json({
+            success: false,
+         });
+      }
+      res.send(userOrderList);
+   } catch (error) {
+      return res.status(400).json({ success: false, error: error });
    }
-   res.send(userOrderList);
 });
 
 module.exports = router;

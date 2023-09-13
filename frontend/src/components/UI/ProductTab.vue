@@ -81,36 +81,30 @@
       			}
 					}"
 					class="swiper slider__reviews">
-						<swiper-slide v-for="i in 6" class="reviews__item">
+						<swiper-slide v-for="review in reviewsList" class="reviews__item">
 							<div class="item__top">
 								<img
-									src="@/assets/images/reviews__img.jpg"
+									:src="review.user.image"
 									alt=""
 									class="top__img"
 								/>
 								<div class="top__info">
 									<h4 class="name__autor">
-										Анатолий Петров
+										<span>{{ review.user.name }} {{ review.user.surname }}</span>
 										<img
-											src="@/assets/images/reviews__autor-icon.svg"
-											alt=""
-										/>
+												src="@/assets/images/reviews__autor-icon.svg"
+												alt=""
+											/>
 									</h4>
 									
-									<product-rating :width="'10px'" :rating="product.rate"></product-rating>
+									<product-rating :width="'10px'" :rating="review.rating"></product-rating>
 									<a href="" class="top__info-link"
-										>vk.com/anatoliy</a
+										>{{ review.user.email }}</a
 									>
 								</div>
 							</div>
 							<div class="item__body">
-								Заказал 5кг мяса, живу в Московской
-								области. Как и обещал оператор, привезли
-								через 1,5 часа. Свежее, как будто было
-								живое еще по дороге. Действительно
-								натуральные продукты. Я обязательно буду
-								заказывать дальше. А теперь подробнее о
-								плюсах и минусах всего магази...
+								{{ review.bodyText }}
 							</div>
 							<a href="" class="item__link"
 								>Читать полностью</a
@@ -127,6 +121,7 @@
 					</div>
 				</div>
 					<green-btn
+					@click.prevent="toggleModalHandler"
 						class="green__btn"
 					>
 						Добавить отзыв
@@ -142,6 +137,8 @@ import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import { Navigation,FreeMode } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/vue';
+import {mapActions, mapMutations, mapState} from 'vuex';
+
 	export default {
 		name:'product-tab',
 		components: {
@@ -161,7 +158,22 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 				reviews:false
 			}
 		},
+		computed:{
+			...mapState({
+				isLoading: state=>state.singleProduct.isLoading,
+				errors: state=>state.singleProduct.errors,
+				reviewsList:state=>state.singleProduct.reviewsList
+			}),
+		},
 		methods:{
+			...mapMutations({
+				toggleModal:'navbar/toggleModal',
+				toggleAddReviews:'navbar/toggleAddReviews'
+			}),
+			toggleModalHandler(){
+				this.toggleModal(true)
+				this.toggleAddReviews()
+			},
 			aboutHandler(){
 				this.about=true
 				this.service=false
@@ -322,6 +334,8 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 						margin-bottom: 5px;
 
 						.top__img {
+							width: 25px;
+							height: 25px;
 							align-self: flex-start;
 							border-radius: 50%;
 						}
@@ -335,24 +349,8 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 								font-size: 15px;
 								line-height: 13px;
 							}
-
-							.card__rating {
-								.star {
-									width: 10px;
-									height: 10px;
-									display: inline-block;
-									background-image: url(@/assets/images/card__star.svg);
-									background-position: center;
-									background-repeat: no-repeat;
-									background-size: cover;
-									margin-right: 4px;
-
-									&.grey {
-										background-image: url(@/assets/images/card__star-grey.svg);
-
-									}
-								}
-							}
+							
+					
 
 							.top__info-link {
 								display: block;

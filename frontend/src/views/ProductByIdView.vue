@@ -37,7 +37,7 @@
                      <span class="total__price-num">{{ totalSumm }} ₽</span>
                   </div>
                   <div class="product__btns">
-                     <green-btn @click.prevent.stop="addProduct(order)" class="product__buy">Купить</green-btn>
+                     <green-btn @click.prevent.stop="addProductHandler(product,quantity)" class="product__buy">Купить</green-btn>
                      <a href="" class="product__basket"
                         ><img src="@/assets/images/shopping-cart-white.svg" alt=""
                      /></a>
@@ -46,7 +46,7 @@
             </div>
             <div class="product__bottom">
                <product-tab :product="product"/>
-               <product-bonus :totalSumm="totalSumm"/>
+               <product-bonus />
             </div>
 				</div>
          </div>
@@ -54,16 +54,12 @@
 </template>
 
 <script>
-import {mapMutations, mapState} from 'vuex';
+import {mapActions, mapMutations, mapState} from 'vuex';
 	export default {
 		data(){
 			return{
 				productId:this.$route.params.id,
-				order:{
-					product:null,
-					cost:0,
-					amount:0
-				}
+				quantity:1
 			}
 		},
 		computed:{
@@ -72,24 +68,32 @@ import {mapMutations, mapState} from 'vuex';
 				totalSumm: state=>state.singleProduct.totalSumm,
 				isLoading: state=>state.singleProduct.isLoading,
 				errors: state=>state.singleProduct.errors,
+
 			}),
 		},
 		methods:{
 			...mapMutations({
 				changeTotalSumm:'singleProduct/changeTotalSumm',
+			}),
+			...mapActions({
 				addProduct:'order/addProduct'
 			}),
 			totalSummHandler(counter){
-				const summ =counter*this.product.price;
-				this.order.amount=counter;
-				this.order.cost=summ;
-				this.changeTotalSumm(summ.toFixed(2))
+				const summ = counter*this.product.price;
+				this.quantity=counter;
+				this.changeTotalSumm(summ.toFixed(2));
 			},
+			addProductHandler(product,quantity){
+				const order={
+					product:product,
+					quantity:quantity
+				}
+				this.addProduct(order);
+			}
 		},
 		mounted(){
-			this.$store.dispatch('singleProduct/getProductById',this.productId).then(product=>{
-				this.order.product=product
-			});
+			this.$store.dispatch('singleProduct/getProductById',this.productId);
+			this.$store.dispatch('singleProduct/getReviewsByUserId',this.productId);
 		}
 	}
 </script>
@@ -195,7 +199,9 @@ import {mapMutations, mapState} from 'vuex';
                font-size: 18.0727px;
                line-height: 23px;
                flex-grow: 1;
-
+					&:active{
+						opacity: 0.7;
+					}
             }
 
             .product__basket {

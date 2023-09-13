@@ -3,6 +3,30 @@ const router = express.Router();
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const multer = require("multer");
+
+const FILE_TYPE_MAP = {
+   "image/png": "png",
+   "image/jpeg": "jpeg",
+   "image/jpg": "jpg",
+};
+const storage = multer.diskStorage({
+   destination: function (req, file, cb) {
+      const isValid = FILE_TYPE_MAP[file.mimetype];
+      let uploadError = new Error("invalid image type");
+      if (isValid) {
+         uploadError = null;
+      }
+      cb(uploadError, "public/avatars");
+   },
+   filename: function (req, file, cb) {
+      const fileName = file.originalname.split(" ").join("-");
+      const extension = FILE_TYPE_MAP[file.mimetype];
+      cb(null, `${fileName}-${Date.now()}.${extension}`);
+   },
+});
+
+const uploadOptions = multer({ storage: storage });
 
 const authErrors = (err) => {
    console.log(err.message, err.code);
@@ -18,6 +42,11 @@ const authErrors = (err) => {
       return errors;
    }
    if (err.message.includes("User validation failed")) {
+      Object.values(err.errors).forEach(({ properties }) => {
+         errors[properties.path] = properties.message;
+      });
+   }
+   if (err.message.includes("Validation failed")) {
       Object.values(err.errors).forEach(({ properties }) => {
          errors[properties.path] = properties.message;
       });
@@ -52,16 +81,13 @@ router.get(`/`, async (req, res) => {
 router.post("/", async (req, res) => {
    let user = new User({
       name: req.body.name,
+      surname: req.body.surname,
       email: req.body.email,
       password: req.body.password,
       isAdmin: req.body.isAdmin,
       phone: req.body.phone,
+      extraPhone: req.body.extraPhone,
       image: req.body.image,
-      street: req.body.street,
-      apartment: req.body.apartment,
-      city: req.body.city,
-      zip: req.body.zip,
-      country: req.body.country,
    });
 
    user = await user.save();
@@ -94,9 +120,7 @@ router.get("/get/user", async (req, res) => {
          }
          currentUser = decoded;
       });
-      const user = await User.findById(currentUser.userId).select(
-         "-passwordHash"
-      );
+      const user = await User.findById(currentUser.userId).select("-password");
 
       if (!user) {
          res.status(500).json({
@@ -144,20 +168,17 @@ router.post("/register", async (req, res) => {
    try {
       let user = new User({
          name: req.body.name,
+         surname: req.body.surname,
          email: req.body.email,
          password: req.body.password,
          isAdmin: req.body.isAdmin,
          phone: req.body.phone,
+         extraPhone: req.body.extraPhone,
          image: req.body.image,
-         street: req.body.street,
-         apartment: req.body.apartment,
-         city: req.body.city,
-         zip: req.body.zip,
-         country: req.body.country,
       });
-
+      console.log("1", user);
       user = await user.save();
-
+      console.log(user);
       if (!user) {
          return res.status(404).send("the user cannot be created!");
       }
@@ -172,35 +193,117 @@ router.post("/register", async (req, res) => {
 });
 
 router.put("/:id", async (req, res) => {
-   const userExist = await User.findById(req.params.id);
-   let newPassword;
-   if (req.body.password) {
-      newPassword = bcrypt.hashSync(req.body.password, 10);
-   } else {
-      newPassword = userExist.passwordHash;
+   try {
+      const userExist = await User.findById(req.params.id);
+      let newPassword;
+      if (!userExist)
+         return res
+            .status(404)
+            .send("the user cannot be updated because user id is wrong!");
+
+      if (req.body.password) {
+         if (bcrypt.compareSync(req.body.password, userExist.password)) {
+            if (req.body.newPassword.length < 6) {
+               return res.status(400).json({
+                  password:
+                     "the password length must be at least 6 characters!",
+               });
+            } else {
+               newPassword = req.body.newPassword;
+            }
+         } else {
+            return res.status(400).json({ error: "the password is wrong!" });
+         }
+         console.log(newPassword);
+
+         const user = await User.findOneAndUpdate(
+            { _id: req.params.id },
+            {
+               name: req.body.name,
+               surname: req.body.surname,
+               email: req.body.email,
+               password: newPassword,
+               isAdmin: req.body.isAdmin,
+               phone: req.body.phone,
+               extraPhone: req.body.extraPhone,
+            },
+            {
+               new: true,
+               runValidators: true,
+            }
+         ).select("-password");
+
+         if (!user) return res.status(400).send("the user cannot be updated!");
+
+         res.send({ user });
+      } else {
+         const user = await User.findOneAndUpdate(
+            { _id: req.params.id },
+            {
+               name: req.body.name,
+               surname: req.body.surname,
+               email: req.body.email,
+               isAdmin: req.body.isAdmin,
+               phone: req.body.phone,
+               extraPhone: req.body.extraPhone,
+            },
+            {
+               new: true,
+               runValidators: true,
+            }
+         ).select("-password");
+
+         if (!user) return res.status(400).send("the user cannot be updated!");
+
+         res.send({ user });
+      }
+   } catch (error) {
+      console.log(error);
+      const errors = authErrors(error);
+      console.log(errors);
+      res.status(500).json(errors);
    }
+});
 
-   const user = await User.findByIdAndUpdate(
-      req.params.id,
-      {
-         name: req.body.name,
-         email: req.body.email,
-         passwordHash: newPassword,
-         isAdmin: req.body.isAdmin,
-         phone: req.body.phone,
-         image: req.body.image,
-         street: req.body.street,
-         apartment: req.body.apartment,
-         city: req.body.city,
-         zip: req.body.zip,
-         country: req.body.country,
-      },
-      { new: true }
-   );
+router.put("/avatar/:id", uploadOptions.single("avatar"), async (req, res) => {
+   try {
+      console.log(req.body, req.file);
+      const userExist = await User.findById(req.params.id);
+      if (!userExist)
+         return res
+            .status(404)
+            .send(
+               "the user avatar cannot be updated because user id is wrong!"
+            );
+      //----------------------------------------
+      //verify file exist or not
+      const file = req.file;
+      if (!file) return res.status(400).send("no image in the request");
 
-   if (!user) return res.status(400).send("the user cannot be created!");
+      const basePath = `${req.protocol}://${req.get("host")}/public/avatars/`;
+      const fileName = req.file.filename;
+      //---------------------------------
 
-   res.send(user);
+      const user = await User.findOneAndUpdate(
+         { _id: req.params.id },
+         {
+            image: `${basePath}${fileName}`,
+         },
+         {
+            new: true,
+         }
+      ).select("-password");
+
+      if (!user)
+         return res.status(400).send("the user avatar cannot be updated!");
+
+      res.send({ user });
+   } catch (error) {
+      console.log(error);
+      const errors = authErrors(error);
+      console.log(errors);
+      res.status(500).json(errors);
+   }
 });
 
 router.delete("/:id", (req, res) => {

@@ -12,6 +12,8 @@ const productsRouter = require("./routers/products");
 const categoriesRouter = require("./routers/categories");
 const usersRouter = require("./routers/users");
 const ordersRouter = require("./routers/orders");
+const reviewsRouter = require("./routers/reviews");
+const reservationRouter = require("./router/reservations");
 const { authJwt } = require("./helpers/jwt");
 const errorHandler = require("./helpers/error-handler");
 
@@ -22,6 +24,7 @@ app.options("*", cors());
 app.use(bodyParser.json());
 app.use(morgan("tiny"));
 app.use(authJwt());
+app.use("/public", express.static(__dirname + "/public"));
 app.use(errorHandler);
 
 //*TODO:routers
@@ -29,6 +32,8 @@ app.use(`${api}/products`, productsRouter);
 app.use(`${api}/categories`, categoriesRouter);
 app.use(`${api}/users`, usersRouter);
 app.use(`${api}/orders`, ordersRouter);
+app.use(`${api}/reviews`, reviewsRouter);
+app.use(`${api}/reservations`, reservationRouter);
 
 mongoose
    .connect(process.env.CONNECTING_STRING)

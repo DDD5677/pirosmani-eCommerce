@@ -27,16 +27,13 @@
 				changePage:'product/changePage',
 				toggleDropdown:'navbar/toggleDropdown',
 				showNavbarHandler:'navbar/showNavbarHandler',
-				//assignCurrenCategory:'product/assignCurrentCategory'
 			}),
 			categoryHandler(item){
 				this.$store.dispatch('product/getProductByCategory',{
 					page:1,
 					id:item._id
 				})
-				console.log(item._id)
 				this.changePage(1)
-				//this.changeCategory(item._id);
 				this.$router.push({ path: "/products", query: { categories: item._id, page:1} });
 				window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
 				this.toggleDropdown(false);

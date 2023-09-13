@@ -8,7 +8,6 @@
 </template>
 
 <script>
-import { computed } from 'vue';
 
 	export default {
 		name:'product-rating',

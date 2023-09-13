@@ -6,35 +6,9 @@ export const authModule = {
       isLoading: true,
       user: null,
       errors: null,
-      showModal: false,
-      signUp: false,
-      signIn: true,
-      forgotPassword: false,
       isLogged: null,
    }),
    mutations: {
-      toggleModal(state, showModal) {
-         state.showModal = showModal;
-         state.signIn = true;
-         state.signUp = false;
-         state.forgotPassword = false;
-      },
-      toggleSignUp(state) {
-         state.signIn = false;
-         state.signUp = true;
-         state.forgotPassword = false;
-      },
-      toggleSignIn(state) {
-         console.log("ok google");
-         state.signIn = true;
-         state.signUp = false;
-         state.forgotPassword = false;
-      },
-      toggleForgotPassword(state) {
-         state.signIn = false;
-         state.signUp = false;
-         state.forgotPassword = true;
-      },
       addOrder(state, product) {
          state.user.user.orders.push(product);
       },
@@ -66,6 +40,18 @@ export const authModule = {
          state.isLoading = false;
          state.errors = payload;
          state.isLogged = false;
+      },
+      updateStart(state) {
+         state.isLoading = true;
+         state.errors = null;
+      },
+      updateSuccess(state, payload) {
+         state.isLoading = false;
+         state.user = payload;
+      },
+      updateFailure(state, payload) {
+         state.isLoading = false;
+         state.errors = payload;
       },
    },
    actions: {
@@ -111,6 +97,34 @@ export const authModule = {
                .catch((error) => {
                   console.log("error refresh", error);
                   context.commit("loginFailure", error.response.data);
+               });
+         });
+      },
+      updateUserInfo(context, updateUser) {
+         return new Promise((resolve, reject) => {
+            context.commit("updateStart");
+            AuthService.updateUserInfo(updateUser)
+               .then((response) => {
+                  console.log("update", response.data);
+                  context.commit("updateSuccess", response.data);
+               })
+               .catch((error) => {
+                  console.log("error update", error);
+                  context.commit("updateFailure", error.response.data);
+               });
+         });
+      },
+      updateUserAvatar(context, data) {
+         return new Promise((resolve, reject) => {
+            context.commit("updateStart");
+            AuthService.updateUserAvatar(data)
+               .then((response) => {
+                  console.log("update avatar", response.data);
+                  context.commit("updateSuccess", response.data);
+               })
+               .catch((error) => {
+                  console.log("error update", error);
+                  context.commit("updateFailure", error.response.data);
                });
          });
       },

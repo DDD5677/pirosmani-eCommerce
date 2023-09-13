@@ -7,6 +7,9 @@ import VacationView from "../views/VacationView.vue";
 import SupportView from "../views/SupportView.vue";
 import ProductByIdView from "../views/ProductByIdView.vue";
 import notFoundView from "../views/notFoundView.vue";
+import BasketView from "../views/BasketView.vue";
+import BasketFormView from "../views/BasketFormView.vue";
+import PersonalView from "../views/PersonalView.vue";
 
 const routes = [
    {
@@ -43,6 +46,21 @@ const routes = [
       path: "/product/:id",
       name: "product",
       component: ProductByIdView,
+   },
+   {
+      path: "/basket",
+      name: "basket",
+      component: BasketView,
+   },
+   {
+      path: "/basket-form",
+      name: "basketForm",
+      component: BasketFormView,
+   },
+   {
+      path: "/personal",
+      name: "personal",
+      component: PersonalView,
    },
    {
       path: "/:pathMatch(.*)*",

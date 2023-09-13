@@ -20,6 +20,17 @@ import SignUp from "@/components/SignUp";
 import SignIn from "@/components/SignIn";
 import ForgotPassword from "@/components/ForgotPassword";
 import ModalLayout from "@/components/Layout/ModalLayout.vue";
+import Basket from "@/components/Basket.vue";
+import BasketProduct from "@/components/BasketProduct";
+import BasketTab from "@/components/UI/BasketTab";
+import BasketForm from "@/components/BasketForm";
+import FormInput from "@/components/UI/FormInput";
+import PersonalInfo from "@/components/PersonalInfo";
+import HistoryOrders from "@/components/HistoryOrders";
+import AddReviews from "@/components/AddReviews";
+import BookingTable from "@/components/BookingTable";
+import UploadImgModal from "@/components/UI/UploadImgModal";
+
 export default [
    NavbarHeader,
    DropdownMenu,
@@ -43,4 +54,14 @@ export default [
    ForgotPassword,
    error,
    Loading,
+   Basket,
+   BasketProduct,
+   BasketTab,
+   BasketForm,
+   FormInput,
+   PersonalInfo,
+   HistoryOrders,
+   UploadImgModal,
+   AddReviews,
+   BookingTable,
 ];

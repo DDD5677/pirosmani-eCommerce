@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema({
       type: String,
       required: [true, "Please enter a phone"],
    },
+   extraPhone: {
+      type: String,
+      default: "",
+   },
    isAdmin: {
       type: Boolean,
       default: false,
@@ -32,29 +36,9 @@ const userSchema = new mongoose.Schema({
       type: String,
       default: "",
    },
-   street: {
+   surname: {
       type: String,
       default: "",
-   },
-   apartment: {
-      type: String,
-      default: "",
-   },
-   city: {
-      type: String,
-      default: "",
-   },
-   zip: {
-      type: String,
-      default: "",
-   },
-   country: {
-      type: String,
-      default: "",
-   },
-   orders: {
-      type: Array,
-      default: [],
    },
 });
 //user before saving
@@ -64,7 +48,16 @@ userSchema.pre("save", async function (next) {
    this.password = bcrypt.hashSync(this.password, salt);
    next();
 });
-
+userSchema.pre("findOneAndUpdate", async function (next) {
+   if (!this._update.password) {
+      next();
+   } else {
+      const salt = await bcrypt.genSalt();
+      console.log("update is working", salt, this._update.password);
+      this._update.password = bcrypt.hashSync(this._update.password, salt);
+      next();
+   }
+});
 userSchema.virtual("id").get(function () {
    return this._id.toHexString();
 });

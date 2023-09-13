@@ -18,7 +18,6 @@ import CategoryService from "@/server/categoryAPI.js";
 
 export const productModule = {
    state: () => ({
-      //data
       page: 1,
       limit: null,
       pageSize: null,
@@ -27,88 +26,7 @@ export const productModule = {
       categories: [],
       isLoading: true,
       errors: null,
-      // categories: [
-      //    {
-      //       id: 1,
-      //       title: "Лучшая еда",
-      //       icon: icon_1,
-      //       category: "best-foods",
-      //    },
-      //    {
-      //       id: 2,
-      //       title: "Гамбургер",
-      //       icon: icon_2,
-      //       category: "burgers",
-      //    },
-      //    {
-      //       id: 3,
-      //       title: "Пицца",
-      //       icon: icon_3,
-      //       category: "pizzas",
-      //    },
-      //    {
-      //       id: 4,
-      //       title: "Бутерброд",
-      //       icon: icon_4,
-      //       category: "sandwiches",
-      //    },
-      //    {
-      //       id: 5,
-      //       title: "Барбекю",
-      //       icon: icon_5,
-      //       category: "bbqs",
-      //    },
-      //    {
-      //       id: 6,
-      //       title: "Стейк",
-      //       icon: icon_6,
-      //       category: "steaks",
-      //    },
-      //    {
-      //       id: 7,
-      //       title: "Сосиска",
-      //       icon: icon_7,
-      //       category: "sausages",
-      //    },
-      //    {
-      //       id: 8,
-      //       title: "Жареный цыпленок",
-      //       icon: icon_8,
-      //       category: "fried-chicken",
-      //    },
-      //    {
-      //       id: 9,
-      //       title: "Хлеб",
-      //       icon: icon_9,
-      //       category: "breads",
-      //    },
-      //    {
-      //       id: 10,
-      //       title: "Десерт",
-      //       icon: icon_10,
-      //       category: "desserts",
-      //    },
-      //    {
-      //       id: 11,
-      //       title: "Мороженое",
-      //       icon: icon_11,
-      //       category: "ice-cream",
-      //    },
-      //    {
-      //       id: 12,
-      //       title: "Шоколад",
-      //       icon: icon_12,
-      //       category: "chocolates",
-      //    },
-      //    {
-      //       id: 13,
-      //       title: "Напитки",
-      //       icon: icon_13,
-      //       category: "drinks",
-      //    },
-      // ],
    }),
-   getters: {},
    mutations: {
       changePage(state, page) {
          state.page = page;
