@@ -50,13 +50,23 @@ export const orderModule = {
       },
       getOrderStart(state) {
          state.isLoading = true;
-         //state.product = null;
          state.errors = null;
       },
       getOrderSuccess(state) {
          state.isLoading = false;
       },
       getOrderFailure(state, payload) {
+         state.isLoading = false;
+         state.errors = payload;
+      },
+      postReservationStart(state) {
+         state.isLoading = true;
+         state.errors = null;
+      },
+      postReservationSuccess(state) {
+         state.isLoading = false;
+      },
+      postReservationFailure(state, payload) {
          state.isLoading = false;
          state.errors = payload;
       },
@@ -98,6 +108,19 @@ export const orderModule = {
                })
                .catch((error) => {
                   context.commit("getOrderFailure", error.response.data);
+               });
+         });
+      },
+      postReservation(context, data) {
+         return new Promise((resolve) => {
+            context.commit("postReservationStart");
+            OrderService.postReservation(data)
+               .then((response) => {
+                  context.commit("postReservationSuccess");
+                  resolve(response.data);
+               })
+               .catch((error) => {
+                  context.commit("postReservationFailure", error.response.data);
                });
          });
       },

@@ -78,7 +78,7 @@ import { mapMutations, mapState } from 'vuex';
 		},
 		methods:{
 			...mapMutations({
-				toggleSignIn:'modal/toggleSignIn'
+				toggleSignIn:'navbar/toggleSignIn'
 			}),
 			submitHandler(){
 				const data={
@@ -88,7 +88,9 @@ import { mapMutations, mapState } from 'vuex';
 					password:this.password
 				}
 			
-				this.$store.dispatch('auth/register',data);
+				this.$store.dispatch('auth/register',data).then((res)=>{
+					this.toggleSignIn()
+				});
 			}
 		}
 		

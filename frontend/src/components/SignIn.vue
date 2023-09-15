@@ -16,7 +16,7 @@
 					v-model="password"
 				/>
 				<span class="error__text active"
-					>{{ errors }}</span
+					>{{ errors?errors.auth:'' }}</span
 				>
 				<div class="forgot__password">
 					<a

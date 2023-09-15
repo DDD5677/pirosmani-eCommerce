@@ -48,6 +48,8 @@
          color: #000000;
 			background-color: #ececf670;
          border: 2px solid #ececf670;
+			
+			border-radius: 5px;
 			display: flex;
 			flex-direction: column;
 			justify-content: space-between;

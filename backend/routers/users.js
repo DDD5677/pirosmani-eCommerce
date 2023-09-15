@@ -164,7 +164,7 @@ router.post("/login", async (req, res) => {
    }
 });
 
-router.post("/register", async (req, res) => {
+router.post("/register", async (req, res, next) => {
    try {
       let user = new User({
          name: req.body.name,
@@ -185,14 +185,11 @@ router.post("/register", async (req, res) => {
 
       res.status(200).send(user);
    } catch (error) {
-      console.log(error);
-      const errors = authErrors(error);
-      console.log(errors);
-      res.status(500).json(errors);
+      next(error);
    }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", async (req, res, next) => {
    try {
       const userExist = await User.findById(req.params.id);
       let newPassword;
@@ -258,53 +255,57 @@ router.put("/:id", async (req, res) => {
          res.send({ user });
       }
    } catch (error) {
-      console.log(error);
-      const errors = authErrors(error);
-      console.log(errors);
-      res.status(500).json(errors);
+      next(error);
    }
 });
 
-router.put("/avatar/:id", uploadOptions.single("avatar"), async (req, res) => {
-   try {
-      console.log(req.body, req.file);
-      const userExist = await User.findById(req.params.id);
-      if (!userExist)
-         return res
-            .status(404)
-            .send(
-               "the user avatar cannot be updated because user id is wrong!"
-            );
-      //----------------------------------------
-      //verify file exist or not
-      const file = req.file;
-      if (!file) return res.status(400).send("no image in the request");
+router.put(
+   "/avatar/:id",
+   uploadOptions.single("avatar"),
+   async (req, res, next) => {
+      try {
+         console.log(req.body, req.file);
+         const userExist = await User.findById(req.params.id);
+         if (!userExist)
+            return res
+               .status(404)
+               .send(
+                  "the user avatar cannot be updated because user id is wrong!"
+               );
+         //----------------------------------------
+         //verify file exist or not
+         const file = req.file;
+         if (!file) return res.status(400).send("no image in the request");
 
-      const basePath = `${req.protocol}://${req.get("host")}/public/avatars/`;
-      const fileName = req.file.filename;
-      //---------------------------------
+         const basePath = `${req.protocol}://${req.get(
+            "host"
+         )}/public/avatars/`;
+         const fileName = req.file.filename;
+         //---------------------------------
 
-      const user = await User.findOneAndUpdate(
-         { _id: req.params.id },
-         {
-            image: `${basePath}${fileName}`,
-         },
-         {
-            new: true,
-         }
-      ).select("-password");
+         const user = await User.findOneAndUpdate(
+            { _id: req.params.id },
+            {
+               image: `${basePath}${fileName}`,
+            },
+            {
+               new: true,
+            }
+         ).select("-password");
 
-      if (!user)
-         return res.status(400).send("the user avatar cannot be updated!");
+         if (!user)
+            return res.status(400).send("the user avatar cannot be updated!");
 
-      res.send({ user });
-   } catch (error) {
-      console.log(error);
-      const errors = authErrors(error);
-      console.log(errors);
-      res.status(500).json(errors);
+         res.send({ user });
+      } catch (error) {
+         next(error);
+         // console.log(error);
+         // const errors = authErrors(error);
+         // console.log(errors);
+         // res.status(500).json(errors);
+      }
    }
-});
+);
 
 router.delete("/:id", (req, res) => {
    User.findByIdAndRemove(req.params.id)

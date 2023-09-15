@@ -2,7 +2,7 @@
 	<div class="page">
 		<div class="container">
 			<h1>Error</h1>
-			<p>{{ error.response.data.message }}</p>
+			<p>{{ error}}</p>
 		</div>
 	</div>
 </template>

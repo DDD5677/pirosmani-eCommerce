@@ -4,31 +4,73 @@
 			Бронирование стола
 		</h5>
 		<form action="">
-			<input class="name" type="text" placeholder="Имя" />
-			<input type="tel" placeholder="+998" />
-			<input type="number" placeholder="Количество человек" />
+			<input class="name" type="text" placeholder="Имя" v-model="name"/>
+			<input type="tel" placeholder="+998" v-model="phone"/>
+			<input type="number" placeholder="Количество человек" min="1" v-model="numOfPeople" />
 			<input
 				type="time"
 				data-placeholder="Время: _ _ : _ _"
 				required
+				v-model="time"
 			/>
 			<input
 				type="date"
 				data-placeholder="Дата:  дд.мм.гг"
 				required
+				v-model="date"
+				name="trip-start"
 			/>
 			
 		</form>
 	</div>
 	<div class="modal__footer">
-		<green-btn href="" class="green__btn">Забронировать</green-btn>
+		<green-btn @click.prevent="postReservationHandler" href="" class="green__btn">Забронировать</green-btn>
 	</div>
 			
 </template>
 
 <script>
+import { mapState,mapMutations } from 'vuex'
 	export default {
 		name:'book-table',
+		data(){
+			return{
+				name:'',
+				phone:'',
+				time:'',
+				date:'',
+				numOfPeople:null
+			}
+		},
+		computed:{
+			...mapState({
+				user:state=>state.auth.user.user,
+			})
+		},
+		methods:{
+			...mapMutations({
+				toggleModal:'navbar/toggleModal',
+			}),
+			postReservationHandler(){
+				const data = {
+					user:this.user.id,
+					name:this.name,
+					phone:this.phone,
+					time:this.time,
+					date:this.date,
+					numOfPeople:this.numOfPeople
+				}
+
+				this.$store.dispatch('order/postReservation',data).then((res)=>{
+					// this.name='';
+					// this.phone='';
+					// this.date='',
+					// this.time='',
+					// this.numOfPeople=null;
+					this.toggleModal(false)
+				})
+			}
+		}
 	}
 </script>
 

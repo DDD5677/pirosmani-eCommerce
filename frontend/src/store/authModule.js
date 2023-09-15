@@ -56,12 +56,12 @@ export const authModule = {
    },
    actions: {
       register(context, user) {
-         return new Promise(() => {
+         return new Promise((resolve) => {
             context.commit("registerStart");
             AuthService.register(user)
                .then((response) => {
                   context.commit("registerSuccess", response.data);
-                  context.commit("toggleSignIn");
+                  resolve();
                })
                .catch((error) => {
                   context.commit("registerFailure", error.response.data);
@@ -76,8 +76,8 @@ export const authModule = {
                   console.log("login response", response);
                   setItem("token", response.data.token);
                   context.commit("loginSuccess", response.data);
-                  context.commit("toggleModal");
                   window.location.reload();
+                  resolve();
                })
                .catch((error) => {
                   console.log("error login", error);

@@ -64,14 +64,23 @@ import img1 from '@/assets/images/home__banner-bg.png';
 				]
 			}
 	 	},
+		computed:{
+			...mapState({
+				isLogged:state=>state.auth.isLogged,
+			})
+		},
 		methods:{
 			...mapMutations({
 				toggleModal:'navbar/toggleModal',
 				toggleBookTable:'navbar/toggleBookTable'
 			}),
 			toggleBookTableHandler(){
+				if(this.isLogged){
 				this.toggleModal(true)
 				this.toggleBookTable()
+			}else{
+					alert('Please log in!')
+				}
 			},
 			
 		},

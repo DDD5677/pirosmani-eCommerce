@@ -7,6 +7,9 @@ const OrderService = {
    getOrdersByUserId(userid) {
       return axios.get(`/orders/get/userorders/${userid}`);
    },
+   postReservation(data) {
+      return axios.post("/reservations", data);
+   },
 };
 
 export default OrderService;

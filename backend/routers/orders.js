@@ -3,22 +3,22 @@ const router = express.Router();
 const Order = require("../models/order");
 const OrderItem = require("../models/order-items");
 
-const orderErrors = (err) => {
-   console.log(err.message, err.code);
-   let errors = {
-      name: "",
-      shippingAdress1: "",
-      city: "",
-      phone: "",
-   };
-   if (err.message.includes("Order validation failed")) {
-      Object.values(err.errors).forEach(({ properties }) => {
-         errors[properties.path] = properties.message;
-      });
-   }
+// const orderErrors = (err) => {
+//    console.log(err.message, err.code);
+//    let errors = {
+//       name: "",
+//       shippingAdress1: "",
+//       city: "",
+//       phone: "",
+//    };
+//    if (err.message.includes("Order validation failed")) {
+//       Object.values(err.errors).forEach(({ properties }) => {
+//          errors[properties.path] = properties.message;
+//       });
+//    }
 
-   return errors;
-};
+//    return errors;
+// };
 
 router.get(`/`, async (req, res) => {
    const orderList = await Order.find({})
@@ -33,23 +33,27 @@ router.get(`/`, async (req, res) => {
    res.send(orderList);
 });
 
-router.get(`/:id`, async (req, res) => {
-   const order = await Order.findById(req.params.id)
-      .populate("user", "name")
-      .populate({
-         path: "orderItems",
-         populate: { path: "product", populate: "category" },
-      });
+router.get(`/:id`, async (req, res, next) => {
+   try {
+      const order = await Order.findById(req.params.id)
+         .populate("user", "name")
+         .populate({
+            path: "orderItems",
+            populate: { path: "product", populate: "category" },
+         });
 
-   if (!order) {
-      res.status(500).json({
-         success: false,
-      });
+      if (!order) {
+         res.status(500).json({
+            success: false,
+         });
+      }
+      res.send(order);
+   } catch (error) {
+      next(error);
    }
-   res.send(order);
 });
 
-router.post("/", async (req, res) => {
+router.post("/", async (req, res, next) => {
    try {
       if (req.body.orderItems.length === 0) {
          return res.status(404).json({ orderItems: "the basket is empty!" });
@@ -101,10 +105,11 @@ router.post("/", async (req, res) => {
 
       res.send(order);
    } catch (error) {
-      console.log(error);
-      const errors = orderErrors(error);
-      console.log(errors);
-      res.status(500).json(errors);
+      next(error);
+      // console.log(error);
+      // const errors = orderErrors(error);
+      // console.log(errors);
+      // res.status(500).json(errors);
    }
 });
 
@@ -169,7 +174,7 @@ router.get(`/get/count`, async (req, res) => {
    });
 });
 
-router.get(`/get/userorders/:userid`, async (req, res) => {
+router.get(`/get/userorders/:userid`, async (req, res, next) => {
    try {
       const userOrderList = await Order.find({ user: req.params.userid })
          .populate({
@@ -185,7 +190,7 @@ router.get(`/get/userorders/:userid`, async (req, res) => {
       }
       res.send(userOrderList);
    } catch (error) {
-      return res.status(400).json({ success: false, error: error });
+      next(error);
    }
 });
 

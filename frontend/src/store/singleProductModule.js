@@ -55,12 +55,11 @@ export const singleProductModule = {
          return new Promise(() => {
             context.commit("productStart");
             ProductSevice.getProductById(payload)
-               .then((responce) => {
-                  context.commit("productSuccess", responce.data);
+               .then((response) => {
+                  context.commit("productSuccess", response.data);
                })
-               .catch((err) => {
-                  context.commit("productFailure", err);
-                  console.log(err);
+               .catch((error) => {
+                  context.commit("productFailure", error.response.data);
                });
          });
       },
@@ -69,12 +68,12 @@ export const singleProductModule = {
          return new Promise((resolve) => {
             context.commit("reviewsStart");
             ProductSevice.postReviews(data)
-               .then((responce) => {
+               .then((response) => {
                   context.commit("reviewsSuccess");
                   resolve();
                })
-               .catch((err) => {
-                  context.commit("reviewsFailure", err);
+               .catch((error) => {
+                  context.commit("reviewsFailure", error.response.data);
                });
          });
       },
@@ -82,11 +81,11 @@ export const singleProductModule = {
          return new Promise(() => {
             context.commit("getReviewsStart");
             ProductSevice.getReviewsByUserId(data)
-               .then((responce) => {
-                  context.commit("getReviewsSuccess", responce.data);
+               .then((response) => {
+                  context.commit("getReviewsSuccess", response.data);
                })
-               .catch((err) => {
-                  context.commit("getReviewsFailure", err);
+               .catch((error) => {
+                  context.commit("getReviewsFailure", error.response.data);
                });
          });
       },

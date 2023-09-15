@@ -4,7 +4,7 @@
 			<h2 class="title">Персональная информация</h2>
 			<div class="top">
 				<div class="img-box">
-					<a href="">
+					<a :href="user.image">
 						<img
 							:src="user.image"
 							alt=""
@@ -73,6 +73,8 @@
 					:label="'Ваш старый пароль'" 
 					:type="'password'" 
 					:placeholder="'Старый пароль'"
+					:errors="errors" 
+					:error="errors?errors.error:''"
 					v-model="password"/>
 
 					<form-input 
@@ -122,8 +124,6 @@ import { removeItem } from "@/helpers/localStorage";
 		},
 		methods:{
 			...mapMutations({
-				// toggleModal:'auth/toggleModal',
-				// toggleUploadImg:'auth/toggleUploadImg'
 			}),
 			assignUserData(user){
 				this.name=user.name;

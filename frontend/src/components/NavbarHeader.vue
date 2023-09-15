@@ -151,8 +151,12 @@ import { mapState,mapMutations } from 'vuex';
 				this.toggleSignIn()
 			},
 			toggleBookTableHandler(){
+				if(this.isLogged){
 				this.toggleModal(true)
 				this.toggleBookTable()
+			}else{
+					alert('Please log in!')
+				}
 			},
 			scrollTop(){
 				window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -207,6 +211,7 @@ import { mapState,mapMutations } from 'vuex';
 		align-items: center;
 	}
    .nav-item {
+		cursor: pointer;
       img {
          display: none;
       }
@@ -299,6 +304,7 @@ import { mapState,mapMutations } from 'vuex';
 			}
 		}
       .user {
+			cursor: pointer;
          margin-right: 30px;
 			@media(max-width:1080px){
 				margin-right: 20px;

@@ -89,7 +89,7 @@ router.get(`/`, async (req, res) => {
    }
 });
 
-router.get(`/:id`, async (req, res) => {
+router.get(`/:id`, async (req, res, next) => {
    try {
       if (!mongoose.isValidObjectId(req.params.id)) {
          return res.status(400).json({
@@ -108,10 +108,7 @@ router.get(`/:id`, async (req, res) => {
       }
       res.send(product);
    } catch (error) {
-      res.status(500).json({
-         success: false,
-         error: error,
-      });
+      next(error);
    }
 });
 
