@@ -1,4 +1,15 @@
 <template>
+	<div class="pagination__wrapper">
+		<div>
+			<span>Rows per page:</span>
+			<select name="" id="" v-model="limit">
+				<option value="5">5</option>
+				<option value="10">10</option>
+				<option value="15">15</option>
+				<option value="20">20</option>
+				<option value="30">30</option>
+			</select>
+		</div>
 	<ul class="pagination">
 		<li v-for="pageNum in pageSize" class="page-item" @click.prevent.stop="changePageData(pageNum)">
 			<a class="page-link" :class="{'active':pageNum===page}" href="#">{{ pageNum }}</a>
@@ -10,6 +21,7 @@
 			/></a>
 		</li>
 	</ul>
+	</div>
 </template>
 
 <script>
@@ -17,23 +29,31 @@ import {mapState, mapGetters, mapMutations} from 'vuex';
 
 	export default {
 		name:"pagination",
+		data(){
+			return{
+				limit:this.$route.query.limit,
+			}
+		},
 		computed:{
 			...mapState({
 			page:state=>state.user.page,
+			limit:state=>state.user.limit,
 			pageSize:state=>state.user.pageSize,
 			})
 		},
 		methods:{
 			...mapMutations({
-				changePage:'user/changePage'
+				changePage:'user/changePage',
+				changeLimit:'user/changeLimit'
 			}),
 			changePageData(page){
 				this.changePage(page);
 				this.$store.dispatch('user/getUsers',{
-					page:page
+					page:page,
+					limit:this.$route.query.limit
 				})
 				
-				this.$router.push({ path: "/users", query: { page:page } });
+				this.$router.push({ path: "/users", query: { page:page,limit:this.$route.query.limit } });
 				
 				window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
 			},
@@ -45,14 +65,35 @@ import {mapState, mapGetters, mapMutations} from 'vuex';
 				
 			}
 		},
+		watch:{
+			limit(newlimit,oldlimit) {
+				this.changePage(1);
+				//	console.log(newlimit,oldlimit)
+				this.changeLimit(newlimit);
+				this.$store.dispatch('user/getUsers',{page:this.page,limit:newlimit})
+				this.$router.push({ path: "/users", query: { page:this.page,limit:newlimit} });
+				
+			}
+		}
 		
 	}
 </script>
 
 <style lang="scss" scoped>
+	.pagination__wrapper{
+		display: flex;
+		align-items: center;
+		justify-content: end;
+		select{
+			display: inline-block;
+			margin:0 15px;
+			padding: 5px;
+			background-color: $light-color;
+			cursor: pointer;
+		}
+	}
 	.pagination {
 		display: flex;
-      margin-top: -14px;
       justify-content: center;
 
       --bs-pagination-focus-box-shadow: 0;

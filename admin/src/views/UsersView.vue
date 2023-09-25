@@ -74,14 +74,15 @@
 						</tbody>
 					</table>
 				</div>
-				<pagination/>
 			</div>
+			<pagination/>
 		</div>
+		
 	</section>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState,mapMutations } from 'vuex';
 	export default {
 		data(){
 			return{
@@ -105,6 +106,9 @@ import { mapState } from 'vuex';
 			}),
 		},
 		methods:{
+			// ...mapMutations({
+				
+			// }),
 			toggleColumns(){
 				this.columns=!this.columns
 			},
@@ -141,7 +145,9 @@ import { mapState } from 'vuex';
 			}
 		},
 		mounted(){
-			this.$store.dispatch('user/getUsers',{page:this.$route.query.page})
+			console.log("userview mounted")
+			this.$store.dispatch('user/getUsers',{page:this.$route.query.page,limit:this.$route.query.limit})
+			
 		}
 	}
 </script>

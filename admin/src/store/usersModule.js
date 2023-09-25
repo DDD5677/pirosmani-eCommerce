@@ -10,6 +10,9 @@ export const usersModule = {
       errors: null,
    }),
    mutations: {
+      changeLimit(state, limit) {
+         state.limit = limit;
+      },
       changePage(state, page) {
          state.page = page;
       },
@@ -36,7 +39,7 @@ export const usersModule = {
             context.commit("getUserStart");
             UserService.getUsers(payload)
                .then((res) => {
-                  console.log(res);
+                  //console.log(res);
                   context.commit("getUserSuccess", res.data);
                })
                .catch((error) => {

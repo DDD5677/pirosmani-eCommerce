@@ -14,7 +14,7 @@
 					<ul class="nav-menu">
 						
 						<li><a href="" class="nav-link">Products</a></li>
-						<li><router-link :to="{name:'users',query:{page:1}}" class="nav-link">Users</router-link></li>
+						<li><router-link :to="{name:'users',query:{page:1,limit:limit}}" class="nav-link">Users</router-link></li>
 						<li><a href="" class="nav-link">Orders</a></li>
 						<li><a href="" class="nav-link">Category</a></li>
 						<li><a href="" class="nav-link">Reviews</a></li>
@@ -40,7 +40,8 @@ import { mapState } from 'vuex';
 		computed:{
 			...mapState({
 				user:state=>state.auth.user,
-				isLoading:state=>state.auth.isLoading
+				isLoading:state=>state.auth.isLoading,
+				limit:state=>state.user.limit
 			})
 		}
 	}

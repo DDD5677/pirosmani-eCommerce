@@ -5,6 +5,7 @@ const UserService = {
       return axios.get("/users", {
          params: {
             page: payload.page,
+            limit: payload.limit,
          },
       });
    },
