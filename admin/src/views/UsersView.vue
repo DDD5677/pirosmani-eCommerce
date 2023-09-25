@@ -18,16 +18,17 @@
 						<ul v-show="columns" class="columns">
 								<li v-for="(option,index) in options" class="options">
 									<label @click="addOptions(index)" :for="'option-'+index">
-										<input  type="checkbox" ref="option" :id="'option-'+index">
-										<span class="shortline" ref="shortline">
+										<input checked type="checkbox" ref="option" :id="'option-'+index">
+										<span class="shortline" :class="{'checked':option.show}" ref="shortline">
 											<span class="circle"></span>
 										</span>
 									
-									{{ option }}
+									{{ option.title }}
 									</label>
 								</li>
 						</ul>
-						<button class="btn"><i class="fa fa-filter" aria-hidden="true"></i>Add Filter</button>
+						<button class="btn"><i class="fa fa-plus" aria-hidden="true"></i>Create</button>
+						
 						<button class="btn"><i class="fa fa-download" aria-hidden="true"></i>Export</button>
 					</div>
 				</div>
@@ -39,11 +40,11 @@
 									<span></span>
 									<input class="checkbox" ref="foomain" @click="toggle()" type="checkbox">
 								</th>
-								<th>Avatar</th>
-								<th>Customers</th>
-								<th>Phone</th>
-								<th>Orders</th>
-								<th>Total spent</th>
+								<th v-if="options[0].show">Avatar</th>
+								<th v-if="options[1].show">Customers</th>
+								<th v-if="options[2].show">Phone</th>
+								<th v-if="options[3].show">Email</th>
+								<th v-if="options[4].show">Total spent</th>
 							</tr>
 							<div v-if="checked>0" class="checked__block">
 								<div>
@@ -63,13 +64,13 @@
 									<span></span>
 									<input class="checkbox" ref="foo" @click="addChecked" type="checkbox">
 								</td>
-								<td>
+								<td v-if="options[0].show">
 									<avatar :user="user"/>
 								</td>
-								<td>{{ user.name }} {{ user.surname }}</td>
-								<td>{{ user.phone }}</td>
-								<td>Orders</td>
-								<td>Total spent</td>
+								<td v-if="options[1].show">{{ user.name }} {{ user.surname }}</td>
+								<td v-if="options[2].show">{{ user.phone }}</td>
+								<td v-if="options[3].show">{{ user.email }}</td>
+								<td v-if="options[4].show">Total spent</td>
 							</tr>
 						</tbody>
 					</table>
@@ -83,6 +84,7 @@
 
 <script>
 import { mapState,mapMutations } from 'vuex';
+import { getItem, setItem } from '@/helpers/localStorage';
 	export default {
 		data(){
 			return{
@@ -90,11 +92,28 @@ import { mapState,mapMutations } from 'vuex';
 				search:'',
 				columns:false,
 				options:[
-					'Avatars',
-					'Customers',
-					'Phone',
-					'Orders',
-					'Total spent'
+					{
+						title:'Avatars',
+						show:true
+					},
+					{
+						title:'Customers',
+						show:true
+					},
+					{
+						title:'Phone',
+						show:true
+					},
+					{
+						title:'Email',
+						show:true
+					},
+					{
+						title:'Total spent',
+						show:true
+					}
+					
+					
 				]
 			}
 		},
@@ -117,10 +136,12 @@ import { mapState,mapMutations } from 'vuex';
 				const option = this.$refs.option
 				if(option[index].checked){
 				shortline[index].classList.add('checked')
+				this.options[index].show=true
 				}else{
 					shortline[index].classList.remove('checked')
+					this.options[index].show=false
 				}
-				
+				setItem('column-options',this.options)
 			},
 			cleanSearch(){
 				this.search=''
@@ -147,7 +168,7 @@ import { mapState,mapMutations } from 'vuex';
 		mounted(){
 			console.log("userview mounted")
 			this.$store.dispatch('user/getUsers',{page:this.$route.query.page,limit:this.$route.query.limit})
-			
+			this.options=getItem('column-options')
 		}
 	}
 </script>
