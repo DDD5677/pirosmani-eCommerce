@@ -1,10 +1,11 @@
 <template>
 	<div class="history__products">
-		<div v-for="order in orderList" class="orders" id="orders">
+		<div v-for="(order,index) in orderList" class="orders" id="orders">
 			<div class="info">
 				<div class="order__number">
 					Номер заказа:
 					<span
+						@click="showProductHandler(index)"
 						class="green"
 						id="order__number-open"
 						>№{{ order.id }}
@@ -22,16 +23,16 @@
 					<span class="green">{{order.status}}</span>
 				</div>
 			</div>
-			<div class="products" id="products">
+			<div v-if="!mobile||(index===activeIndex?true:false)&&showProducts" class="products" id="products" >
 				<div class="order__number">
-					<span class="green" id="order__number"
+					<span @click="showProductHandler(index)" class="green" id="order__number"
 						><img
 							src="@/assets/images/orders__arrow-left.svg"
 							alt=""
 						/>Заказ №2334678954
 					</span>
 				</div>
-				<basket-product v-for="product in order.orderItems" :product="product" :id="product.product.id"/>
+				<basket-product v-for="product in order.orderItems" :product="product" :id="product.product.id" />
 				<!-- <basket-product/> -->
 				<div class="order__again">
 					<a @click="reOrder(order)" href="#" class="order__again-link"
@@ -46,8 +47,15 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 	export default {
 		name:'history-orders',
+		data(){
+			return{
+				showProducts:false,
+				activeIndex:null
+			}
+		},
 		props:{
 			orderList:{
 				type:Array,
@@ -55,16 +63,21 @@
 			}
 		},
 		computed:{
-			
+			...mapState({
+				mobile:state=>state.navbar.mobile
+			})
 		},
 		methods:{
+			showProductHandler(index){
+				this.activeIndex=index;
+				this.showProducts=!this.showProducts
+			},
 			formatDate (dateString){
   			const options = { year: "numeric", month: "long", day: "numeric" }
   			return new Date(dateString).toLocaleDateString(undefined, options)
 			},
 			reOrder(data){
 				this.$store.dispatch('order/addOrder',data)
-
 			}
 		}
 	}

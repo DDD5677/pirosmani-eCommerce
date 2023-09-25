@@ -1,10 +1,10 @@
 <template>
 	<ul class="dropdown-menu" @click.stop>
-       <li v-for="item in categories" :key="item.name">
+       <li v-for="(item, index) in categories" :key="item.name">
           <a class="dropdown-item"
 				@click="categoryHandler(item)"
           >
-			<img src="">
+			<img :src="require(`@/assets/images/dropdown-${index+1}.svg`)">
           <span> {{ item.name }}</span></a
    		>
    	</li>

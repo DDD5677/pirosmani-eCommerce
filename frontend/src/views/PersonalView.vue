@@ -76,7 +76,12 @@ import { mapState } from 'vuex';
 <style lang="scss" scoped>
 .personal__tab {
 	padding: 160px 0;
-
+	@media(max-width:820px){
+		padding: 80px 0 40px;
+	}
+	@media(max-width:450px){
+		padding: 60px 0 40px;
+	}
    .nav {
 		display: flex;
       .nav-link {

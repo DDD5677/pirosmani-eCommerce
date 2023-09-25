@@ -20,17 +20,25 @@ const OrderItem = require("../models/order-items");
 //    return errors;
 // };
 
-router.get(`/`, async (req, res) => {
-   const orderList = await Order.find({})
-      .populate("user", "name")
-      .sort({ dateOrdered: -1 });
+router.get(`/`, async (req, res, next) => {
+   try {
+      const orderList = await Order.find({})
+         .populate("user")
+         .populate({
+            path: "orderItems",
+            populate: { path: "product", populate: "category" },
+         })
+         .sort({ dateOrdered: -1 });
 
-   if (!orderList) {
-      res.status(500).json({
-         success: false,
-      });
+      if (!orderList) {
+         res.status(500).json({
+            success: false,
+         });
+      }
+      res.send(orderList);
+   } catch (error) {
+      next(error);
    }
-   res.send(orderList);
 });
 
 router.get(`/:id`, async (req, res, next) => {

@@ -76,6 +76,7 @@ export default {
 	line-height: 23px;
 	label {
 		text-align: left;
+		width: 100%;
 	}
 	.rating__box {
 		display: flex;
@@ -108,7 +109,7 @@ export default {
 
 		textarea {
 			padding: 10px;
-			width: 286.01px;
+			width: 100%;
 			height: 174.93px;
 			resize: none;
 			border: 1px solid #EBEBEB;
@@ -121,7 +122,4 @@ export default {
 	}
 }
 
-.modal__footer {
-	margin-left: 99px;
-}
 </style>

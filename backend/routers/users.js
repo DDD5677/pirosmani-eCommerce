@@ -56,14 +56,52 @@ const authErrors = (err) => {
 };
 
 router.get(`/`, async (req, res) => {
-   const userList = await User.find({}).select("-password");
+   try {
+      let filter = {};
+      let page = 1;
+      let limit = 10;
+      let totalUsers = 0;
+      let pageSize = 1;
 
-   if (!userList) {
+      if (req.query.page) {
+         page = req.query.page;
+      }
+      if (req.query.limit) {
+         limit = req.query.limit;
+      }
+
+      totalUsers = await User.countDocuments(filter).exec();
+      pageSize = Math.ceil(totalUsers / limit);
+      if (page > pageSize) {
+         return res.status(404).json({
+            success: false,
+            message: "Page is not found!",
+         });
+      }
+      const usersList = await User.find(filter)
+         .skip((page - 1) * limit)
+         .limit(limit)
+         .exec();
+      if (!usersList) {
+         res.status(404).json({
+            success: false,
+            message: "Users is not found!",
+         });
+      }
+      res.send({
+         usersList: usersList,
+         pagination: {
+            pageSize: pageSize,
+            limit: limit,
+            page: page,
+         },
+      });
+   } catch (error) {
       res.status(500).json({
          success: false,
+         message: error.message,
       });
    }
-   res.send(userList);
 });
 
 // router.get("/:id", async (req, res) => {
@@ -142,6 +180,34 @@ router.post("/login", async (req, res) => {
 
       if (!user) {
          return res.status(400).send("the user not found");
+      }
+
+      if (user && bcrypt.compareSync(req.body.password, user.password)) {
+         const token = jwt.sign(
+            {
+               userId: user.id,
+               isAdmin: user.isAdmin,
+            },
+            secret,
+            {
+               expiresIn: "1d",
+            }
+         );
+         res.status(200).send({ user: user, token: token });
+      } else {
+         res.status(400).send("password is wrong");
+      }
+   } catch (error) {
+      res.status(500).json(error);
+   }
+});
+router.post("/admin/login", async (req, res) => {
+   try {
+      const user = await User.findOne({ email: req.body.email });
+      const secret = process.env.secret;
+
+      if (!user || !user.isAdmin) {
+         return res.status(400).json({ auth: "the admin user not found" });
       }
 
       if (user && bcrypt.compareSync(req.body.password, user.password)) {

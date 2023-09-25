@@ -34,7 +34,12 @@
 <style lang="scss" scoped>
 	.page__basket {
    padding: 140px 0 60px;
-
+	@media(max-width:820px){
+		padding: 80px 0 40px;
+	}
+	@media(max-width:450px){
+		padding: 60px 0 40px;
+	}
    .page__basket-wrapper {
       display: flex;
       justify-content: space-between;

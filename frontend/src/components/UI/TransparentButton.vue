@@ -14,14 +14,17 @@
 <style lang="scss" scoped>
 	.transparent__btn {
          text-decoration: none;
-         padding: 8px 15px;
+   		padding: 0.5em 1.2em 0.55em;
+			
+			display: inline-flex;
+			align-items: center;
          font-weight: 400;
-         font-size: 22.2162px;
          line-height: 29px;
          text-align: center;
          color: $main-color;
 			cursor: pointer;
          img {
+				transform: scale(0.8);
             margin-left: 10px;
          }
       }

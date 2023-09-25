@@ -30,15 +30,7 @@
 				:type="'text'" 
 				:placeholder="'Фамилия'"
 				v-model="surname"/>
-
 				
-				<!-- <form-input 
-				class="middle__name" 
-				:label="'Ваше отчество'" 
-				:type="'text'" 
-				:placeholder="'Отчество'"
-				v-model=""/> -->
-
 				<form-input 
 				:label="'Адрес электронной почты'" 
 				:type="'email'" 
@@ -167,7 +159,7 @@ import { removeItem } from "@/helpers/localStorage";
 
 	.green__btn {
 		margin-top: 18px;
-		margin-right: 30px;
+		margin-right: 15px;
 	}
 
 	.title {
