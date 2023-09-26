@@ -5,8 +5,6 @@
 				Choose Image
 				<input class="input_file" type="file" @change.stop="changeAvatar"/>
 				
-        		
-				
 			</label>
 			<span class="image_name" ref="imageName"></span>
 			<div>

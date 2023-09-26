@@ -116,25 +116,50 @@ router.get(`/`, async (req, res) => {
 //    res.status(200).send(user);
 // });
 
-router.post("/", async (req, res) => {
-   let user = new User({
-      name: req.body.name,
-      surname: req.body.surname,
-      email: req.body.email,
-      password: req.body.password,
-      isAdmin: req.body.isAdmin,
-      phone: req.body.phone,
-      extraPhone: req.body.extraPhone,
-      image: req.body.image,
-   });
+router.post("/", uploadOptions.single("avatar"), async (req, res, next) => {
+   try {
+      //verify file exist or not
+      const file = req.file;
+      let user;
+      if (file) {
+         const basePath = `${req.protocol}://${req.get(
+            "host"
+         )}/public/avatars/`;
+         const fileName = req.file.filename;
+         //-------------------------------------------
 
-   user = await user.save();
+         user = new User({
+            name: req.body.name,
+            surname: req.body.surname,
+            email: req.body.email,
+            password: req.body.password,
+            isAdmin: req.body.isAdmin,
+            phone: req.body.phone,
+            extraPhone: req.body.extraPhone,
+            image: `${basePath}${fileName}`,
+         });
+      } else {
+         user = new User({
+            name: req.body.name,
+            surname: req.body.surname,
+            email: req.body.email,
+            password: req.body.password,
+            isAdmin: req.body.isAdmin,
+            phone: req.body.phone,
+            extraPhone: req.body.extraPhone,
+         });
+      }
 
-   if (!user) {
-      return res.status(404).send("the user cannot be created!");
+      user = await user.save();
+
+      if (!user) {
+         return res.status(404).send("the user cannot be created!");
+      }
+
+      res.send(user);
+   } catch (error) {
+      next(error);
    }
-
-   res.send(user);
 });
 
 router.get("/get/user", async (req, res) => {

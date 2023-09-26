@@ -1,53 +1,56 @@
 const mongoose = require("mongoose");
 
-const orderSchema = new mongoose.Schema({
-   orderItems: [
-      {
-         type: mongoose.Schema.Types.ObjectId,
-         ref: "OrderItem",
-         required: [true, "Basket is empty!"],
+const orderSchema = new mongoose.Schema(
+   {
+      orderItems: [
+         {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "OrderItem",
+            required: [true, "Basket is empty!"],
+         },
+      ],
+      name: {
+         type: String,
+         required: [true, "Please enter a name"],
       },
-   ],
-   name: {
-      type: String,
-      required: [true, "Please enter a name"],
+      shippingAdress1: {
+         type: String,
+         required: [true, "Please enter your adress"],
+      },
+      shippingAdress2: {
+         type: String,
+      },
+      city: {
+         type: String,
+         required: [true, "Please enter your city"],
+      },
+      comment: {
+         type: String,
+         default: "",
+      },
+      phone: {
+         type: String,
+         required: [true, "Please enter your phone"],
+      },
+      status: {
+         type: String,
+         required: true,
+         default: "Pending",
+      },
+      totalPrice: {
+         type: Number,
+      },
+      user: {
+         type: mongoose.Schema.Types.ObjectId,
+         ref: "User",
+      },
+      dateOrdered: {
+         type: Date,
+         default: Date.now,
+      },
    },
-   shippingAdress1: {
-      type: String,
-      required: [true, "Please enter your adress"],
-   },
-   shippingAdress2: {
-      type: String,
-   },
-   city: {
-      type: String,
-      required: [true, "Please enter your city"],
-   },
-   comment: {
-      type: String,
-      default: "",
-   },
-   phone: {
-      type: String,
-      required: [true, "Please enter your phone"],
-   },
-   status: {
-      type: String,
-      required: true,
-      default: "Pending",
-   },
-   totalPrice: {
-      type: Number,
-   },
-   user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-   },
-   dateOrdered: {
-      type: Date,
-      default: Date.now,
-   },
-});
+   { timestamps: true }
+);
 
 orderSchema.virtual("id").get(function () {
    return this._id.toHexString();

@@ -37,7 +37,6 @@ import {mapState, mapGetters, mapMutations} from 'vuex';
 		computed:{
 			...mapState({
 			page:state=>state.user.page,
-			limit:state=>state.user.limit,
 			pageSize:state=>state.user.pageSize,
 			})
 		},

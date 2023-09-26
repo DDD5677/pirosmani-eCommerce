@@ -32,6 +32,17 @@ export const usersModule = {
          state.isLoading = false;
          state.errors = payload;
       },
+      postUserStart(state) {
+         state.isLoading = true;
+         state.errors = null;
+      },
+      postUserSuccess(state) {
+         state.isLoading = false;
+      },
+      postUserFailure(state, payload) {
+         state.isLoading = false;
+         state.errors = payload;
+      },
    },
    actions: {
       getUsers(context, payload) {
@@ -44,6 +55,19 @@ export const usersModule = {
                })
                .catch((error) => {
                   context.commit("getUserFailure", error.response.data);
+               });
+         });
+      },
+      postUsers(context, payload) {
+         return new Promise(() => {
+            context.commit("postUserStart");
+            UserService.postUsers(payload)
+               .then((res) => {
+                  console.log(res);
+                  context.commit("postUserSuccess");
+               })
+               .catch((error) => {
+                  context.commit("postUserFailure", error.response.data);
                });
          });
       },

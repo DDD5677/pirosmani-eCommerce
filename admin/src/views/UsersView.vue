@@ -27,7 +27,7 @@
 									</label>
 								</li>
 						</ul>
-						<button class="btn"><i class="fa fa-plus" aria-hidden="true"></i>Create</button>
+						<router-link :to="{name:'create-user'}" class="btn"><i class="fa fa-plus" aria-hidden="true"></i>Create</router-link>
 						
 						<button class="btn"><i class="fa fa-download" aria-hidden="true"></i>Export</button>
 					</div>
