@@ -29,30 +29,42 @@ import {mapState, mapGetters, mapMutations} from 'vuex';
 
 	export default {
 		name:"pagination",
+		props:{
+			getData:{
+				type:Function,
+				required:true
+			},
+			page:{
+				type:Number,
+				required:true
+			},
+			pageSize:{
+				type:Number,
+				required:true
+			}
+		},
 		data(){
 			return{
 				limit:this.$route.query.limit,
+
 			}
 		},
 		computed:{
 			...mapState({
-			page:state=>state.user.page,
-			pageSize:state=>state.user.pageSize,
 			})
 		},
 		methods:{
 			...mapMutations({
-				changePage:'user/changePage',
-				changeLimit:'user/changeLimit'
+				
 			}),
 			changePageData(page){
-				this.changePage(page);
-				this.$store.dispatch('user/getUsers',{
-					page:page,
-					limit:this.$route.query.limit
-				})
-				
-				this.$router.push({ path: "/users", query: { page:page,limit:this.$route.query.limit } });
+				//this.changePage(page);
+				// this.$store.dispatch('user/getUsers',{
+				// 	page:page,
+				// 	limit:this.$route.query.limit
+				// })
+				this.getData(page,this.$route.query.limit)
+				//this.$router.push({ path: "/users", query: { page:page,limit:this.$route.query.limit } });
 				
 				window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
 			},
@@ -66,11 +78,12 @@ import {mapState, mapGetters, mapMutations} from 'vuex';
 		},
 		watch:{
 			limit(newlimit,oldlimit) {
-				this.changePage(1);
+				//this.changePage(1);
 				//	console.log(newlimit,oldlimit)
-				this.changeLimit(newlimit);
-				this.$store.dispatch('user/getUsers',{page:this.page,limit:newlimit})
-				this.$router.push({ path: "/users", query: { page:this.page,limit:newlimit} });
+				
+				this.getData(1,newlimit)
+				//this.$store.dispatch('user/getUsers',{page:this.page,limit:newlimit})
+				//this.$router.push({ path: "/users", query: { page:this.page,limit:newlimit} });
 				
 			}
 		}

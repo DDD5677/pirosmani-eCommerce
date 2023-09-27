@@ -1,9 +1,9 @@
 <template>
 	<section class="users">
 		<div class="container">
-			<error v-if="usersError" :error="usersError"/>
-			<loading v-if="usersLoading"/>
-			<div v-if="!usersLoading&&!usersError" class="users__inner">
+			<error v-if="productsError" :error="productsError"/>
+			<loading v-if="productsLoading"/>
+			<div v-if="!productsLoading&&!productsError" class="users__inner">
 				<div class="table__nav">
 					<div class="filters">
 						<div class="search">
@@ -45,6 +45,7 @@
 								<th v-if="options[2].show">{{options[2].title}}</th>
 								<th v-if="options[3].show">{{options[3].title}}</th>
 								<th v-if="options[4].show">{{options[4].title}}</th>
+								<th v-if="options[5].show">{{options[5].title}}</th>
 							</tr>
 							<div v-if="checked>0" class="checked__block">
 								<div>
@@ -59,24 +60,27 @@
 							</div>
 						</thead>
 						<tbody>
-							<tr v-for="user in users">
+							<tr v-for="product in products">
 								<td>
 									<span></span>
 									<input class="checkbox" ref="foo" @click="addChecked" type="checkbox">
 								</td>
 								<td v-if="options[0].show">
-									<avatar :user="user"/>
+									Image
+									<!-- <avatar :user="product"/> -->
 								</td>
-								<td v-if="options[1].show">{{ user.name }} {{ user.surname }}</td>
-								<td v-if="options[2].show">{{ user.phone }}</td>
-								<td v-if="options[3].show">{{ user.email }}</td>
-								<td v-if="options[4].show">Total spent</td>
+								<td v-if="options[1].show">{{ product.name }}</td>
+								<td v-if="options[2].show">{{ product.price }}$</td>
+								<td v-if="options[3].show">{{ product.countInStock }}</td>
+								<td v-if="options[4].show">{{ product.rate }}</td>
+								<td v-if="options[5].show">{{ product.dateCreated }}</td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
 			</div>
-			<pagination :getData="getUsers" :page="page" :pageSize="pageSize"/>
+			<pagination :getData="getProducts" :page="page" :pageSize="pageSize"/>
+
 		</div>
 		
 	</section>
@@ -93,43 +97,45 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				columns:false,
 				options:[
 					{
-						title:'Avatars',
+						title:'Image',
 						show:true
 					},
 					{
-						title:'Customers',
+						title:'Name',
 						show:true
 					},
 					{
-						title:'Phone',
+						title:'Price',
 						show:true
 					},
 					{
-						title:'Email',
+						title:'Count in stock',
 						show:true
 					},
 					{
-						title:'Total spent',
+						title:'Rate',
+						show:true
+					},
+					{
+						title:'Date created',
 						show:true
 					}
-					
-					
 				]
 			}
 		},
 		computed:{
 			...mapState({
-				users:state=>state.user.users,
-				page:state=>state.user.page,
-				pageSize:state=>state.user.pageSize,
-				usersLoading:state=>state.user.isLoading,
-				usersError:state=>state.user.errors
+				products:state=>state.product.products,
+				page:state=>state.product.page,
+				pageSize:state=>state.product.pageSize,
+				productsLoading:state=>state.product.isLoading,
+				productsError:state=>state.product.errors
 			}),
 		},
 		methods:{
 			...mapMutations({
-				changePage:'user/changePage',
-				changeLimit:'user/changeLimit'
+				changePage:'product/changePage',
+				changeLimit:'product/changeLimit'
 			}),
 			toggleColumns(){
 				this.columns=!this.columns
@@ -167,19 +173,20 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				i.checked=this.$refs.foomain.checked}
 				this.addChecked()
 			},
-
-			getUsers(page,limit){
-				this.$store.dispatch('user/getUsers',{page:page,limit:limit});
+			getProducts(page,limit){
+				this.$store.dispatch('product/getProducts',{page:page,limit:limit});
 				this.changePage(page);
 				this.changeLimit(limit);
-				this.$router.push({ path: "/users", query: { page:page,limit:limit} });
+				this.$router.push({ path: "/products", query: { page:page,limit:limit} });
 			}
 		},
 		mounted(){
 			console.log("userview mounted")
-			this.getUsers(this.$route.query.page,this.$route.query.limit)
-			//this.$store.dispatch('user/getUsers',{page:this.$route.query.page,limit:this.$route.query.limit})
-			this.options=getItem('column-options')
+			this.getProducts(this.$route.query.page,this.$route.query.limit)
+
+			//this.$store.dispatch('product/getProducts',{page:this.$route.query.page,limit:this.$route.query.limit})
+			//this.$store.dispatch('product/getProducts',{page:1,limit:10})
+			//this.options=getItem('column-options')
 		}
 	}
 </script>

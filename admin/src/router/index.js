@@ -3,6 +3,7 @@ import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import UsersView from "../views/UsersView.vue";
 import CreateUserView from "../views/CreateUserView.vue";
+import ProductsView from "../views/ProductsView.vue";
 
 const routes = [
    {
@@ -28,6 +29,12 @@ const routes = [
       name: "create-user",
       meta: { layout: "main" },
       component: CreateUserView,
+   },
+   {
+      path: "/products",
+      name: "products",
+      meta: { layout: "main" },
+      component: ProductsView,
    },
 ];
 

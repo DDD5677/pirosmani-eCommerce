@@ -13,7 +13,7 @@
 				<div class="nav-blocks">
 					<ul class="nav-menu">
 						
-						<li><a href="" class="nav-link">Products</a></li>
+						<li><router-link :to="{name:'products',query:{page:1,limit:limit}}" class="nav-link">Products</router-link></li>
 						<li><router-link :to="{name:'users',query:{page:1,limit:limit}}" class="nav-link">Users</router-link></li>
 						<li><a href="" class="nav-link">Orders</a></li>
 						<li><a href="" class="nav-link">Category</a></li>
