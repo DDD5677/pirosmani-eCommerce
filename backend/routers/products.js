@@ -37,21 +37,30 @@ router.get(`/`, async (req, res) => {
       let limit = 4;
       let totalProducts = 0;
       let pageSize = 1;
-
+      const excludeFields = ["sort", "page", "limit"];
+      let queryStr = JSON.stringify(req.query);
+      queryStr = queryStr.replace(
+         /\b(gte|gt|lte|lt)\b/g,
+         (match) => `$${match}`
+      );
+      filter = JSON.parse(queryStr);
+      excludeFields.forEach((el) => {
+         delete filter[el];
+      });
+      console.log(filter);
       if (req.query.page) {
          page = req.query.page;
       }
       if (req.query.limit) {
          limit = req.query.limit;
       }
-      if (req.query.categories) {
-         const category = await Category.findById(req.query.categories);
+      if (req.query.category) {
+         const category = await Category.findById(req.query.category);
          if (!category)
             return res.status(400).json({
                success: false,
                message: "Invalid Category",
             });
-         filter = { category: req.query.categories };
       }
 
       totalProducts = await Product.countDocuments(filter).exec();
@@ -62,7 +71,9 @@ router.get(`/`, async (req, res) => {
             message: "Page is not found!",
          });
       }
+      console.log(req.query.sort);
       const productList = await Product.find(filter)
+         .sort(req.query.sort)
          .skip((page - 1) * limit)
          .limit(limit)
          .populate("category")

@@ -11,7 +11,15 @@
 							<div v-if="!search" class="search__span"><i class="fa fa-search" aria-hidden="true"></i></div>
 							<button v-if="search" @click="cleanSearch" class="search__btn"><i class="fa fa-times" aria-hidden="true"></i></button>
 						</div>
-						
+						<div class="filter">
+							<div v-for="(filter,index) in filters" :id="index">
+									<div v-if="filter.show">
+										<input type="text" :placeholder="filter.title">
+										<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
+									</div>
+								
+							</div>
+						</div>
 					</div>
 					<div class="buttons">
 						<button @click="toggleColumns" class="btn"><i class="fa fa-th" aria-hidden="true"></i>Columns</button>
@@ -29,6 +37,12 @@
 						</ul>
 						<router-link :to="{name:'create-user'}" class="btn"><i class="fa fa-plus" aria-hidden="true"></i>Create</router-link>
 						
+						<button @click="toggleFilters" class="btn"><i class="fa fa-filter" aria-hidden="true"></i>Filter</button>
+						<ul v-show="filter_box" class="filter__box">
+								<li v-for="(option,index) in filters" :id="index" @click="addFilter(index)" class="options">
+									{{ option.title }}
+								</li>
+						</ul>
 						<button class="btn"><i class="fa fa-download" aria-hidden="true"></i>Export</button>
 					</div>
 				</div>
@@ -46,6 +60,7 @@
 								<th v-if="options[3].show">{{options[3].title}}</th>
 								<th v-if="options[4].show">{{options[4].title}}</th>
 								<th v-if="options[5].show">{{options[5].title}}</th>
+								<th v-if="options[6].show">{{options[6].title}}</th>
 							</tr>
 							<div v-if="checked>0" class="checked__block">
 								<div>
@@ -66,20 +81,20 @@
 									<input class="checkbox" ref="foo" @click="addChecked" type="checkbox">
 								</td>
 								<td v-if="options[0].show">
-									Image
-									<!-- <avatar :user="product"/> -->
+									<avatar :info="{image:product.img, name:product.name}"/> 
 								</td>
 								<td v-if="options[1].show">{{ product.name }}</td>
 								<td v-if="options[2].show">{{ product.price }}$</td>
 								<td v-if="options[3].show">{{ product.countInStock }}</td>
 								<td v-if="options[4].show">{{ product.rate }}</td>
-								<td v-if="options[5].show">{{ product.dateCreated }}</td>
+								<td v-if="options[5].show">{{ product.isFeatured }}</td>
+								<td v-if="options[6].show">{{ formatDate(product.dateCreated) }}</td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
+				<pagination :getData="getProducts" :page="page" :pageSize="pageSize"/>
 			</div>
-			<pagination :getData="getProducts" :page="page" :pageSize="pageSize"/>
 
 		</div>
 		
@@ -95,31 +110,29 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				checked:null,
 				search:'',
 				columns:false,
-				options:[
+				filter_box:false,
+				options:[],
+				filters:[
 					{
-						title:'Image',
-						show:true
+						title:'Min price',
+						show:false
 					},
 					{
-						title:'Name',
-						show:true
+						title:'Max price',
+						show:false
 					},
 					{
-						title:'Price',
-						show:true
+						title:'Min rate',
+						show:false
 					},
 					{
-						title:'Count in stock',
-						show:true
+						title:'Min count in stock',
+						show:false
 					},
 					{
-						title:'Rate',
-						show:true
+						title:'Featured',
+						show:false
 					},
-					{
-						title:'Date created',
-						show:true
-					}
 				]
 			}
 		},
@@ -137,8 +150,21 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				changePage:'product/changePage',
 				changeLimit:'product/changeLimit'
 			}),
+			formatDate (dateString){
+  				const options = { year: "numeric", month: "long", day: "numeric" }
+  				return new Date(dateString).toLocaleDateString(undefined, options) +" " + new Date(dateString).toLocaleTimeString('it-IT')
+			},
 			toggleColumns(){
 				this.columns=!this.columns
+			},
+			toggleFilters(){
+				this.filter_box=!this.filter_box
+			},
+			addFilter(index){
+				this.filters[index].show=true
+			},
+			removeFilter(index){
+				this.filters[index].show=false
 			},
 			addOptions(index){
 				const shortline = this.$refs.shortline
@@ -150,7 +176,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					shortline[index].classList.remove('checked')
 					this.options[index].show=false
 				}
-				setItem('column-options',this.options)
+				setItem('product-options',this.options)
 			},
 			cleanSearch(){
 				this.search=''
@@ -180,13 +206,14 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				this.$router.push({ path: "/products", query: { page:page,limit:limit} });
 			}
 		},
-		mounted(){
-			console.log("userview mounted")
-			this.getProducts(this.$route.query.page,this.$route.query.limit)
+		created(){
+			console.log("created product")
+			this.options=getItem('product-options')
 
-			//this.$store.dispatch('product/getProducts',{page:this.$route.query.page,limit:this.$route.query.limit})
-			//this.$store.dispatch('product/getProducts',{page:1,limit:10})
-			//this.options=getItem('column-options')
+		},
+		mounted(){
+			console.log("productview mounted")
+			this.getProducts(this.$route.query.page,this.$route.query.limit)
 		}
 	}
 </script>
@@ -201,24 +228,27 @@ import { getItem, setItem } from '@/helpers/localStorage';
 			align-items: center;
 			margin-bottom: 10px;
 			.filters{
+			display: flex;
+			align-items: center;
 				.search{
 					display: inline-block;
-					font-size: 16px;
 					border-bottom: 1px solid #454444;
-					border-radius: 15px 15px 0 0;
+					border-radius: 10px 10px 0 0;
+					margin-right: 10px;
 					&:hover{
 						background-color: $light-color;
 					}
 					//background-color: $light-color;
 					&__input{
+						width: 120px;
 						background-color: $light-color;
-						border-radius: 15px  0 0;
+						border-radius: 10px  0 0;
 						padding: 10px 0 10px 15px;
 						
 					}
 					&__btn{
 						padding: 10px;
-						border-radius: 0 15px 0 0;
+						border-radius: 0 10px 0 0;
 						background-color: $light-color;
 						cursor: pointer;
 						width: 35px;
@@ -227,14 +257,40 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					&__span{
 						width: 35px;
 						padding: 10px;
-						border-radius: 0 15px 0 0;
+						border-radius: 0 10px 0 0;
 						background-color: $light-color;
 						display: inline-block;
 						font-size: 13px;
 					}
 				}
+				.filter{
+					display: flex;
+					div{
+						position: relative;
+						margin-right: 5px;
+					}
+					input{
+						width: 100px;
+						padding: 10px ;
+						border-radius: 10px 10px 0 0;
+						border-bottom: 1px solid #000;
+						background-color: $light-color;
+						display: inline-block;
+					}
+					button{
+						position: absolute;
+						top: -5px;
+						right: -5px;
+						width: 20px;
+						height: 20px;
+						border-radius: 50%;
+						cursor: pointer;
+						background-color: $light-color;
+					}
+				}
 			}
 			.buttons{
+				position: relative;
 				.btn{
 					border-radius: 15px;
 					padding: 10px 15px;
@@ -252,8 +308,28 @@ import { getItem, setItem } from '@/helpers/localStorage';
 						margin-right: 10px;
 					}
 				}
+				.filter__box{
+					position: absolute;
+					left: 50%;
+					z-index: 52;
+					background-color: #fff;
+					padding: 10px 0;
+					border-radius: 10px;
+					width: 180px;
+					-webkit-box-shadow: 2px 12px 59px 3px rgba(34, 60, 80, 0.2);
+					-moz-box-shadow: 2px 12px 59px 3px rgba(34, 60, 80, 0.2);
+					box-shadow: 2px 12px 59px 3px rgba(34, 60, 80, 0.2);	
+					.options{
+						padding: 5px 15px;
+						cursor: pointer;
+						&:hover{
+							background-color: $light-color;
+						}
+					}
+				}
 				.columns{
 					position: absolute;
+					left: 0;
 					z-index: 52;
 					background-color: #fff;
 					padding: 15px;
@@ -264,6 +340,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					box-shadow: 2px 12px 59px 3px rgba(34, 60, 80, 0.2);	
 					.options{
 						padding: 5px 0;
+						
 						label{
 							cursor: pointer;
 							letter-spacing: 0.8px;

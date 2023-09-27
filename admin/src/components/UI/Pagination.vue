@@ -35,7 +35,7 @@ import {mapState, mapGetters, mapMutations} from 'vuex';
 				required:true
 			},
 			page:{
-				type:Number,
+				type:[String,Number],
 				required:true
 			},
 			pageSize:{

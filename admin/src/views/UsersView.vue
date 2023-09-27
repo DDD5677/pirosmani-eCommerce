@@ -65,7 +65,7 @@
 									<input class="checkbox" ref="foo" @click="addChecked" type="checkbox">
 								</td>
 								<td v-if="options[0].show">
-									<avatar :user="user"/>
+									<avatar :info="user"/>
 								</td>
 								<td v-if="options[1].show">{{ user.name }} {{ user.surname }}</td>
 								<td v-if="options[2].show">{{ user.phone }}</td>
@@ -75,8 +75,8 @@
 						</tbody>
 					</table>
 				</div>
+				<pagination :getData="getUsers" :page="page" :pageSize="pageSize"/>
 			</div>
-			<pagination :getData="getUsers" :page="page" :pageSize="pageSize"/>
 		</div>
 		
 	</section>
@@ -91,30 +91,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				checked:null,
 				search:'',
 				columns:false,
-				options:[
-					{
-						title:'Avatars',
-						show:true
-					},
-					{
-						title:'Customers',
-						show:true
-					},
-					{
-						title:'Phone',
-						show:true
-					},
-					{
-						title:'Email',
-						show:true
-					},
-					{
-						title:'Total spent',
-						show:true
-					}
-					
-					
-				]
+				options:null
 			}
 		},
 		computed:{
@@ -144,7 +121,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					shortline[index].classList.remove('checked')
 					this.options[index].show=false
 				}
-				setItem('column-options',this.options)
+				setItem('user-options',this.options)
 			},
 			cleanSearch(){
 				this.search=''
@@ -162,6 +139,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				this.$refs.foomain.checked=false;
 				this.toggle()
 			},
+			
 			toggle(){
 				for(let i of this.$refs.foo ){
 				i.checked=this.$refs.foomain.checked}
@@ -175,11 +153,16 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				this.$router.push({ path: "/users", query: { page:page,limit:limit} });
 			}
 		},
+		created(){
+			console.log('created userview')
+			this.options=getItem('user-options')
+
+		},
 		mounted(){
 			console.log("userview mounted")
 			this.getUsers(this.$route.query.page,this.$route.query.limit)
 			//this.$store.dispatch('user/getUsers',{page:this.$route.query.page,limit:this.$route.query.limit})
-			this.options=getItem('column-options')
+			//this.options=getItem('user-options')
 		}
 	}
 </script>

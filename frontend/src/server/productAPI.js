@@ -7,7 +7,7 @@ const ProductService = {
    getProductByCategory(payload) {
       return axios.get("products", {
          params: {
-            categories: payload.id,
+            category: payload.id,
             page: payload.page,
          },
       });

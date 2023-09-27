@@ -15,7 +15,7 @@
 						<h3 class="title">Pending Orders</h3>
 						<ul v-if="!ordersLoading">
 							<li v-for="order in orders" class="order__item">
-								<avatar :user="order.user"/>
+								<avatar :info="order.user"/>
 								<div class="order__info">
 									<div>
 										<span class="order__date">{{ formatDate(order.dateOrdered) }}</span>
@@ -33,7 +33,7 @@
 							<info class="info-item" title="Pending reviews" :amount="reviews.length+''" :src="require('@/assets/images/reviews-icon.svg')"/>
 							<ul>
 								<li v-for="review in reviews.slice(0,10)" class="item">
-									<avatar :user="review.user"/>
+									<avatar :info="review.user"/>
 									<div class="review__info">
 										<p>
 											{{ review.bodyText }}
@@ -51,7 +51,7 @@
 							<info class="info-item" title="New customers" :amount="users.length+''" :src="require('@/assets/images/user-icon.svg')"/>
 							<ul>
 								<li v-for="user in users.slice(-10)" class="item">
-									<avatar :user="user"/>
+									<avatar :info="user"/>
 									<div class="user__info">
 										<p>
 											{{ user.name }} {{ user.surname }}

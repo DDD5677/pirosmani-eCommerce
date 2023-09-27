@@ -34,13 +34,67 @@
 </template>
 
 <script>
+import { setItem } from '@/helpers/localStorage';
 import { mapMutations, mapState } from 'vuex';
 export default {
 	name:'sign-in',
 	data(){
 		return{
 			email:'',
-			password:''
+			password:'',
+			product_options:[
+					{
+						title:'Image',
+						show:true
+					},
+					{
+						title:'Name',
+						show:true
+					},
+					{
+						title:'Price',
+						show:true
+					},
+					{
+						title:'Count in stock',
+						show:true
+					},
+					{
+						title:'Rate',
+						show:true
+					},
+					{
+						title:'Featured',
+						show:true
+					},
+					{
+						title:'Date created',
+						show:true
+					}
+				],
+				user_options:[
+					{
+						title:'Avatars',
+						show:true
+					},
+					{
+						title:'Customers',
+						show:true
+					},
+					{
+						title:'Phone',
+						show:true
+					},
+					{
+						title:'Email',
+						show:true
+					},
+					{
+						title:'Total spent',
+						show:true
+					}
+					
+				]
 		}
 	},
 	computed:{
@@ -65,6 +119,8 @@ export default {
 			
 			this.$store.dispatch('auth/login',data).then(()=>{
 				//this.$router.push("/");
+				setItem('user-options',this.user_options)
+				setItem('product-options',this.product_options)
 				this.reload()
 			});
 		}
