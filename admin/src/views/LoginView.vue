@@ -103,14 +103,6 @@ export default {
 		})
 	},
 	methods:{
-		// ...mapMutations({
-		// 	toggleSignUp:'navbar/toggleSignUp',
-		// 	toggleForgotPassword:'navbar/toggleForgotPassword'
-		// }),
-		async reload(){
-			await this.$router.push("/");
-			//window.location.reload();
-		},
 		submitHandler(){
 			const data={
 				email:this.email,
@@ -118,10 +110,9 @@ export default {
 			}
 			
 			this.$store.dispatch('auth/login',data).then(()=>{
-				//this.$router.push("/");
+				this.$router.push("/");
 				setItem('user-options',this.user_options)
 				setItem('product-options',this.product_options)
-				this.reload()
 			});
 		}
 	}

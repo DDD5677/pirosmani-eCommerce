@@ -1,19 +1,19 @@
 <template>
 	<section class="dashboard">
 		<div class="container">
-			<div class="dashboard_inner">
+			<div v-if="!ordersLoading&&!usersLoading&&!reviewsLoading" class="dashboard_inner">
 				<div class="left">
 					<div class="info">
 						<div class="benefit">
 							<info class="info-item" title="Total Benefits" amount="5000$" :src="require('@/assets/images/dollar-sign-svgrepo-com.svg')"/>
 						</div>
-						<div v-if="!ordersLoading" class="new-orders">
-							<info  class="info-item" title="New Orders" :amount="orders.length +''" :src="require('@/assets/images/shopping-basket.svg')"/>
+						<div class="new-orders">
+							<info  class="info-item" title="New Orders" :amount="orders.length" :src="require('@/assets/images/shopping-basket.svg')"/>
 						</div>
 					</div>
 					<div class="orders">
 						<h3 class="title">Pending Orders</h3>
-						<ul v-if="!ordersLoading">
+						<ul>
 							<li v-for="order in orders" class="order__item">
 								<avatar :info="order.user"/>
 								<div class="order__info">
@@ -29,8 +29,8 @@
 				</div>
 				<div class="right">
 					<div class="reviews">
-						<div v-if="!reviewsLoading">
-							<info class="info-item" title="Pending reviews" :amount="reviews.length+''" :src="require('@/assets/images/reviews-icon.svg')"/>
+						<div>
+							<info class="info-item" title="Pending reviews" :amount="reviews.length" :src="require('@/assets/images/reviews-icon.svg')"/>
 							<ul>
 								<li v-for="review in reviews.slice(0,10)" class="item">
 									<avatar :info="review.user"/>
@@ -47,8 +47,8 @@
 
 					</div>
 					<div class="customers">
-						<div v-if="!usersLoading">
-							<info class="info-item" title="New customers" :amount="users.length+''" :src="require('@/assets/images/user-icon.svg')"/>
+						<div>
+							<info class="info-item" title="New customers" :amount="users.length" :src="require('@/assets/images/user-icon.svg')"/>
 							<ul>
 								<li v-for="user in users.slice(-10)" class="item">
 									<avatar :info="user"/>

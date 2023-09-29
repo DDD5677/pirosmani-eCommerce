@@ -23,7 +23,7 @@
 				required:true
 			},
 			amount:{
-				type:String,
+				type:[String,Number],
 				required:true
 			}
 		}

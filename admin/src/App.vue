@@ -6,6 +6,7 @@
 <script>
 import MainLayout from '@/Layout/MainLayout.vue';
 import ModalLayout from '@/Layout/ModalLayout.vue';
+import { getItem } from './helpers/localStorage';
 	export default {
 		components:{
 			MainLayout,
@@ -17,9 +18,12 @@ import ModalLayout from '@/Layout/ModalLayout.vue';
 			}
 		},
 		created(){
-			this.$store.dispatch('auth/refresh').catch(()=>{
+			const token= getItem('token');
+			if(token){
+			this.$store.dispatch('auth/refresh')
+			}else{
 				this.$router.push("/login")
-			});
+			}
 			
 		}
 	}
