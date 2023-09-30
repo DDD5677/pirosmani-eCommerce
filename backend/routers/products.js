@@ -155,36 +155,39 @@ router.get(`/:id`, async (req, res, next) => {
    }
 });
 
-router.post(`/`, uploadOptions.single("image"), async (req, res) => {
-   const category = await Category.findById(req.body.category);
-   if (!category) return res.status(400).send("Invalid Category");
-   const file = req.file;
-   if (!file) return res.status(400).send("no image in the request");
+router.post(`/`, uploadOptions.single("image"), async (req, res, next) => {
+   try {
+      const category = await Category.findById(req.body.category);
+      if (!category) return res.status(400).send("Invalid Category");
+      const file = req.file;
+      if (!file) return res.status(400).send("no image in the request");
 
-   const basePath = `${req.protocol}://${req.get("host")}/public/uploads/`;
-   const fileName = req.file.filename;
+      const basePath = `${req.protocol}://${req.get("host")}/public/uploads/`;
+      const fileName = req.file.filename;
 
-   let product = new Product({
-      name: req.body.name,
-      dsc: req.body.dsc,
-      richDsc: req.body.richDsc,
-      img: `${basePath}${fileName}`,
-      images: req.body.images,
-      country: req.body.country,
-      price: req.body.price,
-      category: req.body.category,
-      countInStock: req.body.countInStock,
-      isFeatured: req.body.isFeatured,
-      reviews: req.body.reviews,
-   });
+      let product = new Product({
+         name: req.body.name,
+         dsc: req.body.dsc,
+         richDsc: req.body.richDsc,
+         img: `${basePath}${fileName}`,
+         images: req.body.images,
+         country: req.body.country,
+         price: req.body.price,
+         category: req.body.category,
+         countInStock: req.body.countInStock,
+         isFeatured: req.body.isFeatured,
+      });
 
-   product = await product.save();
+      product = await product.save();
 
-   if (!product) {
-      return res.status(500).send("The product cannot be created.");
+      if (!product) {
+         return res.status(500).send("The product cannot be created.");
+      }
+
+      res.send(product);
+   } catch (error) {
+      next(error);
    }
-
-   res.send(product);
 });
 
 router.put("/:id", async (req, res) => {

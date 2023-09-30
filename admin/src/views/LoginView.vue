@@ -121,7 +121,11 @@ export default {
 						source:'',
 						show:false
 					},
-				]
+				],
+				sorts:{
+					user:'',
+					product:''
+				}
 		}
 	},
 	computed:{
@@ -138,6 +142,7 @@ export default {
 			
 			this.$store.dispatch('auth/login',data).then(()=>{
 				this.$router.push("/");
+				setItem('sorts',this.sorts)
 				setItem('user-options',this.user_options)
 				setItem('product-options',this.product_options)
 				setItem('product-filters',this.product_filters)

@@ -50,10 +50,6 @@ const productSchema = new mongoose.Schema(
          type: Date,
          default: Date.now,
       },
-      reviews: {
-         type: Array,
-         default: [],
-      },
    },
    { timestamps: true }
 );

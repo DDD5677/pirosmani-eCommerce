@@ -52,7 +52,7 @@
 		background: #FCFCFC;
 		border: 1.1194px solid #EBEBEB;
 		border-radius: 7.11356px;
-		margin-bottom: 15px;
+		//margin-bottom: 15px;
 		font-size: 16px;
 		&:focus {
 			border: 1.1194px solid $main-color;

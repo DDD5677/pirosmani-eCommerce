@@ -70,60 +70,6 @@
 				</form>
 				
 			</div>
-			<!-- <div class="blocks">
-				<form-input
-				class="inputs" 
-				:label="'Name'" 
-				:type="'text'" 
-				:placeholder="'Name'" 
-				:errors="errors" 
-				:error="errors?errors.name:''" 
-				v-model="name"/>
-				<form-input
-				class="inputs" 
-				:label="'Surname'" 
-				:type="'text'" 
-				:placeholder="'Surname'" 
-				:errors="errors" 
-				:error="errors?errors.name:''" 
-				v-model="surname"/>
-			</div>
-			<div class="blocks">
-				<form-input
-				class="inputs" 
-				:label="'Email'" 
-				:type="'email'" 
-				:placeholder="'Email'" 
-				:errors="errors" 
-				:error="errors?errors.name:''" 
-				v-model="email"/>
-				<form-input
-				class="inputs" 
-				:label="'Password'" 
-				:type="'password'" 
-				:placeholder="'Password'" 
-				:errors="errors" 
-				:error="errors?errors.name:''" 
-				v-model="password"/>
-			</div>
-			<div class="blocks">
-				<form-input
-				class="inputs" 
-				:label="'Phone'" 
-				:type="'tel'" 
-				:placeholder="'Phone'" 
-				:errors="errors" 
-				:error="errors?errors.name:''" 
-				v-model="phone"/>
-				<form-input
-				class="inputs" 
-				:label="'Extra phone'" 
-				:type="'tel'" 
-				:placeholder="'Extra phone'" 
-				:errors="errors" 
-				:error="errors?errors.name:''" 
-				v-model="extraPhone"/>
-			</div> -->
 			
 		</div>
 	</section>
@@ -186,14 +132,16 @@ import { mapMutations, mapState } from 'vuex';
 
 <style lang="scss" scoped>
 .create__users{
-	padding: 100px 0 50px;
+	padding: 120px 0 50px;
 	.title{
 		font-size: 24px;
 		font-weight: 500;
 		margin-bottom: 20px;
 	}
 	.blocks{
-		
+		border: 1px solid #C6C6C6;
+		padding: 20px 15px;
+		border-radius: 15px;
 		form{
 			display: flex;
 			gap: 20px;

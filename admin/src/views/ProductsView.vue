@@ -34,7 +34,7 @@
 									</label>
 								</li>
 						</ul>
-						<router-link :to="{name:'create-user'}" class="btn"><i class="fa fa-plus" aria-hidden="true"></i>Create</router-link>
+						<router-link :to="{name:'create-product'}" class="btn"><i class="fa fa-plus" aria-hidden="true"></i>Create</router-link>
 						
 						<button @click="toggleFilters" class="btn"><i class="fa fa-filter" aria-hidden="true"></i>Filter</button>
 						<ul v-show="filter_box" class="filter__box">
