@@ -4,7 +4,7 @@ export const productsModule = {
    state: () => ({
       page: 1,
       limit: null,
-      pageSize: null,
+      pageSize: 1,
       products: null,
       isLoading: true,
       errors: null,
@@ -50,7 +50,6 @@ export const productsModule = {
             context.commit("getProductStart");
             ProductService.getProducts(payload)
                .then((res) => {
-                  console.log(res);
                   context.commit("getProductSuccess", res.data);
                })
                .catch((error) => {
@@ -63,7 +62,6 @@ export const productsModule = {
             context.commit("postUserStart");
             UserService.postUsers(payload)
                .then((res) => {
-                  console.log(res);
                   context.commit("postUserSuccess");
                })
                .catch((error) => {

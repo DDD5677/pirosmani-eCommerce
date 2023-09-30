@@ -79,6 +79,7 @@ router.get(`/`, async (req, res) => {
          });
       }
       const usersList = await User.find(filter)
+         .sort(req.query.sort)
          .skip((page - 1) * limit)
          .limit(limit)
          .exec();

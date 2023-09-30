@@ -94,6 +94,33 @@ export default {
 						show:true
 					}
 					
+				],
+				product_filters:[
+					{
+						title:'Min price',
+						source:'',
+						show:false
+					},
+					{
+						title:'Max price',
+						source:'',
+						show:false
+					},
+					{
+						title:'Min rate',
+						source:'',
+						show:false
+					},
+					{
+						title:'Min count in stock',
+						source:'',
+						show:false
+					},
+					{
+						title:'Featured',
+						source:'',
+						show:false
+					},
 				]
 		}
 	},
@@ -113,6 +140,7 @@ export default {
 				this.$router.push("/");
 				setItem('user-options',this.user_options)
 				setItem('product-options',this.product_options)
+				setItem('product-filters',this.product_filters)
 			});
 		}
 	}

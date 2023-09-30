@@ -6,6 +6,7 @@ const UserService = {
          params: {
             page: payload.page,
             limit: payload.limit,
+            sort: payload.sort,
          },
       });
    },

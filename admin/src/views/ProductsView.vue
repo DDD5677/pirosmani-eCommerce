@@ -1,9 +1,8 @@
 <template>
 	<section class="users">
 		<div class="container">
-			<error v-if="productsError" :error="productsError"/>
-			<loading v-if="productsLoading"/>
-			<div v-if="!productsLoading&&!productsError" class="users__inner">
+			
+			<div  class="users__inner">
 				<div class="table__nav">
 					<div class="filters">
 						<div class="search">
@@ -14,7 +13,7 @@
 						<div class="filter">
 							<div v-for="(filter,index) in filters" :id="index">
 									<div v-if="filter.show">
-										<input type="text" :placeholder="filter.title">
+										<input type="text" :placeholder="filter.title" v-model="filter.source" @change="sumbitFilters">
 										<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
 									</div>
 								
@@ -55,9 +54,9 @@
 									<input class="checkbox" ref="foomain" @click="toggle()" type="checkbox">
 								</th>
 								<th v-if="options[0].show">{{options[0].title}}</th>
-								<th v-if="options[1].show">{{options[1].title}}</th>
-								<th v-if="options[2].show">{{options[2].title}}</th>
-								<th v-if="options[3].show">{{options[3].title}}</th>
+								<th v-if="options[1].show" @click="sortHandler('name')" class="sort_btn">{{options[1].title}} <i v-if="sort==='name'||sort==='-name'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i></th>
+								<th v-if="options[2].show" @click="sortHandler('price')" class="sort_btn">{{options[2].title}} <i v-if="sort==='price'||sort==='-price'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i></th>
+								<th v-if="options[3].show" @click="sortHandler('countInStock')" class="sort_btn">{{options[3].title}} <i v-if="sort==='countInStock'||sort==='-countInStock'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i></th>
 								<th v-if="options[4].show">{{options[4].title}}</th>
 								<th v-if="options[5].show">{{options[5].title}}</th>
 								<th v-if="options[6].show">{{options[6].title}}</th>
@@ -74,7 +73,9 @@
 								<a href="" class="delete__btn"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
 							</div>
 						</thead>
-						<tbody>
+						
+						<tbody v-if="!productsLoading&&!productsError">
+							
 							<tr v-for="product in products">
 								<td>
 									<span></span>
@@ -92,12 +93,13 @@
 							</tr>
 						</tbody>
 					</table>
+					<loading v-if="productsLoading"/>
+					<error v-if="productsError" :error="productsError"/>
+
 				</div>
 				<pagination :getData="getProducts" :page="page" :pageSize="pageSize"/>
 			</div>
-
 		</div>
-		
 	</section>
 </template>
 
@@ -107,33 +109,13 @@ import { getItem, setItem } from '@/helpers/localStorage';
 	export default {
 		data(){
 			return{
+				sort:'',
 				checked:null,
 				search:'',
 				columns:false,
 				filter_box:false,
 				options:[],
-				filters:[
-					{
-						title:'Min price',
-						show:false
-					},
-					{
-						title:'Max price',
-						show:false
-					},
-					{
-						title:'Min rate',
-						show:false
-					},
-					{
-						title:'Min count in stock',
-						show:false
-					},
-					{
-						title:'Featured',
-						show:false
-					},
-				]
+				filters:[],
 			}
 		},
 		computed:{
@@ -154,6 +136,20 @@ import { getItem, setItem } from '@/helpers/localStorage';
   				const options = { year: "numeric", month: "long", day: "numeric" }
   				return new Date(dateString).toLocaleDateString(undefined, options) +" " + new Date(dateString).toLocaleTimeString('it-IT')
 			},
+			sortHandler(sort){
+				if(this.sort===sort){
+					if(this.sort[0]==='-'){
+						this.sort=this.sort.substring(1)
+					}else{
+					this.sort='-'+this.sort
+					}
+				}else{
+					this.sort=sort
+				}
+				this.getProducts(this.$route.query.page,this.$route.query.limit)
+				const sorts=getItem('sorts')
+				setItem('sorts',{...sorts,product:this.sort})
+			},
 			toggleColumns(){
 				this.columns=!this.columns
 			},
@@ -162,9 +158,19 @@ import { getItem, setItem } from '@/helpers/localStorage';
 			},
 			addFilter(index){
 				this.filters[index].show=true
+				this.filter_box=false
 			},
 			removeFilter(index){
 				this.filters[index].show=false
+				if(this.filters[index].source){
+					this.filters[index].source=''
+					setItem('product-filters',this.filters);
+					this.getProducts(1,this.$route.query.limit)
+				}
+			},
+			sumbitFilters(){
+				setItem('product-filters',this.filters);
+				this.getProducts(1,this.$route.query.limit)
 			},
 			addOptions(index){
 				const shortline = this.$refs.shortline
@@ -199,20 +205,36 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				i.checked=this.$refs.foomain.checked}
 				this.addChecked()
 			},
+
 			getProducts(page,limit){
-				this.$store.dispatch('product/getProducts',{page:page,limit:limit});
+				const queries = {
+					page:page,
+					limit:limit,
+					sort:this.sort,
+					min_price:this.filters[0].source,
+					max_price:this.filters[1].source,
+					min_count:this.filters[3].source,
+					isFeatured:this.filters[4].source,
+				}
+				this.$store.dispatch('product/getProducts',queries);
 				this.changePage(page);
 				this.changeLimit(limit);
-				this.$router.push({ path: "/products", query: { page:page,limit:limit} });
+				this.$router.push({ path: "/products", query: queries });
+			}
+		},
+		watch:{
+			filters(newFilter,oldFilter){
+				setItem('product-filters',newFilter);
+				this.getProducts(this.$route.query.page,this.$route.query.limit)
 			}
 		},
 		created(){
-			console.log("created product")
 			this.options=getItem('product-options')
+			this.filters=getItem('product-filters')
+			this.sort=getItem('sorts').product
 
 		},
 		mounted(){
-			console.log("productview mounted")
 			this.getProducts(this.$route.query.page,this.$route.query.limit)
 		}
 	}
@@ -399,6 +421,10 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				width: 100%;
 				border-collapse: collapse;
 				border-spacing: 0px;
+				.rotate{
+					transition: all 0.3s ease-in-out;
+					transform: rotate(180deg);
+				}
 				tr th:first-child,
 				tr td:first-child{
 					padding-left: 15px;
@@ -421,6 +447,13 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					position: sticky;
 					top: 85px;
 					z-index: 50;
+					.sort_btn{
+						cursor: pointer;
+						transition: all 0.3s ease-in-out;
+						&:hover{
+							color: $main-color;
+						}
+					}
 					th{
 						font-weight: 500;
 						background-color: #fff;

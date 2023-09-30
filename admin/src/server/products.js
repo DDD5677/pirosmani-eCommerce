@@ -6,6 +6,13 @@ const ProductService = {
          params: {
             page: payload.page,
             limit: payload.limit,
+            sort: payload.sort,
+            price: {
+               lte: payload.max_price,
+               gte: payload.min_price,
+            },
+            isFeatured: payload.isFeatured,
+            countInStock: { gte: payload.min_count },
          },
       });
    },

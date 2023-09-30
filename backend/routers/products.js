@@ -37,22 +37,44 @@ router.get(`/`, async (req, res) => {
       let limit = 4;
       let totalProducts = 0;
       let pageSize = 1;
-      const excludeFields = ["sort", "page", "limit"];
-      let queryStr = JSON.stringify(req.query);
-      queryStr = queryStr.replace(
-         /\b(gte|gt|lte|lt)\b/g,
-         (match) => `$${match}`
-      );
-      filter = JSON.parse(queryStr);
-      excludeFields.forEach((el) => {
-         delete filter[el];
-      });
-      console.log(filter);
+
+      // const excludeFields = ["sort", "page", "limit"];
+
+      // excludeFields.forEach((el) => {
+      //    delete filter[el];
+      // });
+
       if (req.query.page) {
          page = req.query.page;
       }
       if (req.query.limit) {
          limit = req.query.limit;
+      }
+      //Building filter object
+      if (req.query.price) {
+         if (req.query.price.lte) {
+            filter = {
+               ...filter,
+               price: { ...filter.price, lte: req.query.price.lte },
+            };
+         }
+         if (req.query.price.gte) {
+            filter = {
+               ...filter,
+               price: { ...filter.price, gte: req.query.price.gte },
+            };
+         }
+      }
+      if (req.query.isFeatured) {
+         filter = { ...filter, isFeatured: req.query.isFeatured };
+      }
+      if (req.query.countInStock) {
+         if (req.query.countInStock.gte) {
+            filter = {
+               ...filter,
+               countInStock: { gte: req.query.countInStock.gte },
+            };
+         }
       }
       if (req.query.category) {
          const category = await Category.findById(req.query.category);
@@ -61,7 +83,17 @@ router.get(`/`, async (req, res) => {
                success: false,
                message: "Invalid Category",
             });
+         filter = { ...filter, category: req.query.category };
       }
+
+      let queryStr = JSON.stringify(filter);
+      queryStr = queryStr.replace(
+         /\b(gte|gt|lte|lt)\b/g,
+         (match) => `$${match}`
+      );
+      filter = JSON.parse(queryStr);
+
+      console.log(filter);
 
       totalProducts = await Product.countDocuments(filter).exec();
       pageSize = Math.ceil(totalProducts / limit);
@@ -71,7 +103,7 @@ router.get(`/`, async (req, res) => {
             message: "Page is not found!",
          });
       }
-      console.log(req.query.sort);
+      console.log("sort", req.query.sort);
       const productList = await Product.find(filter)
          .sort(req.query.sort)
          .skip((page - 1) * limit)

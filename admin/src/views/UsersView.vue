@@ -41,7 +41,15 @@
 									<input class="checkbox" ref="foomain" @click="toggle()" type="checkbox">
 								</th>
 								<th v-if="options[0].show">{{options[0].title}}</th>
-								<th v-if="options[1].show">{{options[1].title}}</th>
+								<th v-if="options[1].show" 
+									@click="sortHandler('name')" 
+									class="sort_btn">
+									{{options[1].title}} 
+									<i v-if="sort==='name'||sort==='-name'" 
+										class="fa fa-arrow-up" 
+										:class="sort[0]==='-'?'rotate':''" 
+										aria-hidden="true"></i>
+								</th>
 								<th v-if="options[2].show">{{options[2].title}}</th>
 								<th v-if="options[3].show">{{options[3].title}}</th>
 								<th v-if="options[4].show">{{options[4].title}}</th>
@@ -88,6 +96,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 	export default {
 		data(){
 			return{
+				sort:'',
 				checked:null,
 				search:'',
 				columns:false,
@@ -108,6 +117,20 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				changePage:'user/changePage',
 				changeLimit:'user/changeLimit'
 			}),
+			sortHandler(sort){
+				if(this.sort===sort){
+					if(this.sort[0]==='-'){
+						this.sort=this.sort.substring(1)
+					}else{
+					this.sort='-'+this.sort
+					}
+				}else{
+					this.sort=sort
+				}
+				this.getUsers(this.$route.query.page,this.$route.query.limit)
+				const sorts=getItem('sorts')
+				setItem('sorts',{...sorts,user:this.sort})
+			},
 			toggleColumns(){
 				this.columns=!this.columns
 			},
@@ -147,22 +170,25 @@ import { getItem, setItem } from '@/helpers/localStorage';
 			},
 
 			getUsers(page,limit){
-				this.$store.dispatch('user/getUsers',{page:page,limit:limit});
+				const queries = {
+					page:page,
+					limit:limit,
+					sort:this.sort,
+				}
+				this.$store.dispatch('user/getUsers',queries);
 				this.changePage(page);
 				this.changeLimit(limit);
-				this.$router.push({ path: "/users", query: { page:page,limit:limit} });
+				this.$router.push({ path: "/users", query: queries });
 			}
 		},
 		created(){
-			console.log('created userview')
 			this.options=getItem('user-options')
+			this.sort=getItem('sorts').user
 
 		},
 		mounted(){
-			console.log("userview mounted")
 			this.getUsers(this.$route.query.page,this.$route.query.limit)
-			//this.$store.dispatch('user/getUsers',{page:this.$route.query.page,limit:this.$route.query.limit})
-			//this.options=getItem('user-options')
+
 		}
 	}
 </script>
@@ -294,6 +320,10 @@ import { getItem, setItem } from '@/helpers/localStorage';
 			border: 1px solid #d3d3d3;
 			border-radius: 15px;
 			margin-bottom: 50px;
+			.rotate{
+					transition: all 0.3s ease-in-out;
+					transform: rotate(180deg);
+				}
 			table{
 				width: 100%;
 				border-collapse: collapse;
@@ -320,6 +350,13 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					position: sticky;
 					top: 85px;
 					z-index: 50;
+					.sort_btn{
+						cursor: pointer;
+						transition: all 0.3s ease-in-out;
+						&:hover{
+							color: $main-color;
+						}
+					}
 					th{
 						font-weight: 500;
 						background-color: #fff;
