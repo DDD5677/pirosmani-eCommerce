@@ -11,11 +11,10 @@
 						<span class="image_name" ref="imageName"></span>
 					</label>
 					<label @click="isFeaturedHandler" for="">
-						<input  type="checkbox" id="">
+						<input  type="checkbox" name="">
 						<span class="shortline" :class="{'checked':isFeatured}">
 							<span class="circle"></span>
 						</span>
-					
 						isFeatured
 					</label>
 					<form-input
@@ -26,15 +25,26 @@
 					:errors="errors" 
 					:error="errors?errors.name:''" 
 					v-model="name"/>
-					<label class="inputs" for="">
+					<div class="inputs">
+						<label class="">
 						Country
-						<select  name="" id="">
-						<option v-for="(country,index) in country_list" 
-						:value="country">
-							{{ country }}
-						</option>
-					</select>
+						<select  name="countries" v-model="country">
+							<option v-for="(country,index) in country_list" 
+							:value="country">
+								{{ country }}
+							</option>
+						</select>
 					</label>
+					<label class="">
+						Category
+						<select  name="categories" v-model="category">
+							<option v-for="(category,index) in categories" 
+							:value="category._id">
+								{{ category.name }}
+							</option>
+						</select>
+					</label>
+					</div>
 					<form-input
 					class="inputs" 
 					:label="'Count in stock'" 
@@ -55,14 +65,14 @@
 					
 					<div class="textarea_block">
 						<div class="rich_dsc">
-							<label>Rich description</label>
-							<textarea  v-model="richDsc" name="" id="" cols="10" rows="8" placeholder="Rich description"></textarea>
+							<label for="richDsc">Rich description</label>
+							<textarea  v-model="richDsc" name="richDsc" id="richDsc" cols="10" rows="8" placeholder="Rich description"></textarea>
 
 						</div>
 						<div class="short_dsc">
-							<label>Short description</label>
+							<label for="shortDsc">Short description</label>
 
-							<textarea  v-model="dsc" name="" id="" cols="10" rows="4" placeholder="Short description"></textarea>
+							<textarea  v-model="dsc" name="shortDsc" id="shortDsc" cols="10" rows="4" placeholder="Short description"></textarea>
 						<green-btn class="green__btn">Create</green-btn>
 
 						</div>
@@ -83,47 +93,51 @@ import { mapMutations, mapState } from 'vuex';
 			return{
 				name:'',
 				country:'',
+				category:'',
 				price:null,
 				isFeatured:false,
 				countInStock:'',
 				dsc:'',
 				richDsc:'',
-				avatar:null,
+				image:null,
 				country_list:["Countries","Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cruise Ship","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyz Republic","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania","Mauritius","Mexico","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Namibia","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","Norway","Oman","Pakistan","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre &amp; Miquelon","Samoa","San Marino","Satellite","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka","St Kitts &amp; Nevis","St Lucia","St Vincent","St. Lucia","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad &amp; Tobago","Tunisia","Turkey","Turkmenistan","Turks &amp; Caicos","Uganda","Ukraine","United Arab Emirates","United Kingdom","Uruguay","Uzbekistan","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"],
 			}
 		},
 		computed:{
 			...mapState({
-				errors:state=>state.auth.errors
+				errors:state=>state.auth.errors,
+				categories:state=>state.category.categories
 			})
 		},
 		methods:{
-			...mapMutations({
-				toggleSignIn:'navbar/toggleSignIn'
-			}),
 			changeAvatar(event){
             let inputImage = document.querySelector("input[type=file]").files[0];
             this.$refs.imageName.innerText = inputImage.name;
 				console.log(inputImage,event.target.value)
-				this.avatar=inputImage;
+				this.image=inputImage;
 			},
 			isFeaturedHandler(){
+				console.log(this.isFeatured)
 				this.isFeatured=!this.isFeatured
 			},
 			submitHandler(){
 				const data={
 					name:this.name,
 					country:this.country,
-					email:this.email,
+					category:this.category,
 					isFeatured:this.isFeatured,
-					phone:this.phone,
-					extraPhone:this.extraPhone,
-					password:this.password,
-					avatar:this.avatar,
+					countInStock:this.countInStock,
+					price:this.price,
+					dsc:this.dsc,
+					richDsc:this.richDsc,
+					image:this.image,
 				}
 				console.log(data)
-				this.$store.dispatch('user/postUsers',data)
+				this.$store.dispatch('product/postProducts',data)
 			}
+		},
+		mounted(){
+			this.$store.dispatch('category/getCategory')
 		}
 		
 	}
@@ -146,13 +160,10 @@ import { mapMutations, mapState } from 'vuex';
 			gap: 20px;
 			flex-wrap: wrap;
 			width: 100%;
-			label.inputs{
-				padding: 0;
-			}
 			select{
 				margin-top: 10px;
 				display: block;
-				padding: 11px 20px;
+				padding: 11px 10px;
 				background: #FCFCFC;
 				border: 1.1194px solid #EBEBEB;
 				border-radius: 7.11356px;
@@ -236,6 +247,15 @@ import { mapMutations, mapState } from 'vuex';
 	
 		.inputs{
 			flex: 1 0 45%;
+			select{
+				width: 100%;
+				
+			}
+			label{
+				margin-right: 20px;
+				padding: 0;
+				width: 45%;
+			}
 		}
 		.green__btn{
 			margin-top: 25px;

@@ -54,9 +54,24 @@
 									<input class="checkbox" ref="foomain" @click="toggle()" type="checkbox">
 								</th>
 								<th v-if="options[0].show">{{options[0].title}}</th>
-								<th v-if="options[1].show" @click="sortHandler('name')" class="sort_btn">{{options[1].title}} <i v-if="sort==='name'||sort==='-name'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i></th>
-								<th v-if="options[2].show" @click="sortHandler('price')" class="sort_btn">{{options[2].title}} <i v-if="sort==='price'||sort==='-price'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i></th>
-								<th v-if="options[3].show" @click="sortHandler('countInStock')" class="sort_btn">{{options[3].title}} <i v-if="sort==='countInStock'||sort==='-countInStock'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i></th>
+								<th v-if="options[1].show"  >
+									<span class="sort_btn" @click="sortHandler('name')">
+									{{options[1].title}}
+									<i v-if="sort==='name'||sort==='-name'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
+									</span>
+								</th>
+								<th v-if="options[2].show" >
+									<span @click="sortHandler('price')" class="sort_btn">
+									{{options[2].title}} 
+									<i v-if="sort==='price'||sort==='-price'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
+									</span>
+								</th>
+								<th v-if="options[3].show" >
+									<span @click="sortHandler('countInStock')" class="sort_btn">
+									{{options[3].title}} 
+									<i v-if="sort==='countInStock'||sort==='-countInStock'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
+									</span>
+								</th>
 								<th v-if="options[4].show">{{options[4].title}}</th>
 								<th v-if="options[5].show">{{options[5].title}}</th>
 								<th v-if="options[6].show">{{options[6].title}}</th>
@@ -450,6 +465,9 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					.sort_btn{
 						cursor: pointer;
 						transition: all 0.3s ease-in-out;
+						i{
+							transition: all 0.1s ease-in;
+						}
 						&:hover{
 							color: $main-color;
 						}

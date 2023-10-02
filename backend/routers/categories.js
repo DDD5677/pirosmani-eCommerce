@@ -2,15 +2,19 @@ const express = require("express");
 const router = express.Router();
 const Category = require("../models/category");
 
-router.get(`/`, async (req, res) => {
-   const categoryList = await Category.find({});
+router.get(`/`, async (req, res, next) => {
+   try {
+      const categoryList = await Category.find({});
 
-   if (!categoryList) {
-      res.status(500).json({
-         success: false,
-      });
+      if (!categoryList) {
+         res.status(500).json({
+            success: false,
+         });
+      }
+      res.send(categoryList);
+   } catch (error) {
+      next(error);
    }
-   res.send(categoryList);
 });
 
 router.get("/:id", async (req, res) => {

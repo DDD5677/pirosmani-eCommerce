@@ -4,6 +4,7 @@ import { authModule } from "./authModule";
 import { reviewsModule } from "./reviewsModule";
 import { usersModule } from "./usersModule";
 import { productsModule } from "./productsModule";
+import { categoryModule } from "./categoryModule";
 
 export default createStore({
    modules: {
@@ -12,5 +13,6 @@ export default createStore({
       review: reviewsModule,
       user: usersModule,
       product: productsModule,
+      category: categoryModule,
    },
 });

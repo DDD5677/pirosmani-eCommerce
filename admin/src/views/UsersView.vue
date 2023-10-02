@@ -1,9 +1,8 @@
 <template>
 	<section class="users">
 		<div class="container">
-			<error v-if="usersError" :error="usersError"/>
-			<loading v-if="usersLoading"/>
-			<div v-if="!usersLoading&&!usersError" class="users__inner">
+			
+			<div  class="users__inner">
 				<div class="table__nav">
 					<div class="filters">
 						<div class="search">
@@ -41,14 +40,14 @@
 									<input class="checkbox" ref="foomain" @click="toggle()" type="checkbox">
 								</th>
 								<th v-if="options[0].show">{{options[0].title}}</th>
-								<th v-if="options[1].show" 
-									@click="sortHandler('name')" 
-									class="sort_btn">
+								<th v-if="options[1].show" >
+									<span @click="sortHandler('name')" class="sort_btn">
 									{{options[1].title}} 
 									<i v-if="sort==='name'||sort==='-name'" 
 										class="fa fa-arrow-up" 
 										:class="sort[0]==='-'?'rotate':''" 
 										aria-hidden="true"></i>
+									</span>
 								</th>
 								<th v-if="options[2].show">{{options[2].title}}</th>
 								<th v-if="options[3].show">{{options[3].title}}</th>
@@ -66,7 +65,7 @@
 								<a href="" class="delete__btn"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
 							</div>
 						</thead>
-						<tbody>
+						<tbody v-if="!usersLoading&&!usersError">
 							<tr v-for="user in users">
 								<td>
 									<span></span>
@@ -81,8 +80,12 @@
 								<td v-if="options[4].show">Total spent</td>
 							</tr>
 						</tbody>
+						
 					</table>
+					<loading v-if="usersLoading"/>
 				</div>
+				<error v-if="usersError" :error="usersError"/>
+			
 				<pagination :getData="getUsers" :page="page" :pageSize="pageSize"/>
 			</div>
 		</div>

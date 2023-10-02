@@ -6,6 +6,7 @@
 			@input="$emit('update:modelValue',$event.target.value)"
 			:type="type"
 			:placeholder="placeholder"
+			:id="label"
 		/>
 		<div class="error__message" v-if="errors&&error">{{ error }}</div>
 	</div>

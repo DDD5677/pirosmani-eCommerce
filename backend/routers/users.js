@@ -216,7 +216,7 @@ router.post("/login", async (req, res) => {
             },
             secret,
             {
-               expiresIn: "1d",
+               expiresIn: "7d",
             }
          );
          res.status(200).send({ user: user, token: token });

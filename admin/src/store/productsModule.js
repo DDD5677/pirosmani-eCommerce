@@ -32,14 +32,14 @@ export const productsModule = {
          state.isLoading = false;
          state.errors = payload;
       },
-      postUserStart(state) {
+      postProductStart(state) {
          state.isLoading = true;
          state.errors = null;
       },
-      postUserSuccess(state) {
+      postProductSuccess(state) {
          state.isLoading = false;
       },
-      postUserFailure(state, payload) {
+      postProductFailure(state, payload) {
          state.isLoading = false;
          state.errors = payload;
       },
@@ -57,15 +57,15 @@ export const productsModule = {
                });
          });
       },
-      postUsers(context, payload) {
+      postProducts(context, payload) {
          return new Promise(() => {
-            context.commit("postUserStart");
-            UserService.postUsers(payload)
+            context.commit("postProductStart");
+            ProductService.postProducts(payload)
                .then((res) => {
-                  context.commit("postUserSuccess");
+                  context.commit("postProductSuccess");
                })
                .catch((error) => {
-                  context.commit("postUserFailure", error.response.data);
+                  context.commit("postProductFailure", error.response.data);
                });
          });
       },
