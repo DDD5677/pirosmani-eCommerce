@@ -35,7 +35,7 @@ router.get(`/:id`, async (req, res) => {
    }
 });
 
-router.put("/", async (req, res) => {
+router.put("/", async (req, res, next) => {
    try {
       const reviews = await Review.findOneAndUpdate(
          {
@@ -60,14 +60,6 @@ router.put("/", async (req, res) => {
             .send("the reviews cannot be updated or created!");
       }
 
-      res.send(reviews);
-   } catch (error) {
-      res.status(500).json({ error });
-   }
-});
-
-router.post("/", async (req, res, next) => {
-   try {
       let key = `ratings.${req.body.rating}`;
       const product = await Product.findByIdAndUpdate(req.body.product, {
          $inc: { [key]: 1 },
@@ -77,6 +69,14 @@ router.post("/", async (req, res, next) => {
          return res.status(404).send("rating is not accepted");
       }
 
+      res.send(reviews);
+   } catch (error) {
+      next(error);
+   }
+});
+
+router.post("/", async (req, res, next) => {
+   try {
       let review = new Review({
          product: req.body.product,
          user: req.body.user,
@@ -88,6 +88,15 @@ router.post("/", async (req, res, next) => {
 
       if (!review) {
          return res.status(404).send("the review cannot be created!");
+      }
+
+      let key = `ratings.${req.body.rating}`;
+      const product = await Product.findByIdAndUpdate(req.body.product, {
+         $inc: { [key]: 1 },
+      });
+
+      if (!product) {
+         return res.status(404).send("rating is not accepted");
       }
 
       res.send(review);
