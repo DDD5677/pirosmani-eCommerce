@@ -149,7 +149,7 @@ router.get(`/:id`, async (req, res, next) => {
             success: false,
          });
       }
-      res.send(product);
+      res.status(200).send(product);
    } catch (error) {
       next(error);
    }
@@ -190,26 +190,30 @@ router.post(`/`, uploadOptions.single("image"), async (req, res, next) => {
    }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", uploadOptions.single("image"), async (req, res) => {
    if (!mongoose.isValidObjectId(req.params.id)) {
       return res.status(400).send("Invalid Product ID");
    }
    const category = await Category.findById(req.body.category);
    if (!category) return res.status(400).send("Invalid Category");
+
+   const file = req.file;
+   if (!file) return res.status(400).send("no image in the request");
+
+   const basePath = `${req.protocol}://${req.get("host")}/public/uploads/`;
+   const fileName = req.file.filename;
    const product = await Product.findByIdAndUpdate(
       req.params.id,
       {
          name: req.body.name,
          dsc: req.body.dsc,
          richDsc: req.body.richDsc,
-         img: req.body.img,
+         img: `${basePath}${fileName}`,
          images: req.body.images,
          country: req.body.country,
          price: req.body.price,
          category: req.body.category,
          countInStock: req.body.countInStock,
-         rate: req.body.rate,
-         numReviews: req.body.numReviews,
          isFeatured: req.body.isFeatured,
       },
       { new: true }

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Review = require("../models/review");
+const Product = require("../models/product");
 
 router.get(`/`, async (req, res) => {
    try {
@@ -65,8 +66,17 @@ router.put("/", async (req, res) => {
    }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", async (req, res, next) => {
    try {
+      let key = `ratings.${req.body.rating}`;
+      const product = await Product.findByIdAndUpdate(req.body.product, {
+         $inc: { [key]: 1 },
+      });
+
+      if (!product) {
+         return res.status(404).send("rating is not accepted");
+      }
+
       let review = new Review({
          product: req.body.product,
          user: req.body.user,
@@ -82,7 +92,7 @@ router.post("/", async (req, res) => {
 
       res.send(review);
    } catch (error) {
-      res.status(500).json({ error });
+      next(error);
    }
 });
 

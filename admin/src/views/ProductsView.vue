@@ -102,7 +102,7 @@
 								<td v-if="options[1].show">{{ product.name }}</td>
 								<td v-if="options[2].show">{{ product.price }}$</td>
 								<td v-if="options[3].show">{{ product.countInStock }}</td>
-								<td v-if="options[4].show">{{ product.rate }}</td>
+								<td v-if="options[4].show">{{ ratingCalc(product.ratings) }}</td>
 								<td v-if="options[5].show">{{ product.isFeatured }}</td>
 								<td v-if="options[6].show">{{ formatDate(product.dateCreated) }}</td>
 							</tr>
@@ -141,12 +141,28 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				productsLoading:state=>state.product.isLoading,
 				productsError:state=>state.product.errors
 			}),
+			
 		},
 		methods:{
 			...mapMutations({
 				changePage:'product/changePage',
 				changeLimit:'product/changeLimit'
 			}),
+			ratingCalc(ratings){
+				let items = Object.entries(ratings);
+            let sum = 0;
+            let total = 0;
+
+            for (let [key, value] of items) {
+               total += value;
+               sum += value * parseInt(key);
+            }
+				if(total){
+            	return Math.round(sum / total);
+				}else{
+					return 0
+				}
+			},
 			formatDate (dateString){
   				const options = { year: "numeric", month: "long", day: "numeric" }
   				return new Date(dateString).toLocaleDateString(undefined, options) +" " + new Date(dateString).toLocaleTimeString('it-IT')

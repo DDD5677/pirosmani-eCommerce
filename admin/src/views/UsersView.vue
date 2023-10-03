@@ -77,7 +77,7 @@
 								<td v-if="options[1].show">{{ user.name }} {{ user.surname }}</td>
 								<td v-if="options[2].show">{{ user.phone }}</td>
 								<td v-if="options[3].show">{{ user.email }}</td>
-								<td v-if="options[4].show">Total spent</td>
+								<td v-if="options[4].show">{{ user.totalSpent }}</td>
 							</tr>
 						</tbody>
 						
@@ -114,6 +114,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				usersLoading:state=>state.user.isLoading,
 				usersError:state=>state.user.errors
 			}),
+			
 		},
 		methods:{
 			...mapMutations({

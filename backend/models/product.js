@@ -50,8 +50,47 @@ const productSchema = new mongoose.Schema(
          type: Date,
          default: Date.now,
       },
+      ratings: {
+         type: mongoose.Mixed,
+         1: Number,
+         2: Number,
+         3: Number,
+         4: Number,
+         5: Number,
+         get: function (ratings) {
+            let items = Object.entries(ratings);
+            let sum = 0;
+            let total = 0;
+
+            for (let [key, value] of items) {
+               total += value;
+               sum += value * parseInt(key);
+            }
+            return Math.round(sum / total);
+         },
+         set: function (r) {
+            if (!(this instanceof mongoose.Document)) {
+               // only call setter when updating the whole path with an object
+               if (r instanceof Object) return r;
+               else {
+                  throw new Error("");
+               }
+            } else {
+               // get the actual ratings object without using the getter which returns  an integer value
+               // r is the ratings which is an integer value that represent the star level from 1 to 5
+               if (r instanceof Object) {
+                  return r; // handle setting default when creating object
+               }
+               this.get("ratings", null, { getters: false })[r] =
+                  1 +
+                  parseInt(this.get("ratings", null, { getters: false })[r]);
+               return this.get("ratings", null, { getters: false });
+            }
+         },
+         default: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+      },
    },
-   { timestamps: true }
+   { timestamps: true, toObject: { getters: true }, toJSON: { getters: true } }
 );
 
 productSchema.virtual("id").get(function () {

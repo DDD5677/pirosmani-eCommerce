@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Order = require("../models/order");
 const OrderItem = require("../models/order-items");
+const User = require("../models/user");
 
 // const orderErrors = (err) => {
 //    console.log(err.message, err.code);
@@ -91,6 +92,13 @@ router.post("/", async (req, res, next) => {
       );
 
       const totalPrice = totalPrices.reduce((a, b) => a + b, 0);
+
+      const user = await User.findByIdAndUpdate(req.body.user, {
+         $inc: { totalSpent: totalPrice },
+      });
+      if (!user) {
+         res.status(404).send("total price is not accepted");
+      }
 
       let order = new Order({
          orderItems: orderItemsIds,
