@@ -90,8 +90,8 @@ import { mapState } from 'vuex';
 		},
 		mounted(){
 			console.log("mounted homeview")
-			this.$store.dispatch('order/getOrders')
-			this.$store.dispatch('review/getReviews')
+			this.$store.dispatch('order/getOrders',{user:''})
+			this.$store.dispatch('review/getReviews',{user:''})
 			this.$store.dispatch('user/getUsers',{page:1})
 		}
 	}
@@ -138,6 +138,7 @@ import { mapState } from 'vuex';
 					}
 					
 					.order__info{
+						margin-left: 15px;
 						display: flex;
 						width: 100%;
 						align-items: center;
@@ -202,12 +203,16 @@ import { mapState } from 'vuex';
 			}
 			.reviews{
 				.review__info{
+					margin-left: 15px;
 					font-size: 14px;
 					line-height: 1.2;
 					color: rgba(0, 0, 0, 0.6);
 				}
 			}
 			.customers{
+				.user__info{
+					margin-left: 15px;
+				}
 				.item{
 					align-items: center;
 					font-size: 16px;

@@ -49,7 +49,7 @@
 					<table>
 						<thead>
 							<tr >
-								<th>
+								<th v-if="!productsError">
 									<span></span>
 									<input class="checkbox" ref="foomain" @click="toggle()" type="checkbox">
 								</th>
@@ -479,6 +479,8 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					top: 85px;
 					z-index: 50;
 					.sort_btn{
+						
+						font-weight: 500;
 						cursor: pointer;
 						transition: all 0.3s ease-in-out;
 						i{

@@ -4,8 +4,9 @@ export const usersModule = {
    state: () => ({
       page: 1,
       limit: null,
-      pageSize: null,
+      pageSize: 1,
       users: null,
+      user: null,
       isLoading: true,
       errors: null,
    }),
@@ -32,6 +33,19 @@ export const usersModule = {
          state.isLoading = false;
          state.errors = payload;
       },
+      getUserByIdStart(state) {
+         state.isLoading = true;
+         state.user = null;
+         state.errors = null;
+      },
+      getUserByIdSuccess(state, payload) {
+         state.isLoading = false;
+         state.user = payload;
+      },
+      getUserByIdFailure(state, payload) {
+         state.isLoading = false;
+         state.errors = payload;
+      },
       postUserStart(state) {
          state.isLoading = true;
          state.errors = null;
@@ -40,6 +54,18 @@ export const usersModule = {
          state.isLoading = false;
       },
       postUserFailure(state, payload) {
+         state.isLoading = false;
+         state.errors = payload;
+      },
+      updateStart(state) {
+         state.isLoading = true;
+         state.errors = null;
+      },
+      updateSuccess(state, payload) {
+         state.isLoading = false;
+         state.user = payload.user;
+      },
+      updateFailure(state, payload) {
          state.isLoading = false;
          state.errors = payload;
       },
@@ -58,6 +84,20 @@ export const usersModule = {
                });
          });
       },
+      getUserById(context, payload) {
+         return new Promise((resolve) => {
+            context.commit("getUserByIdStart");
+            UserService.getUserById(payload)
+               .then((res) => {
+                  //console.log(res);
+                  context.commit("getUserByIdSuccess", res.data);
+                  resolve(res.data);
+               })
+               .catch((error) => {
+                  context.commit("getUserByIdFailure", error.response.data);
+               });
+         });
+      },
       postUsers(context, payload) {
          return new Promise(() => {
             context.commit("postUserStart");
@@ -68,6 +108,20 @@ export const usersModule = {
                })
                .catch((error) => {
                   context.commit("postUserFailure", error.response.data);
+               });
+         });
+      },
+      updateUser(context, payload) {
+         return new Promise((resolve, reject) => {
+            context.commit("updateStart");
+            UserService.updateUser(payload)
+               .then((response) => {
+                  console.log("update", response.data);
+                  context.commit("updateSuccess", response.data);
+               })
+               .catch((error) => {
+                  console.log("error update", error);
+                  context.commit("updateFailure", error.response.data);
                });
          });
       },

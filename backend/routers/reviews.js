@@ -5,7 +5,16 @@ const Product = require("../models/product");
 
 router.get(`/`, async (req, res) => {
    try {
-      const reviewsList = await Review.find({}).populate(["user", "product"]);
+      let filter = {};
+
+      if (req.query.user) {
+         filter["user"] = req.query.user;
+      }
+
+      const reviewsList = await Review.find(filter).populate([
+         "user",
+         "product",
+      ]);
 
       if (!reviewsList) {
          res.status(500).json({
@@ -18,7 +27,7 @@ router.get(`/`, async (req, res) => {
    }
 });
 
-router.get(`/:id`, async (req, res) => {
+router.get(`/:id`, async (req, res, next) => {
    try {
       const reviewsList = await Review.find({
          product: req.params.id,
@@ -31,7 +40,7 @@ router.get(`/:id`, async (req, res) => {
       }
       res.send(reviewsList);
    } catch (error) {
-      res.status(500).json({ error });
+      next(error);
    }
 });
 

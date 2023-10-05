@@ -10,6 +10,9 @@ const UserService = {
          },
       });
    },
+   getUserById(payload) {
+      return axios.get(`/users/${payload}`);
+   },
    postUsers(data) {
       let formData = new FormData();
       formData.append("avatar", data.avatar);
@@ -21,6 +24,18 @@ const UserService = {
       formData.append("extraPhone", data.extraPhone);
       formData.append("password", data.password);
       return axios.post("/users", formData);
+   },
+   updateUser(user) {
+      let formData = new FormData();
+      formData.append("avatar", user.avatar);
+      formData.append("name", user.name);
+      formData.append("surname", user.surname);
+      formData.append("isAdmin", user.isAdmin);
+      formData.append("email", user.email);
+      formData.append("phone", user.phone);
+      formData.append("extraPhone", user.extraPhone);
+      formData.append("password", user.password);
+      return axios.put(`/users/${user.id}`, formData);
    },
 };
 

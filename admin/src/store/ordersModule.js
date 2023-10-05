@@ -44,29 +44,16 @@ export const ordersModule = {
       },
    },
    actions: {
-      getOrders(context) {
+      getOrders(context, payload) {
          return new Promise(() => {
             context.commit("orderStart");
-            OrderService.getOrders()
+            OrderService.getOrders(payload)
                .then((res) => {
                   console.log(res);
                   context.commit("orderSuccess", res.data);
                })
                .catch((error) => {
                   context.commit("orderFailure", error.response.data);
-               });
-         });
-      },
-      getOrdersByUserId(context, userid) {
-         return new Promise((resolve) => {
-            context.commit("getOrderStart");
-            OrderService.getOrdersByUserId(userid)
-               .then((response) => {
-                  context.commit("getOrderSuccess");
-                  resolve(response.data);
-               })
-               .catch((error) => {
-                  context.commit("getOrderFailure", error.response.data);
                });
          });
       },

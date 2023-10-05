@@ -25,7 +25,7 @@
 					Забыли пароль?
 					</a>
 				</div>
-				<green-btn  class="green__btn enter__profile" @click="submitHandler" >
+				<green-btn  class="green__btn enter__profile" @click.prevent="submitHandler" >
 				Войти
 				</green-btn>
 			</div>

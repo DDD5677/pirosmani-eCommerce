@@ -22,10 +22,10 @@ export const reviewsModule = {
       },
    },
    actions: {
-      getReviews(context) {
+      getReviews(context, payload) {
          return new Promise(() => {
             context.commit("getReviewStart");
-            ReviewService.getReviews()
+            ReviewService.getReviews(payload)
                .then((res) => {
                   console.log(res);
                   context.commit("getReviewSuccess", res.data);

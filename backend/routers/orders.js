@@ -23,7 +23,11 @@ const User = require("../models/user");
 
 router.get(`/`, async (req, res, next) => {
    try {
-      const orderList = await Order.find({})
+      let filter = {};
+      if (req.query.user) {
+         filter["user"] = req.query.user;
+      }
+      const orderList = await Order.find(filter)
          .populate("user")
          .populate({
             path: "orderItems",

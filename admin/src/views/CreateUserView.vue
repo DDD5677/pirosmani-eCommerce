@@ -32,7 +32,6 @@
 					:type="'text'" 
 					:placeholder="'Surname'" 
 					:errors="errors" 
-					:error="errors?errors.name:''" 
 					v-model="surname"/>
 					<form-input
 					class="inputs" 
@@ -40,7 +39,7 @@
 					:type="'email'" 
 					:placeholder="'Email'" 
 					:errors="errors" 
-					:error="errors?errors.name:''" 
+					:error="errors?errors.email:''" 
 					v-model="email"/>
 					<form-input
 					class="inputs" 
@@ -48,7 +47,7 @@
 					:type="'password'" 
 					:placeholder="'Password'" 
 					:errors="errors" 
-					:error="errors?errors.name:''" 
+					:error="errors?errors.password:''" 
 					v-model="password"/>
 					<form-input
 					class="inputs" 
@@ -56,7 +55,7 @@
 					:type="'tel'" 
 					:placeholder="'Phone'" 
 					:errors="errors" 
-					:error="errors?errors.name:''" 
+					:error="errors?errors.phone:''" 
 					v-model="phone"/>
 					<form-input
 					class="inputs" 
@@ -64,7 +63,6 @@
 					:type="'tel'" 
 					:placeholder="'Extra phone'" 
 					:errors="errors" 
-					:error="errors?errors.name:''" 
 					v-model="extraPhone"/>
 					<green-btn class="green__btn">Create</green-btn>
 				</form>
@@ -95,7 +93,7 @@ import { mapMutations, mapState } from 'vuex';
 		},
 		computed:{
 			...mapState({
-				errors:state=>state.auth.errors
+				errors:state=>state.user.errors
 			})
 		},
 		methods:{

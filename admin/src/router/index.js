@@ -5,6 +5,7 @@ import UsersView from "../views/UsersView.vue";
 import CreateUserView from "../views/CreateUserView.vue";
 import ProductsView from "../views/ProductsView.vue";
 import CreateProductView from "../views/CreateProductView.vue";
+import UserDetailView from "../views/UserDetailView.vue";
 
 const routes = [
    {
@@ -30,6 +31,12 @@ const routes = [
       name: "create-user",
       meta: { layout: "main" },
       component: CreateUserView,
+   },
+   {
+      path: "/users/:id",
+      name: "user-detail",
+      meta: { layout: "main" },
+      component: UserDetailView,
    },
    {
       path: "/products",

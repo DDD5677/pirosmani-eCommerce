@@ -6,6 +6,7 @@ export const productsModule = {
       limit: null,
       pageSize: 1,
       products: null,
+      product: null,
       isLoading: true,
       errors: null,
    }),
@@ -32,6 +33,20 @@ export const productsModule = {
          state.isLoading = false;
          state.errors = payload;
       },
+      getProductByIdStart(state) {
+         state.isLoading = true;
+         state.product = null;
+         state.errors = null;
+      },
+      getProductByIdSuccess(state, payload) {
+         state.isLoading = false;
+         state.product = payload.productList;
+         state.limit = payload.pagination.limit;
+      },
+      getProductByIdFailure(state, payload) {
+         state.isLoading = false;
+         state.errors = payload;
+      },
       postProductStart(state) {
          state.isLoading = true;
          state.errors = null;
@@ -54,6 +69,18 @@ export const productsModule = {
                })
                .catch((error) => {
                   context.commit("getProductFailure", error.response.data);
+               });
+         });
+      },
+      getProductById(context, payload) {
+         return new Promise(() => {
+            context.commit("getProductByIdStart");
+            ProductService.getProductById(payload)
+               .then((res) => {
+                  context.commit("getProductByIdSuccess", res.data);
+               })
+               .catch((error) => {
+                  context.commit("getProductByIdFailure", error.response.data);
                });
          });
       },

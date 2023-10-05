@@ -16,6 +16,11 @@ const ProductService = {
          },
       });
    },
+
+   getProductById(payload) {
+      return axios.get(`/products/${payload}`);
+   },
+
    postProducts(data) {
       let formData = new FormData();
       formData.append("image", data.image);

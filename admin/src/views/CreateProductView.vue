@@ -183,7 +183,7 @@ import { mapMutations, mapState } from 'vuex';
 				.short_dsc{
 					display: flex;
 					flex-direction: column;
-					align-items: end;
+					align-items: flex-end;
 					width: 50%;
 					label{
 						width: 100%;

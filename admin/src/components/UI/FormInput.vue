@@ -69,7 +69,5 @@
 	.error__message{
 		font-size: 14px;
 		color: red;
-		margin-top: -15px;
-		margin-bottom: 10px;
 	}
 </style>

@@ -29,7 +29,6 @@ import PersonalInfo from "@/components/PersonalInfo";
 import HistoryOrders from "@/components/HistoryOrders";
 import AddReviews from "@/components/AddReviews";
 import BookingTable from "@/components/BookingTable";
-import UploadImgModal from "@/components/UI/UploadImgModal";
 
 export default [
    NavbarHeader,
@@ -61,7 +60,6 @@ export default [
    FormInput,
    PersonalInfo,
    HistoryOrders,
-   UploadImgModal,
    AddReviews,
    BookingTable,
 ];

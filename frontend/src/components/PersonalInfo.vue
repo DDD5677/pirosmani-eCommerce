@@ -1,49 +1,57 @@
 <template>
 	<div class="personal__info">
-		<div class="personal__left">
-			<h2 class="title">Персональная информация</h2>
-			<div class="top">
-				<div class="img-box">
-					<a :href="user.image">
-						<img
-							:src="user.image"
-							alt=""
-						/>
-					</a>
-				</div>
-				<upload-img/>
+		<form @submit.prevent="submitHandler" enctype="multipart/form-data">
+			<div class="personal__left">
+				<h2 class="title">Персональная информация</h2>
+					<div class="top">
+						<div class="img-box">
+							<a :href="user.image">
+								<img
+									:src="user.image"
+									alt=""
+								/>
+							</a>
+						</div>
+					
+						<label class="custom-file-upload">
+							Choose Image
+							<input class="input_file" type="file" @change.stop="changeAvatar"/>
+							
+						</label>
+						<span class="image_name" ref="imageName"></span>
+						
+					</div>
+					<div class="personal__form" action="">
+					
+						<form-input 
+						class="name" 
+						:label="'Ваше имя'" 
+						:type="'text'" 
+						:placeholder="'Имя'"
+						:errors="errors" 
+						:error="errors?errors.name:''"
+						v-model="name"/>
+					
+						<form-input 
+						class="surname" 
+						:label="'Ваша фамилия'" 
+						:type="'text'" 
+						:placeholder="'Фамилия'"
+						v-model="surname"/>
+						
+						<form-input 
+						:label="'Адрес электронной почты'" 
+						:type="'email'" 
+						:placeholder="'Email'"
+						:errors="errors" 
+						:error="errors?errors.email:''"
+						v-model="email"/>
+					</div>
 			</div>
-			<form class="personal__form" action="">
+			<div class="personal__right">
+				<h2 class="title">Контактная информация</h2>
+				<span class="subtitle">(подтверждение заказов)</span>
 				
-				<form-input 
-				class="name" 
-				:label="'Ваше имя'" 
-				:type="'text'" 
-				:placeholder="'Имя'"
-				:errors="errors" 
-				:error="errors?errors.name:''"
-				v-model="name"/>
-			
-				<form-input 
-				class="surname" 
-				:label="'Ваша фамилия'" 
-				:type="'text'" 
-				:placeholder="'Фамилия'"
-				v-model="surname"/>
-				
-				<form-input 
-				:label="'Адрес электронной почты'" 
-				:type="'email'" 
-				:placeholder="'Email'"
-				:errors="errors" 
-				:error="errors?errors.email:''"
-				v-model="email"/>
-			</form>
-		</div>
-		<div class="personal__right">
-			<h2 class="title">Контактная информация</h2>
-			<span class="subtitle">(подтверждение заказов)</span>
-			<form action="">
 				<div class="top">
 					<form-input 
 					:label="'Основной телефон'" 
@@ -84,10 +92,11 @@
 					v-model="confirmPassword"/>
 
 				</div>
-				<green-btn href="" class="green__btn" @click.prevent="submitHandler">Сохранить изменения</green-btn>
+				<green-btn class="green__btn">Сохранить изменения</green-btn>
 				<transparent-btn @click="logOutHandler">Log out</transparent-btn>
-			</form>
-		</div>
+				
+			</div>
+		</form>
 	</div>
 </template>
 
@@ -105,7 +114,8 @@ import { removeItem } from "@/helpers/localStorage";
 				extraPhone:'',
 				password:'',
 				newPassword:'',
-				confirmPassword:''
+				confirmPassword:'',
+				avatar:null
 			}
 		},
 		computed:{
@@ -124,6 +134,12 @@ import { removeItem } from "@/helpers/localStorage";
 				this.phone=user.phone;
 				this.extraPhone=user.extraPhone;
 			},
+			changeAvatar(event){
+            let inputImage = document.querySelector("input[type=file]").files[0];
+            this.$refs.imageName.innerText = inputImage.name;
+				console.log(inputImage,event.target.value)
+				this.avatar=inputImage;
+			},
 			submitHandler(){
 				const data={
 					id:this.user.id,
@@ -133,7 +149,8 @@ import { removeItem } from "@/helpers/localStorage";
 					phone:this.phone,
 					extraPhone:this.extraPhone,
 					password:this.password,
-					newPassword:this.newPassword
+					newPassword:this.newPassword,
+					avatar:this.avatar
 				}
 			
 				this.$store.dispatch('auth/updateUserInfo',data);
@@ -153,10 +170,32 @@ import { removeItem } from "@/helpers/localStorage";
 
 <style lang="scss" scoped>
 .personal__info {
-	display: flex;
-	justify-content: space-between;
+	
 	padding: 45px 0 0;
-
+	form{
+		display: flex;
+	justify-content: space-between;
+	}
+	.image_name{
+		margin-left: 10px;
+		font-size: 11px;
+		color: $main-color;
+	}
+	.custom-file-upload {
+		margin-bottom: 10px;
+		border-radius: 5px;
+		border: 1px solid $main-color;
+		
+		color: $main-color;
+		display: inline-block;
+		font-size: 12px;
+		font-weight: 500;
+		padding: 3px 8px;
+		cursor: pointer;
+	}	
+	input[type="file"] {
+    display: none;
+	}
 	.green__btn {
 		margin-top: 18px;
 		margin-right: 15px;

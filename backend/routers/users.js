@@ -105,17 +105,21 @@ router.get(`/`, async (req, res) => {
    }
 });
 
-// router.get("/:id", async (req, res) => {
-//    const user = await User.findById(req.params.id).select("-password");
+router.get("/:id", async (req, res, next) => {
+   try {
+      const user = await User.findById(req.params.id).select("-password");
 
-//    if (!user) {
-//       res.status(500).json({
-//          message: "The user with the given ID was not found.",
-//       });
-//    }
+      if (!user) {
+         res.status(500).json({
+            message: "The user with the given ID was not found.",
+         });
+      }
 
-//    res.status(200).send(user);
-// });
+      res.status(200).send(user);
+   } catch (error) {
+      next(error);
+   }
+});
 
 router.post("/", uploadOptions.single("avatar"), async (req, res, next) => {
    try {
@@ -281,14 +285,34 @@ router.post("/register", async (req, res, next) => {
    }
 });
 
-router.put("/:id", async (req, res, next) => {
+router.put("/:id", uploadOptions.single("avatar"), async (req, res, next) => {
    try {
       const userExist = await User.findById(req.params.id);
       let newPassword;
-      if (!userExist)
+      let basePath;
+      let fileName;
+      let updateBlock = {
+         name: req.body.name,
+         surname: req.body.surname,
+         email: req.body.email,
+         phone: req.body.phone,
+         extraPhone: req.body.extraPhone,
+      };
+      const file = req.file;
+      if (!userExist) {
          return res
             .status(404)
             .send("the user cannot be updated because user id is wrong!");
+      }
+
+      if (file) {
+         basePath = `${req.protocol}://${req.get("host")}/public/avatars/`;
+         fileName = req.file.filename;
+         updateBlock["image"] = `${basePath}${fileName}`;
+      }
+      if (req.body.isAdmin) {
+         updateBlock["isAdmin"] = req.body.isAdmin;
+      }
 
       if (req.body.password) {
          if (bcrypt.compareSync(req.body.password, userExist.password)) {
@@ -303,101 +327,26 @@ router.put("/:id", async (req, res, next) => {
          } else {
             return res.status(400).json({ error: "the password is wrong!" });
          }
-         console.log(newPassword);
-
-         const user = await User.findOneAndUpdate(
-            { _id: req.params.id },
-            {
-               name: req.body.name,
-               surname: req.body.surname,
-               email: req.body.email,
-               password: newPassword,
-               isAdmin: req.body.isAdmin,
-               phone: req.body.phone,
-               extraPhone: req.body.extraPhone,
-            },
-            {
-               new: true,
-               runValidators: true,
-            }
-         ).select("-password");
-
-         if (!user) return res.status(400).send("the user cannot be updated!");
-
-         res.send({ user });
-      } else {
-         const user = await User.findOneAndUpdate(
-            { _id: req.params.id },
-            {
-               name: req.body.name,
-               surname: req.body.surname,
-               email: req.body.email,
-               isAdmin: req.body.isAdmin,
-               phone: req.body.phone,
-               extraPhone: req.body.extraPhone,
-            },
-            {
-               new: true,
-               runValidators: true,
-            }
-         ).select("-password");
-
-         if (!user) return res.status(400).send("the user cannot be updated!");
-
-         res.send({ user });
+         updateBlock["password"] = newPassword;
       }
+
+      console.log(updateBlock);
+      const user = await User.findOneAndUpdate(
+         { _id: req.params.id },
+         updateBlock,
+         {
+            new: true,
+            runValidators: true,
+         }
+      ).select("-password");
+
+      if (!user) return res.status(400).send("the user cannot be updated!");
+
+      res.send({ user });
    } catch (error) {
       next(error);
    }
 });
-
-router.put(
-   "/avatar/:id",
-   uploadOptions.single("avatar"),
-   async (req, res, next) => {
-      try {
-         console.log(req.body, req.file);
-         const userExist = await User.findById(req.params.id);
-         if (!userExist)
-            return res
-               .status(404)
-               .send(
-                  "the user avatar cannot be updated because user id is wrong!"
-               );
-         //----------------------------------------
-         //verify file exist or not
-         const file = req.file;
-         if (!file) return res.status(400).send("no image in the request");
-
-         const basePath = `${req.protocol}://${req.get(
-            "host"
-         )}/public/avatars/`;
-         const fileName = req.file.filename;
-         //---------------------------------
-
-         const user = await User.findOneAndUpdate(
-            { _id: req.params.id },
-            {
-               image: `${basePath}${fileName}`,
-            },
-            {
-               new: true,
-            }
-         ).select("-password");
-
-         if (!user)
-            return res.status(400).send("the user avatar cannot be updated!");
-
-         res.send({ user });
-      } catch (error) {
-         next(error);
-         // console.log(error);
-         // const errors = authErrors(error);
-         // console.log(errors);
-         // res.status(500).json(errors);
-      }
-   }
-);
 
 router.delete("/:id", (req, res) => {
    User.findByIdAndRemove(req.params.id)

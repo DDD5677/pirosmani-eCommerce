@@ -11,12 +11,16 @@ const AuthService = {
       return axios.get("/users/get/user");
    },
    updateUserInfo(user) {
-      return axios.put(`/users/${user.id}`, user);
-   },
-   updateUserAvatar(data) {
       let formData = new FormData();
-      formData.append("avatar", data.avatar);
-      return axios.put(`/users/avatar/${data.id}`, formData);
+      formData.append("avatar", user.avatar);
+      formData.append("name", user.name);
+      formData.append("surname", user.surname);
+      formData.append("newPassword", user.newPassword);
+      formData.append("email", user.email);
+      formData.append("phone", user.phone);
+      formData.append("extraPhone", user.extraPhone);
+      formData.append("password", user.password);
+      return axios.put(`/users/${user.id}`, formData);
    },
 };
 

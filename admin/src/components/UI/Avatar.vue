@@ -27,7 +27,6 @@
 	border-radius: 50%;
 	object-fit: cover;
 	background-color: $light-color;
-	margin-right: 15px;
 }
 .avatar__name{
 	text-align: center;

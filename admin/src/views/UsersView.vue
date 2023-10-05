@@ -35,7 +35,7 @@
 					<table>
 						<thead>
 							<tr >
-								<th>
+								<th v-if="!usersError">
 									<span></span>
 									<input class="checkbox" ref="foomain" @click="toggle()" type="checkbox">
 								</th>
@@ -66,7 +66,7 @@
 							</div>
 						</thead>
 						<tbody v-if="!usersLoading&&!usersError">
-							<tr v-for="user in users">
+							<tr v-for="user in users" @click="this.$router.push(`/users/${user.id}`)">
 								<td>
 									<span></span>
 									<input class="checkbox" ref="foo" @click="addChecked" type="checkbox">
@@ -83,8 +83,8 @@
 						
 					</table>
 					<loading v-if="usersLoading"/>
+					<error v-if="usersError" :error="usersError"/>
 				</div>
-				<error v-if="usersError" :error="usersError"/>
 			
 				<pagination :getData="getUsers" :page="page" :pageSize="pageSize"/>
 			</div>
@@ -356,6 +356,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					z-index: 50;
 					.sort_btn{
 						cursor: pointer;
+						font-weight: 500;
 						transition: all 0.3s ease-in-out;
 						&:hover{
 							color: $main-color;

@@ -1,8 +1,12 @@
 import axios from "./axios";
 
 const ReviewService = {
-   getReviews() {
-      return axios.get("/reviews");
+   getReviews(payload) {
+      return axios.get("/reviews", {
+         params: {
+            user: payload.user,
+         },
+      });
    },
 };
 

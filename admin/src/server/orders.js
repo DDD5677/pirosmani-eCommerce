@@ -4,8 +4,12 @@ const OrderService = {
    order(order) {
       return axios.post("/orders", order);
    },
-   getOrders() {
-      return axios.get("/orders");
+   getOrders(payload) {
+      return axios.get("/orders", {
+         params: {
+            user: payload.user,
+         },
+      });
    },
    getOrdersByUserId(userid) {
       return axios.get(`/orders/get/userorders/${userid}`);

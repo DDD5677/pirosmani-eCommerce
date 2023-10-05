@@ -1,8 +1,8 @@
 <template>
-	<a
+	<button
    class="green__btn"
     ><slot></slot>
-	 </a>
+	 </button>
 </template>
 
 <script>
@@ -15,8 +15,7 @@
 	.green__btn {
    background-color: $main-color;
    padding: 0.5em 1.2em 0.55em;
-   display: inline-block;
-   text-decoration: none;
+	font-size: 16px;
    text-align: center;
    color: #fff;
    border-radius: 5px;

@@ -50,7 +50,7 @@
 		</div>
 		<green-btn
 			class="green__btn"
-			@click="submitHandler">
+			@click.prevent="submitHandler">
 		Зарегистрироваться
 		</green-btn>
 	</form>

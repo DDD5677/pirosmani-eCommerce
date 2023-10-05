@@ -114,20 +114,6 @@ export const authModule = {
                });
          });
       },
-      updateUserAvatar(context, data) {
-         return new Promise((resolve, reject) => {
-            context.commit("updateStart");
-            AuthService.updateUserAvatar(data)
-               .then((response) => {
-                  console.log("update avatar", response.data);
-                  context.commit("updateSuccess", response.data);
-               })
-               .catch((error) => {
-                  console.log("error update", error);
-                  context.commit("updateFailure", error.response.data);
-               });
-         });
-      },
    },
    namespaced: true,
 };
