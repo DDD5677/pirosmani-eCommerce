@@ -27,7 +27,7 @@ export const usersModule = {
          state.users = payload.usersList;
          state.pageSize = payload.pagination.pageSize;
          state.page = +payload.pagination.page;
-         state.limit = payload.pagination.limit;
+         state.limit = payload.pagination.limit.toString();
       },
       getUserFailure(state, payload) {
          state.isLoading = false;

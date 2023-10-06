@@ -11,11 +11,8 @@ const OrderService = {
          },
       });
    },
-   getOrdersByUserId(userid) {
-      return axios.get(`/orders/get/userorders/${userid}`);
-   },
-   postReservation(data) {
-      return axios.post("/reservations", data);
+   getSaledCount(payload) {
+      return axios.get(`/orders/saled/${payload}`);
    },
 };
 

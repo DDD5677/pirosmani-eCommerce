@@ -34,7 +34,7 @@ router.get(`/`, async (req, res) => {
    try {
       let filter = {};
       let page = 1;
-      let limit = 4;
+      let limit = 5;
       let totalProducts = 0;
       let pageSize = 1;
 

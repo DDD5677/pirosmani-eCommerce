@@ -91,7 +91,7 @@
 						
 						<tbody v-if="!productsLoading&&!productsError">
 							
-							<tr v-for="product in products">
+							<tr v-for="product in products" :id="product.id" @click="this.$router.push(`/products/${product.id}`)">
 								<td>
 									<span></span>
 									<input class="checkbox" ref="foo" @click="addChecked" type="checkbox">

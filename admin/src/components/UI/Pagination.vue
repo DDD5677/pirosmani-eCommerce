@@ -11,10 +11,13 @@
 			</select>
 		</div>
 	<ul class="pagination">
-		<li v-for="pageNum in pageSize" class="page-item" @click.prevent.stop="changePageData(pageNum)">
-			<a class="page-link" :class="{'active':pageNum===page}" href="#">{{ pageNum }}</a>
+		<li v-for="pageNum in pageSize" 
+		class="page-item" 
+		:class="(((2<pageNum)&&(pageNum<page-1))||((pageNum>page+1)&&(pageNum<pageSize-1)))&&pageSize>10?'none':''" 
+		@click.prevent.stop="changePageData(pageNum)">
+			<a  class="page-link" :class="{'active':pageNum===page}" href="#">{{ pageNum }}</a>
+			
 		</li>
-		
 		<li class="page-item" @click.prevent.stop="changePageData(increamentPage())">
 			<a class="page-link" href="#"
 				><img src="@/assets/images/pagination-arrow.svg" alt=""
@@ -103,6 +106,10 @@ import {mapState, mapGetters, mapMutations} from 'vuex';
 			background-color: $light-color;
 			cursor: pointer;
 		}
+		.none{
+			display: none;
+			
+		}
 	}
 	.pagination {
 		display: flex;
@@ -114,9 +121,8 @@ import {mapState, mapGetters, mapMutations} from 'vuex';
          &:focus {
             border: 1px red solid;
          }
-
          margin-right: 7px;
-
+			
          .page-link {
             border: none;
             padding: 8px 18px;

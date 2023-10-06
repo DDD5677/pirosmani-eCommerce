@@ -3,42 +3,33 @@ import OrderService from "@/server/orders";
 export const ordersModule = {
    state: () => ({
       orders: null,
+      saledCount: 0,
       isLoading: true,
       errors: null,
    }),
    mutations: {
-      orderStart(state) {
+      getOrderStart(state) {
          state.isLoading = true;
          state.orders = null;
          state.errors = null;
       },
-      orderSuccess(state, payload) {
+      getOrderSuccess(state, payload) {
          state.isLoading = false;
          state.orders = payload;
-      },
-      orderFailure(state, payload) {
-         state.isLoading = false;
-         state.errors = payload;
-      },
-      getOrderStart(state) {
-         state.isLoading = true;
-         state.errors = null;
-      },
-      getOrderSuccess(state) {
-         state.isLoading = false;
       },
       getOrderFailure(state, payload) {
          state.isLoading = false;
          state.errors = payload;
       },
-      postReservationStart(state) {
+      getSaledCountStart(state) {
          state.isLoading = true;
          state.errors = null;
       },
-      postReservationSuccess(state) {
+      getSaledCountSuccess(state, payload) {
+         state.saledCount = payload.saledCount;
          state.isLoading = false;
       },
-      postReservationFailure(state, payload) {
+      getSaledCountFailure(state, payload) {
          state.isLoading = false;
          state.errors = payload;
       },
@@ -46,27 +37,25 @@ export const ordersModule = {
    actions: {
       getOrders(context, payload) {
          return new Promise(() => {
-            context.commit("orderStart");
+            context.commit("getOrderStart");
             OrderService.getOrders(payload)
                .then((res) => {
-                  console.log(res);
-                  context.commit("orderSuccess", res.data);
+                  context.commit("getOrderSuccess", res.data);
                })
                .catch((error) => {
-                  context.commit("orderFailure", error.response.data);
+                  context.commit("getOrderFailure", error.response.data);
                });
          });
       },
-      postReservation(context, data) {
-         return new Promise((resolve) => {
-            context.commit("postReservationStart");
-            OrderService.postReservation(data)
-               .then((response) => {
-                  context.commit("postReservationSuccess");
-                  resolve(response.data);
+      getSaledCount(context, payload) {
+         return new Promise(() => {
+            context.commit("getSaledCountStart");
+            OrderService.getSaledCount(payload)
+               .then((res) => {
+                  context.commit("getSaledCountSuccess", res.data);
                })
                .catch((error) => {
-                  context.commit("postReservationFailure", error.response.data);
+                  context.commit("getSaledCountFailure", error.response.data);
                });
          });
       },

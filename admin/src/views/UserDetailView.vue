@@ -1,5 +1,5 @@
 <template>
-	<section class="create__users">
+	<section class="user__detail">
 		<div class="container">
 			<h2 class="title">User information</h2>
 			<div class="blocks">
@@ -208,7 +208,7 @@ import { mapMutations, mapState } from 'vuex';
 </script>
 
 <style lang="scss" scoped>
-.create__users{
+.user__detail{
 	padding: 120px 0 50px;
 	.title{
 		font-size: 24px;

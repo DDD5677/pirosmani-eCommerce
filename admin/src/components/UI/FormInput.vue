@@ -42,7 +42,7 @@
 <style lang="scss" scoped>
 	label{
 		display: block;
-		font-weight: 400;
+		font-weight: 500;
 		font-size: 16px;
 		line-height: 20px;
 		margin-bottom: 10px;

@@ -66,6 +66,29 @@ router.get(`/:id`, async (req, res, next) => {
    }
 });
 
+router.get(`/saled/:id`, async (req, res, next) => {
+   try {
+      const orderItemsList = await OrderItem.find({
+         product: req.params.id,
+      });
+
+      if (!orderItemsList) {
+         res.status(500).json({
+            success: false,
+            msg: "smth wrong",
+         });
+      }
+      let saledCount = 0;
+      orderItemsList.forEach((item) => {
+         saledCount += item.quantity;
+      });
+      console.log(saledCount);
+      res.status(200).send({ saledCount });
+   } catch (error) {
+      next(error);
+   }
+});
+
 router.post("/", async (req, res, next) => {
    try {
       if (req.body.orderItems.length === 0) {

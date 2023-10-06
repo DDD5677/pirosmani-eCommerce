@@ -6,6 +6,7 @@ import CreateUserView from "../views/CreateUserView.vue";
 import ProductsView from "../views/ProductsView.vue";
 import CreateProductView from "../views/CreateProductView.vue";
 import UserDetailView from "../views/UserDetailView.vue";
+import ProductDetailView from "../views/ProductDetailView.vue";
 
 const routes = [
    {
@@ -49,6 +50,12 @@ const routes = [
       name: "create-product",
       meta: { layout: "main" },
       component: CreateProductView,
+   },
+   {
+      path: "/products/:id",
+      name: "product-detail",
+      meta: { layout: "main" },
+      component: ProductDetailView,
    },
 ];
 

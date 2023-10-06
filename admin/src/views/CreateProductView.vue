@@ -28,22 +28,22 @@
 					<div class="inputs">
 						<label class="">
 						Country
-						<select  name="countries" v-model="country">
-							<option v-for="(country,index) in country_list" 
-							:value="country">
-								{{ country }}
-							</option>
-						</select>
-					</label>
-					<label class="">
-						Category
-						<select  name="categories" v-model="category">
-							<option v-for="(category,index) in categories" 
-							:value="category._id">
-								{{ category.name }}
-							</option>
-						</select>
-					</label>
+							<select  name="countries" v-model="country">
+								<option v-for="(country,index) in country_list" 
+								:value="country">
+									{{ country }}
+								</option>
+							</select>
+						</label>
+						<label class="">
+							Category
+							<select  name="categories" v-model="category">
+								<option v-for="(category,index) in categories" 
+								:value="category._id">
+									{{ category.name }}
+								</option>
+							</select>
+						</label>
 					</div>
 					<form-input
 					class="inputs" 
@@ -217,11 +217,7 @@ import { mapMutations, mapState } from 'vuex';
 				}
 			}
 		}
-	.image_name{
-		margin-left: 10px;
-		font-size: 11px;
-		color: $main-color;
-	}
+	
 	.custom-file-upload {
 		border-radius: 5px;
 		border: 1px solid $main-color;
@@ -239,6 +235,11 @@ import { mapMutations, mapState } from 'vuex';
 				margin-left: 5px;
 			}
 
+		}
+		.image_name{
+			margin-left: 10px;
+			font-size: 11px;
+			color: $main-color;
 		}
 		input[type="file"] {
     		display: none;
@@ -269,6 +270,7 @@ import { mapMutations, mapState } from 'vuex';
 			letter-spacing: 0.8px;
 			padding: 10px;
 			display: inline-block;
+			font-weight: 500;
 		}
 		input{
 			height: 0;

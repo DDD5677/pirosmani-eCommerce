@@ -27,7 +27,7 @@ export const productsModule = {
          state.products = payload.productList;
          state.pageSize = payload.pagination.pageSize;
          state.page = +payload.pagination.page;
-         state.limit = payload.pagination.limit;
+         state.limit = payload.pagination.limit.toString();
       },
       getProductFailure(state, payload) {
          state.isLoading = false;
@@ -40,8 +40,7 @@ export const productsModule = {
       },
       getProductByIdSuccess(state, payload) {
          state.isLoading = false;
-         state.product = payload.productList;
-         state.limit = payload.pagination.limit;
+         state.product = payload;
       },
       getProductByIdFailure(state, payload) {
          state.isLoading = false;
@@ -73,11 +72,12 @@ export const productsModule = {
          });
       },
       getProductById(context, payload) {
-         return new Promise(() => {
+         return new Promise((resolve) => {
             context.commit("getProductByIdStart");
             ProductService.getProductById(payload)
                .then((res) => {
                   context.commit("getProductByIdSuccess", res.data);
+                  resolve(res.data);
                })
                .catch((error) => {
                   context.commit("getProductByIdFailure", error.response.data);

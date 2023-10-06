@@ -13,8 +13,8 @@
 				<div class="nav-blocks">
 					<ul class="nav-menu">
 						
-						<li><router-link :to="{name:'products',query:{page:1,limit:limit}}" class="nav-link">Products</router-link></li>
-						<li><router-link :to="{name:'users',query:{page:1,limit:limit}}" class="nav-link">Users</router-link></li>
+						<li><router-link :to="{name:'products',query:{page:1,limit:productLimit}}" class="nav-link">Products</router-link></li>
+						<li><router-link :to="{name:'users',query:{page:1,limit:userLimit}}" class="nav-link">Users</router-link></li>
 						<li><a href="" class="nav-link">Orders</a></li>
 						<li><a href="" class="nav-link">Category</a></li>
 						<li><a href="" class="nav-link">Reviews</a></li>
@@ -41,7 +41,8 @@ import { mapState } from 'vuex';
 			...mapState({
 				user:state=>state.auth.user,
 				isLoading:state=>state.auth.isLoading,
-				limit:state=>state.user.limit
+				userLimit:state=>state.user.limit,
+				productLimit:state=>state.product.limit
 			})
 		}
 	}
