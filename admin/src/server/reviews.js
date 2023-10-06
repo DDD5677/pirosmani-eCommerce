@@ -5,6 +5,7 @@ const ReviewService = {
       return axios.get("/reviews", {
          params: {
             user: payload.user,
+            product: payload.product,
          },
       });
    },

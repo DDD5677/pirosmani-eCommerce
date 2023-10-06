@@ -11,9 +11,8 @@
 			</select>
 		</div>
 	<ul class="pagination">
-		<li v-for="pageNum in pageSize" 
+		<li v-for="pageNum in links" 
 		class="page-item" 
-		:class="(((2<pageNum)&&(pageNum<page-1))||((pageNum>page+1)&&(pageNum<pageSize-1)))&&pageSize>10?'none':''" 
 		@click.prevent.stop="changePageData(pageNum)">
 			<a  class="page-link" :class="{'active':pageNum===page}" href="#">{{ pageNum }}</a>
 			
@@ -44,6 +43,10 @@ import {mapState, mapGetters, mapMutations} from 'vuex';
 			pageSize:{
 				type:Number,
 				required:true
+			},
+			pageLimit:{
+				type:Number,
+				default:4
 			}
 		},
 		data(){
@@ -53,21 +56,45 @@ import {mapState, mapGetters, mapMutations} from 'vuex';
 			}
 		},
 		computed:{
-			...mapState({
-			})
+			pages(){
+				let pages=[]
+
+				for( let i=1; i<=this.pageSize;i++){
+					pages.push(i)
+				}
+				return pages
+			},
+			links(){
+				let first=[1,'...'], last=['...',this.pageSize], range=[];
+				if(this.page<this.pageLimit){
+					range=this.range(1,this.pageLimit)
+					return (range.length<this.pageSize)?range.concat(last):range
+				}else if(this.page>this.pageSize-this.pageLimit){
+					range=this.range(this.pageSize-this.pageLimit,this.pageSize)
+					return (range.length<this.pageSize)?first.concat(range):range
+				}else{
+					range = this.range(this.page-Math.ceil(this.pageLimit/2),this.page+Math.ceil(this.pageLimit/2))
+					return first.concat(range).concat(last);
+				}
+			}
 		},
 		methods:{
+
+			range(start,end){
+				let pages=[];
+				for(let i=start-1; i<end;i++){
+					if (this.pages[i]) {
+                    pages.push(this.pages[i]);
+                }
+				}
+
+				return pages
+			},
 			...mapMutations({
 				
 			}),
 			changePageData(page){
-				//this.changePage(page);
-				// this.$store.dispatch('user/getUsers',{
-				// 	page:page,
-				// 	limit:this.$route.query.limit
-				// })
 				this.getData(page,this.$route.query.limit)
-				//this.$router.push({ path: "/users", query: { page:page,limit:this.$route.query.limit } });
 				
 				window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
 			},
@@ -81,13 +108,7 @@ import {mapState, mapGetters, mapMutations} from 'vuex';
 		},
 		watch:{
 			limit(newlimit,oldlimit) {
-				//this.changePage(1);
-				//	console.log(newlimit,oldlimit)
-				
 				this.getData(1,newlimit)
-				//this.$store.dispatch('user/getUsers',{page:this.page,limit:newlimit})
-				//this.$router.push({ path: "/users", query: { page:this.page,limit:newlimit} });
-				
 			}
 		}
 		

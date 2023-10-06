@@ -195,7 +195,7 @@ import { mapMutations, mapState } from 'vuex';
 				this.$store.dispatch('user/updateUser',data)
 			}
 		},
-		mounted(){
+		created(){
 			
 			this.$store.dispatch('user/getUserById',this.$route.params.id).then(user=>{
 				this.assignUserData(user)

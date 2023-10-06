@@ -15,9 +15,9 @@
 									<span class="info-title">Created at: </span>
 									<span>{{ formatDate(dateCreated) }}</span>
 								</div>
-								<div class="updated">
+								<div v-if="dateUpdated" class="updated">
 									<span class="info-title">Updated at: </span>
-									<span></span>
+									<span>{{ formatDate(dateUpdated) }}</span>
 								</div>
 							</div>
 							<div class="info-sales">
@@ -28,8 +28,21 @@
 							</div>
 						</div>
 					</div>
-					<div class="left-bottom">
-
+					<div v-if="!reviewsLoading" class="reviews">
+						<div>
+							<info class="info-item" title="Reviews" :amount="reviews.length" :src="require('@/assets/images/reviews-icon.svg')"/>
+							<ul>
+								<li v-for="review in reviews.slice(0,10)" class="item">
+									<avatar :info="review.user"/>
+									<div class="review__info">
+										<p>
+											{{ review.bodyText }}
+										</p>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<a class="see__all" href="">See all reviews</a>
 					</div>
 				</div>
 				<div class="right">
@@ -142,6 +155,7 @@ import { mapMutations, mapState } from 'vuex';
 				image:'',
 				avatar:null,
 				dateCreated:'',
+				dateUpdated:'',
 				country_list:["Countries","Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cruise Ship","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyz Republic","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania","Mauritius","Mexico","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Namibia","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","Norway","Oman","Pakistan","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre &amp; Miquelon","Samoa","San Marino","Satellite","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka","St Kitts &amp; Nevis","St Lucia","St Vincent","St. Lucia","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad &amp; Tobago","Tunisia","Turkey","Turkmenistan","Turks &amp; Caicos","Uganda","Ukraine","United Arab Emirates","United Kingdom","Uruguay","Uzbekistan","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"],
 
 			}
@@ -152,7 +166,9 @@ import { mapMutations, mapState } from 'vuex';
 				errors:state=>state.product.errors,
 				product:state=>state.product.product,
 				saledCount:state=>state.order.saledCount,
-				categories:state=>state.category.categories
+				categories:state=>state.category.categories,
+				reviews:state=>state.review.reviews,
+				reviewsLoading:state=>state.review.isLoading,
 			})
 		},
 		methods:{
@@ -187,6 +203,7 @@ import { mapMutations, mapState } from 'vuex';
 				this.country=product.country,
 				this.ratings=product.ratings,
 				this.dateCreated=product.dateCreated
+				this.dateUpdated=product.updatedAt
 			},
 			changeAvatar(event){
             let inputImage = document.querySelector("input[type=file]").files[0];
@@ -218,6 +235,7 @@ import { mapMutations, mapState } from 'vuex';
 			this.$store.dispatch('product/getProductById',this.$route.params.id).then(product=>{
 				this.assignUserData(product)
 				this.$store.dispatch('order/getSaledCount',product.id)
+				this.$store.dispatch('review/getReviews',{product:product.id})
 			});
 			this.$store.dispatch('category/getCategory')
 			
@@ -236,15 +254,19 @@ import { mapMutations, mapState } from 'vuex';
 			.right{
 				flex: 1 0 48%;
 				
-				padding: 25px 15px;
 				border: 1px solid #C6C6C6;
 				border-radius: 15px;
 			}
 
 			.left{
+				display: flex;
+				flex-direction: column;
 				.left-top{
 					display: flex;
+					
+					padding: 25px 15px;
 					.img-box{
+						border: 1px solid #C6C6C6;
 						flex:0 0 60%;
 						height: 200px;
 						border-radius: 10px;
@@ -252,10 +274,15 @@ import { mapMutations, mapState } from 'vuex';
 						background-position: center;
 						background-repeat: no-repeat;
 						overflow: hidden;
+						
 						img{
 							width: 100%;
 							height: 100%;
 							object-fit: cover;
+							transition: all 0.3s ease-in-out;
+							&:hover{
+								transform: scale(1.05);
+							}
 						}
 					}
 
@@ -280,12 +307,58 @@ import { mapMutations, mapState } from 'vuex';
 					}
 
 				}
+				.reviews{
+					display: flex;
+					flex-grow: 1;
+					flex-direction: column;
+					justify-content: space-between;
+					.info-item	{
+						width: 100%;
+						border-radius: 15px 15px 0 0;
+						margin-bottom: 10px;
+					}
+					.item{
+						display: flex;
+						width: 100%;
+						padding: 10px 15px;
+						cursor: pointer;
+						transition: all 0.3s ease-in-out;
+						&:hover{
+							background-color: $light-color;
+						}
+					}
+					.see__all{
+						width: 100%;
+						display: inline-block;
+						padding: 15px;
+						color: $main-color;
+						font-weight: 500;
+						font-size: 18px;
+						text-align: center;
+						transition: all 0.3s ease-in-out;
+						border-radius: 0 0 15px 15px;
+						&:hover{
+							background-color: $light-color;
+						}
+					}
+				}
+				.reviews{
+					.review__info{
+						width: 100%;
+						margin-left: 15px;
+						font-size: 14px;
+						line-height: 1.2;
+						color: rgba(0, 0, 0, 0.6);
+					}
+				}
 			}
 
 
 
 
 			.right{
+				
+				padding: 25px 15px;
 				form{
 					display: flex;
 					flex-direction: column;

@@ -27,7 +27,6 @@ export const categoryModule = {
             context.commit("getCategoryStart");
             CategoryService.getCategory()
                .then((res) => {
-                  console.log(res);
                   context.commit("getCategorySuccess", res.data);
                })
                .catch((error) => {

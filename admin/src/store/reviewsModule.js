@@ -27,7 +27,6 @@ export const reviewsModule = {
             context.commit("getReviewStart");
             ReviewService.getReviews(payload)
                .then((res) => {
-                  console.log(res);
                   context.commit("getReviewSuccess", res.data);
                })
                .catch((error) => {

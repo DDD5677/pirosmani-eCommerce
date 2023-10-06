@@ -10,7 +10,9 @@ router.get(`/`, async (req, res) => {
       if (req.query.user) {
          filter["user"] = req.query.user;
       }
-
+      if (req.query.product) {
+         filter["product"] = req.query.product;
+      }
       const reviewsList = await Review.find(filter).populate([
          "user",
          "product",
