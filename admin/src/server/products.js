@@ -34,6 +34,20 @@ const ProductService = {
       formData.append("countInStock", data.countInStock);
       return axios.post("/products", formData);
    },
+
+   updateProducts(data) {
+      let formData = new FormData();
+      formData.append("image", data.image);
+      formData.append("name", data.name);
+      formData.append("country", data.country);
+      formData.append("isFeatured", data.isFeatured);
+      formData.append("category", data.category);
+      formData.append("dsc", data.dsc);
+      formData.append("richDsc", data.richDsc);
+      formData.append("price", data.price);
+      formData.append("countInStock", data.countInStock);
+      return axios.put(`/products/${data.id}`, formData);
+   },
 };
 
 export default ProductService;

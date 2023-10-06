@@ -96,6 +96,19 @@ export const productsModule = {
                });
          });
       },
+      updateProducts(context, payload) {
+         return new Promise((resolve) => {
+            context.commit("postProductStart");
+            ProductService.updateProducts(payload)
+               .then((res) => {
+                  context.commit("postProductSuccess");
+                  resolve();
+               })
+               .catch((error) => {
+                  context.commit("postProductFailure", error.response.data);
+               });
+         });
+      },
    },
    namespaced: true,
 };

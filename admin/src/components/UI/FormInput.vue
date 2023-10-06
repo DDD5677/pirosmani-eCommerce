@@ -7,6 +7,7 @@
 			:type="type"
 			:placeholder="placeholder"
 			:id="label"
+			:step="step"
 		/>
 		<div class="error__message" v-if="errors&&error">{{ error }}</div>
 	</div>
@@ -27,6 +28,10 @@
 			placeholder:{
 				type:String,
 				required:true
+			},
+			step:{
+				type:String,
+				default:'1'
 			},
 			errors:{
 				type:Object,

@@ -38,12 +38,6 @@ router.get(`/`, async (req, res) => {
       let totalProducts = 0;
       let pageSize = 1;
 
-      // const excludeFields = ["sort", "page", "limit"];
-
-      // excludeFields.forEach((el) => {
-      //    delete filter[el];
-      // });
-
       if (req.query.page) {
          page = req.query.page;
       }
@@ -85,7 +79,7 @@ router.get(`/`, async (req, res) => {
             });
          filter = { ...filter, category: req.query.category };
       }
-
+      //--------------------------------------------
       let queryStr = JSON.stringify(filter);
       queryStr = queryStr.replace(
          /\b(gte|gt|lte|lt)\b/g,
@@ -190,39 +184,53 @@ router.post(`/`, uploadOptions.single("image"), async (req, res, next) => {
    }
 });
 
-router.put("/:id", uploadOptions.single("image"), async (req, res) => {
-   if (!mongoose.isValidObjectId(req.params.id)) {
-      return res.status(400).send("Invalid Product ID");
-   }
-   const category = await Category.findById(req.body.category);
-   if (!category) return res.status(400).send("Invalid Category");
+router.put("/:id", uploadOptions.single("image"), async (req, res, error) => {
+   try {
+      if (!mongoose.isValidObjectId(req.params.id)) {
+         return res.status(400).send("Invalid Product ID");
+      }
 
-   const file = req.file;
-   if (!file) return res.status(400).send("no image in the request");
-
-   const basePath = `${req.protocol}://${req.get("host")}/public/uploads/`;
-   const fileName = req.file.filename;
-   const product = await Product.findByIdAndUpdate(
-      req.params.id,
-      {
+      let updateBlock = {
          name: req.body.name,
          dsc: req.body.dsc,
          richDsc: req.body.richDsc,
-         img: `${basePath}${fileName}`,
-         images: req.body.images,
          country: req.body.country,
          price: req.body.price,
-         category: req.body.category,
          countInStock: req.body.countInStock,
          isFeatured: req.body.isFeatured,
-      },
-      { new: true }
-   );
-   if (!product) {
-      return res.status(500).send("the product cannot be updated!");
-   }
+      };
+      const file = req.file;
+      let basePath;
+      let fileName;
 
-   res.send(product);
+      if (req.body.category) {
+         const category = await Category.findById(req.body.category);
+         if (!category) {
+            return res.status(400).send("Invalid Category");
+         } else {
+            updateBlock["category"] = req.body.category;
+         }
+      }
+
+      if (file) {
+         basePath = `${req.protocol}://${req.get("host")}/public/uploads/`;
+         fileName = req.file.filename;
+         updateBlock["img"] = `${basePath}${fileName}`;
+      }
+
+      const product = await Product.findByIdAndUpdate(
+         req.params.id,
+         updateBlock,
+         { new: true }
+      );
+      if (!product) {
+         return res.status(500).send("the product cannot be updated!");
+      }
+
+      res.status(200).send(product);
+   } catch (error) {
+      next(error);
+   }
 });
 
 router.delete("/:id", (req, res) => {

@@ -288,6 +288,11 @@ router.post("/register", async (req, res, next) => {
 router.put("/:id", uploadOptions.single("avatar"), async (req, res, next) => {
    try {
       const userExist = await User.findById(req.params.id);
+      if (!userExist) {
+         return res
+            .status(404)
+            .send("the user cannot be updated because user id is wrong!");
+      }
       let newPassword;
       let basePath;
       let fileName;
@@ -299,11 +304,6 @@ router.put("/:id", uploadOptions.single("avatar"), async (req, res, next) => {
          extraPhone: req.body.extraPhone,
       };
       const file = req.file;
-      if (!userExist) {
-         return res
-            .status(404)
-            .send("the user cannot be updated because user id is wrong!");
-      }
 
       if (file) {
          basePath = `${req.protocol}://${req.get("host")}/public/avatars/`;
@@ -342,7 +342,7 @@ router.put("/:id", uploadOptions.single("avatar"), async (req, res, next) => {
 
       if (!user) return res.status(400).send("the user cannot be updated!");
 
-      res.send({ user });
+      res.status(200).send({ user });
    } catch (error) {
       next(error);
    }

@@ -118,6 +118,7 @@ export const usersModule = {
                .then((response) => {
                   console.log("update", response.data);
                   context.commit("updateSuccess", response.data);
+                  resolve();
                })
                .catch((error) => {
                   console.log("error update", error);

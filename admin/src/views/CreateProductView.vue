@@ -112,7 +112,9 @@ import { mapMutations, mapState } from 'vuex';
 		methods:{
 			changeAvatar(event){
             let inputImage = document.querySelector("input[type=file]").files[0];
-            this.$refs.imageName.innerText = inputImage.name;
+				if(inputImage){
+            	this.$refs.imageName.innerText = inputImage.name;
+				}
 				console.log(inputImage,event.target.value)
 				this.image=inputImage;
 			},
