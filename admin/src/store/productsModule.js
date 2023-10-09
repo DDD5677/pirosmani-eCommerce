@@ -57,6 +57,17 @@ export const productsModule = {
          state.isLoading = false;
          state.errors = payload;
       },
+      deleteProductStart(state) {
+         state.isLoading = true;
+         state.errors = null;
+      },
+      deleteProductSuccess(state) {
+         state.isLoading = false;
+      },
+      deleteProductFailure(state, payload) {
+         state.isLoading = false;
+         state.errors = payload;
+      },
    },
    actions: {
       getProducts(context, payload) {
@@ -85,11 +96,12 @@ export const productsModule = {
          });
       },
       postProducts(context, payload) {
-         return new Promise(() => {
+         return new Promise((resolve) => {
             context.commit("postProductStart");
             ProductService.postProducts(payload)
                .then((res) => {
                   context.commit("postProductSuccess");
+                  resolve();
                })
                .catch((error) => {
                   context.commit("postProductFailure", error.response.data);
@@ -106,6 +118,18 @@ export const productsModule = {
                })
                .catch((error) => {
                   context.commit("postProductFailure", error.response.data);
+               });
+         });
+      },
+      deleteProducts(context, payload) {
+         return new Promise(() => {
+            context.commit("deleteProductStart");
+            ProductService.deleteProducts(payload)
+               .then((res) => {
+                  context.commit("deleteProductSuccess");
+               })
+               .catch((error) => {
+                  context.commit("deleteProductFailure", error.response.data);
                });
          });
       },

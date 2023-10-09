@@ -35,6 +35,7 @@
 								<li v-for="review in reviews.slice(0,10)" class="item">
 									<avatar :info="review.user"/>
 									<div class="review__info">
+										<span class="review__title">{{ review.user.name }}</span>
 										<p>
 											{{ review.bodyText }}
 										</p>
@@ -75,10 +76,16 @@ import { mapState } from 'vuex';
 		computed:{
 			...mapState({
 				orders:state=>state.order.orders,
-				ordersLoading:state=>state.order.isLoading,
-				reviews:state=>state.review.reviews,
-				reviewsLoading:state=>state.review.isLoading,
 				users:state=>state.user.users,
+				reviews:state=>state.review.reviews,
+
+				ordersError:state=>state.order.errors,
+				reviewsError:state=>state.review.errors,
+				usersError:state=>state.user.errors,
+				authError:state=>state.auth.errors,
+
+				reviewsLoading:state=>state.review.isLoading,
+				ordersLoading:state=>state.order.isLoading,
 				usersLoading:state=>state.user.isLoading
 			})
 		},
@@ -89,10 +96,13 @@ import { mapState } from 'vuex';
 			},
 		},
 		mounted(){
-			console.log("mounted homeview")
-			this.$store.dispatch('order/getOrders',{user:''})
-			this.$store.dispatch('review/getReviews',{user:''})
-			this.$store.dispatch('user/getUsers',{page:1})
+			if(!this.authError){
+				console.log("mounted homeview")
+				this.$store.dispatch('order/getOrders',{user:''})
+				this.$store.dispatch('review/getReviews',{user:''})
+				this.$store.dispatch('user/getUsers',{page:1})
+			}
+			
 		}
 	}
 </script>
@@ -203,10 +213,16 @@ import { mapState } from 'vuex';
 			}
 			.reviews{
 				.review__info{
+					
 					margin-left: 15px;
 					font-size: 14px;
 					line-height: 1.2;
 					color: rgba(0, 0, 0, 0.6);
+					.review__title{
+						font-size: 14px;
+						color: #000;
+						font-weight: 500;
+					}
 				}
 			}
 			.customers{

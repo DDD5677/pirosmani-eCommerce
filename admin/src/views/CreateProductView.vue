@@ -135,7 +135,18 @@ import { mapMutations, mapState } from 'vuex';
 					image:this.image,
 				}
 				console.log(data)
-				this.$store.dispatch('product/postProducts',data)
+				this.$store.dispatch('product/postProducts',data).then(()=>{
+					this.name='';
+					this.country='';
+					this.category=''
+					this.isFeatured=false
+					this.countInStock=''
+					this.price=null
+					this.dsc=''
+					this.richDsc=''
+					this.image=null
+					this.$refs.imageName.innerText = '';
+				})
 			}
 		},
 		mounted(){

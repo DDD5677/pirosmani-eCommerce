@@ -51,7 +51,7 @@
 							<tr >
 								<th v-if="!productsError">
 									<span></span>
-									<input class="checkbox" ref="foomain" @click="toggle()" type="checkbox">
+									<input class="checkbox" ref="foomain" @click="allCheck()" type="checkbox">
 								</th>
 								<th v-if="options[0].show">{{options[0].title}}</th>
 								<th v-if="options[1].show"  >
@@ -85,26 +85,26 @@
 									></button>
 									<span class="checked">{{ checked }} Items selected</span>
 								</div>
-								<a href="" class="delete__btn"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
+								<a @click.prevent="deleteProducts" class="delete__btn"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
 							</div>
 						</thead>
 						
 						<tbody v-if="!productsLoading&&!productsError">
 							
-							<tr v-for="product in products" :id="product.id" @click="this.$router.push(`/products/${product.id}`)">
+							<tr v-for="product in products" :id="product.id" >
 								<td>
 									<span></span>
-									<input class="checkbox" ref="foo" @click="addChecked" type="checkbox">
+									<input class="checkbox" ref="foo" @click="removedProductsId($event,product.id)" type="checkbox">
 								</td>
 								<td v-if="options[0].show">
 									<avatar :info="{image:product.img, name:product.name}"/> 
 								</td>
-								<td v-if="options[1].show">{{ product.name }}</td>
-								<td v-if="options[2].show">{{ product.price }}$</td>
-								<td v-if="options[3].show">{{ product.countInStock }}</td>
-								<td v-if="options[4].show">{{ ratingCalc(product.ratings) }}</td>
-								<td v-if="options[5].show">{{ product.isFeatured }}</td>
-								<td v-if="options[6].show">{{ formatDate(product.dateCreated) }}</td>
+								<td v-if="options[1].show" @click="productDetail(product.id)">{{ product.name }}</td>
+								<td v-if="options[2].show" @click="productDetail(product.id)">{{ product.price }}$</td>
+								<td v-if="options[3].show" @click="productDetail(product.id)">{{ product.countInStock }}</td>
+								<td v-if="options[4].show" @click="productDetail(product.id)">{{ ratingCalc(product.ratings) }}</td>
+								<td v-if="options[5].show" @click="productDetail(product.id)">{{ product.isFeatured }}</td>
+								<td v-if="options[6].show" @click="productDetail(product.id)">{{ formatDate(product.dateCreated) }}</td>
 							</tr>
 						</tbody>
 					</table>
@@ -129,6 +129,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				search:'',
 				columns:false,
 				filter_box:false,
+				removedProdId:[],
 				options:[],
 				filters:[],
 			}
@@ -218,6 +219,16 @@ import { getItem, setItem } from '@/helpers/localStorage';
 			cleanSearch(){
 				this.search=''
 			},
+			removedProductsId(checkbox,productId){
+				if(checkbox.target.checked){
+					this.removedProdId.push(productId)
+					this.addChecked()
+				}else{
+					this.removedProdId=this.removedProdId.filter(item=>item!==productId)
+					this.addChecked()
+					console.log('not checked')
+				}
+			},
 			addChecked(){
 				let k=0;
 				for(let i of this.$refs.foo ){
@@ -229,14 +240,34 @@ import { getItem, setItem } from '@/helpers/localStorage';
 			},
 			removeCheck(){
 				this.$refs.foomain.checked=false;
+				this.removedProdId=[]
+				this.toggle()
+			},
+			allCheck(){
+				this.removedProdId=[];
+				for( let product of this.products){
+					this.removedProdId.push(product.id)
+				}
 				this.toggle()
 			},
 			toggle(){
 				for(let i of this.$refs.foo ){
-				i.checked=this.$refs.foomain.checked}
+				i.checked=this.$refs.foomain.checked
+				}
 				this.addChecked()
 			},
 
+			productDetail(id){
+				this.$router.push(`/products/${id}`)
+			},
+
+			deleteProducts(){
+				const data= {
+					products:this.removedProdId
+				}
+				this.$store.dispatch('product/deleteProducts',data);
+
+			},
 			getProducts(page,limit){
 				const queries = {
 					page:page,
@@ -254,6 +285,10 @@ import { getItem, setItem } from '@/helpers/localStorage';
 			}
 		},
 		watch:{
+			page(newp,old){
+				this.delete=[];
+				this.checked=0
+			},
 			filters(newFilter,oldFilter){
 				setItem('product-filters',newFilter);
 				this.getProducts(this.$route.query.page,this.$route.query.limit)

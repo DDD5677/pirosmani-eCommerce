@@ -66,7 +66,7 @@
 							</div>
 						</thead>
 						<tbody v-if="!usersLoading&&!usersError">
-							<tr v-for="user in users" @click="this.$router.push(`/users/${user.id}`)">
+							<tr v-for="user in users" :id="user.id">
 								<td>
 									<span></span>
 									<input class="checkbox" ref="foo" @click="addChecked" type="checkbox">
@@ -74,10 +74,10 @@
 								<td v-if="options[0].show">
 									<avatar :info="user"/>
 								</td>
-								<td v-if="options[1].show">{{ user.name }} {{ user.surname }}</td>
-								<td v-if="options[2].show">{{ user.phone }}</td>
-								<td v-if="options[3].show">{{ user.email }}</td>
-								<td v-if="options[4].show">{{ user.totalSpent }}</td>
+								<td v-if="options[1].show" @click="userDetail(user.id)">{{ user.name }} {{ user.surname }}</td>
+								<td v-if="options[2].show" @click="userDetail(user.id)">{{ user.phone }}</td>
+								<td v-if="options[3].show" @click="userDetail(user.id)">{{ user.email }}</td>
+								<td v-if="options[4].show" @click="userDetail(user.id)">{{ user.totalSpent }}</td>
 							</tr>
 						</tbody>
 						
@@ -171,6 +171,10 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				for(let i of this.$refs.foo ){
 				i.checked=this.$refs.foomain.checked}
 				this.addChecked()
+			},
+
+			userDetail(id){
+				this.$router.push(`/users/${id}`)
 			},
 
 			getUsers(page,limit){

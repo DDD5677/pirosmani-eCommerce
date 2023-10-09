@@ -2,7 +2,9 @@
 		<div class="wrapper">
 			<error v-if="errors" :error="errors"></error>
 			
-			<h2 v-if="!isLoading&&!errors" class="title">{{ currentCategory }}</h2>
+			<div class="container">
+				<h2 v-if="!isLoading&&!errors" class="title">{{ currentCategory }}</h2>
+			</div>
 			<loading v-if="isLoading"/>
 			<product-list v-if="!isLoading&&!errors" />
 		</div>
@@ -53,7 +55,6 @@ import {mapState} from 'vuex'
 			font-weight: 500;
     		font-size: 27.1585px;
     		line-height: 19px;
-			margin-left: 25px;
 		}
 	}
 </style>

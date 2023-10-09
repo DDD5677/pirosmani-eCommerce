@@ -29,7 +29,7 @@
                      <h4 class="title">Промокод</h4>
                      <form action="">
                         <input type="text" placeholder="Введите промокод" />
-                        <green-btn  class="green__btn">Подтвердить</green-btn>
+                        <green-btn @click.prevent="console.log('ckick')" class="green__btn">Подтвердить</green-btn>
                      </form>
                   </div>
                </div>

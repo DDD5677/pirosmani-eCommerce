@@ -233,8 +233,8 @@ router.put("/:id", uploadOptions.single("image"), async (req, res, error) => {
    }
 });
 
-router.delete("/:id", (req, res) => {
-   Product.findByIdAndRemove(req.params.id)
+router.delete("/", (req, res) => {
+   Product.deleteMany({ _id: { $in: req.body.products } })
       .then((product) => {
          if (product) {
             return res

@@ -98,6 +98,15 @@ box-shadow: -1px 10px 17px -5px rgba(45, 104, 45, 0.2);
 		font-size: 18px;
 		border-radius: 50%;
 		cursor: pointer;
+		a{
+			height: 30px;
+			width: 30px;
+		}
+		img{
+			width: 30px;
+			height: 30px;
+			border-radius: 50%;
+		}
 	}
 	&-toggle{
 		border: none;
