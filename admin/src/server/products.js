@@ -7,6 +7,7 @@ const ProductService = {
             page: payload.page,
             limit: payload.limit,
             sort: payload.sort,
+            search: payload.search,
             price: {
                lte: payload.max_price,
                gte: payload.min_price,

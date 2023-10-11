@@ -57,15 +57,14 @@ export const usersModule = {
          state.isLoading = false;
          state.errors = payload;
       },
-      updateStart(state) {
+      deleteUserStart(state) {
          state.isLoading = true;
          state.errors = null;
       },
-      updateSuccess(state, payload) {
+      deleteUserSuccess(state) {
          state.isLoading = false;
-         state.user = payload.user;
       },
-      updateFailure(state, payload) {
+      deleteUserFailure(state, payload) {
          state.isLoading = false;
          state.errors = payload;
       },
@@ -76,7 +75,6 @@ export const usersModule = {
             context.commit("getUserStart");
             UserService.getUsers(payload)
                .then((res) => {
-                  //console.log(res);
                   context.commit("getUserSuccess", res.data);
                })
                .catch((error) => {
@@ -89,7 +87,6 @@ export const usersModule = {
             context.commit("getUserByIdStart");
             UserService.getUserById(payload)
                .then((res) => {
-                  //console.log(res);
                   context.commit("getUserByIdSuccess", res.data);
                   resolve(res.data);
                })
@@ -103,7 +100,6 @@ export const usersModule = {
             context.commit("postUserStart");
             UserService.postUsers(payload)
                .then((res) => {
-                  console.log(res);
                   context.commit("postUserSuccess");
                })
                .catch((error) => {
@@ -113,16 +109,27 @@ export const usersModule = {
       },
       updateUser(context, payload) {
          return new Promise((resolve, reject) => {
-            context.commit("updateStart");
+            context.commit("postUserStart");
             UserService.updateUser(payload)
                .then((response) => {
-                  console.log("update", response.data);
-                  context.commit("updateSuccess", response.data);
+                  context.commit("postUserSuccess", response.data);
                   resolve();
                })
                .catch((error) => {
-                  console.log("error update", error);
-                  context.commit("updateFailure", error.response.data);
+                  context.commit("postUserFailure", error.response.data);
+               });
+         });
+      },
+      deleteUsers(context, payload) {
+         return new Promise((resolve) => {
+            context.commit("deleteUserStart");
+            UserService.deleteUsers(payload)
+               .then((res) => {
+                  context.commit("deleteUserSuccess");
+                  resolve();
+               })
+               .catch((error) => {
+                  context.commit("deleteUserFailure", error.response.data);
                });
          });
       },

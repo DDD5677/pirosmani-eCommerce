@@ -69,7 +69,15 @@ router.get(`/`, async (req, res) => {
       if (req.query.limit) {
          limit = req.query.limit;
       }
-
+      if (req.query.search) {
+         filter = {
+            $or: [
+               { name: { $regex: req.query.search, $options: "i" } },
+               { email: { $regex: req.query.search, $options: "i" } },
+            ],
+         };
+      }
+      console.log(filter);
       totalUsers = await User.countDocuments(filter).exec();
       pageSize = Math.ceil(totalUsers / limit);
       if (page > pageSize) {
@@ -348,8 +356,8 @@ router.put("/:id", uploadOptions.single("avatar"), async (req, res, next) => {
    }
 });
 
-router.delete("/:id", (req, res) => {
-   User.findByIdAndRemove(req.params.id)
+router.delete("/", (req, res) => {
+   User.deleteMany({ _id: { $in: req.body.users } })
       .then((user) => {
          if (user) {
             return res

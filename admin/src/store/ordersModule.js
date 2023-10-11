@@ -2,12 +2,22 @@ import OrderService from "@/server/orders";
 
 export const ordersModule = {
    state: () => ({
+      page: 1,
+      limit: null,
+      pageSize: 1,
       orders: null,
+      order: null,
       saledCount: 0,
       isLoading: true,
       errors: null,
    }),
    mutations: {
+      changeLimit(state, limit) {
+         state.limit = limit;
+      },
+      changePage(state, page) {
+         state.page = page;
+      },
       getOrderStart(state) {
          state.isLoading = true;
          state.orders = null;
@@ -15,7 +25,10 @@ export const ordersModule = {
       },
       getOrderSuccess(state, payload) {
          state.isLoading = false;
-         state.orders = payload;
+         state.orders = payload.orderList;
+         state.pageSize = payload.pagination.pageSize;
+         state.page = +payload.pagination.page;
+         state.limit = payload.pagination.limit.toString();
       },
       getOrderFailure(state, payload) {
          state.isLoading = false;

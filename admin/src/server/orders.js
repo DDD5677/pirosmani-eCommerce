@@ -1,12 +1,17 @@
 import axios from "./axios";
 
 const OrderService = {
-   order(order) {
-      return axios.post("/orders", order);
-   },
    getOrders(payload) {
       return axios.get("/orders", {
          params: {
+            page: payload.page,
+            limit: payload.limit,
+            sort: payload.sort,
+            search: payload.search,
+            totalPrice: {
+               lte: payload.max_price,
+               gte: payload.min_price,
+            },
             user: payload.user,
          },
       });

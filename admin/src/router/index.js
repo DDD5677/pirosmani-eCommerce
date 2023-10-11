@@ -3,10 +3,11 @@ import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import UsersView from "../views/UsersView.vue";
 import CreateUserView from "../views/CreateUserView.vue";
+import UserDetailView from "../views/UserDetailView.vue";
 import ProductsView from "../views/ProductsView.vue";
 import CreateProductView from "../views/CreateProductView.vue";
-import UserDetailView from "../views/UserDetailView.vue";
 import ProductDetailView from "../views/ProductDetailView.vue";
+import OrdersView from "../views/OrdersView.vue";
 
 const routes = [
    {
@@ -56,6 +57,12 @@ const routes = [
       name: "product-detail",
       meta: { layout: "main" },
       component: ProductDetailView,
+   },
+   {
+      path: "/orders",
+      name: "orders",
+      meta: { layout: "main" },
+      component: OrdersView,
    },
 ];
 

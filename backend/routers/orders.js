@@ -24,23 +24,94 @@ const User = require("../models/user");
 router.get(`/`, async (req, res, next) => {
    try {
       let filter = {};
+      let page = 1;
+      let limit = 5;
+      let totalOrders = 0;
+      let pageSize = 1;
+      if (req.query.page) {
+         page = req.query.page;
+      }
+      if (req.query.limit) {
+         limit = req.query.limit;
+      }
+      //Building filter object
       if (req.query.user) {
          filter["user"] = req.query.user;
       }
+      if (req.query.totalPrice) {
+         if (req.query.totalPrice.lte) {
+            filter = {
+               ...filter,
+               totalPrice: {
+                  ...filter.totalPrice,
+                  lte: req.query.totalPrice.lte,
+               },
+            };
+         }
+         if (req.query.totalPrice.gte) {
+            filter = {
+               ...filter,
+               totalPrice: {
+                  ...filter.totalPrice,
+                  gte: req.query.totalPrice.gte,
+               },
+            };
+         }
+      }
+      if (req.query.search) {
+         filter = {
+            ...filter,
+            name: { $regex: req.query.search, $options: "i" },
+         };
+      }
+      //--------------------------------------------------------
+      let queryStr = JSON.stringify(filter);
+      queryStr = queryStr.replace(
+         /\b(gte|gt|lte|lt)\b/g,
+         (match) => `$${match}`
+      );
+      filter = JSON.parse(queryStr);
+
+      console.log(filter);
+      totalOrders = await Order.countDocuments(filter).exec();
+      if (!totalOrders) {
+         return res.status(404).json({
+            success: false,
+            message: "There is not order",
+         });
+      }
+      pageSize = Math.ceil(totalOrders / limit);
+      if (page > pageSize) {
+         return res.status(404).json({
+            success: false,
+            message: "Page is not found!",
+         });
+      }
+      console.log("sort", req.query.sort);
+
       const orderList = await Order.find(filter)
-         .populate("user")
-         .populate({
-            path: "orderItems",
-            populate: { path: "product", populate: "category" },
-         })
-         .sort({ dateOrdered: -1 });
+         .sort(req.query.sort)
+         .skip((page - 1) * limit)
+         .limit(limit)
+         .populate("user");
+      // .populate({
+      //    path: "orderItems",
+      //    populate: { path: "product", populate: "category" },
+      // });
 
       if (!orderList) {
          res.status(500).json({
             success: false,
          });
       }
-      res.send(orderList);
+      res.send({
+         orderList: orderList,
+         pagination: {
+            pageSize: pageSize,
+            limit: limit,
+            page: page,
+         },
+      });
    } catch (error) {
       next(error);
    }

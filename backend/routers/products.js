@@ -79,6 +79,12 @@ router.get(`/`, async (req, res) => {
             });
          filter = { ...filter, category: req.query.category };
       }
+      if (req.query.search) {
+         filter = {
+            ...filter,
+            name: { $regex: req.query.search, $options: "i" },
+         };
+      }
       //--------------------------------------------
       let queryStr = JSON.stringify(filter);
       queryStr = queryStr.replace(
@@ -90,6 +96,12 @@ router.get(`/`, async (req, res) => {
       console.log(filter);
 
       totalProducts = await Product.countDocuments(filter).exec();
+      if (!totalProducts) {
+         return res.status(404).json({
+            success: false,
+            message: "There is not product",
+         });
+      }
       pageSize = Math.ceil(totalProducts / limit);
       if (page > pageSize) {
          return res.status(404).json({

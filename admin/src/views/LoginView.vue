@@ -71,14 +71,10 @@ export default {
 						title:'Date created',
 						show:true
 					}
-				],
-				user_options:[
+			],
+			order_options:[
 					{
-						title:'Avatars',
-						show:true
-					},
-					{
-						title:'Customers',
+						title:'Customer',
 						show:true
 					},
 					{
@@ -86,46 +82,97 @@ export default {
 						show:true
 					},
 					{
-						title:'Email',
+						title:'City',
 						show:true
 					},
 					{
-						title:'Total spent',
+						title:'Adress',
+						show:true
+					},
+					{
+						title:'Status',
+						show:true
+					},
+					{
+						title:'Total price',
+						show:true
+					},
+					{
+						title:'Date ordered',
 						show:true
 					}
-					
-				],
-				product_filters:[
-					{
-						title:'Min price',
-						source:'',
-						show:false
-					},
-					{
-						title:'Max price',
-						source:'',
-						show:false
-					},
-					{
-						title:'Min rate',
-						source:'',
-						show:false
-					},
-					{
-						title:'Min count in stock',
-						source:'',
-						show:false
-					},
-					{
-						title:'Featured',
-						source:'',
-						show:false
-					},
-				],
-				sorts:{
-					user:'',
-					product:''
+			],
+			user_options:[
+				{
+					title:'Avatars',
+					show:true
+				},
+				{
+					title:'Customers',
+					show:true
+				},
+				{
+					title:'Phone',
+					show:true
+				},
+				{
+					title:'Email',
+					show:true
+				},
+				{
+					title:'Total spent',
+					show:true
+				},
+				{
+					title:'Admin',
+					show:true
 				}
+				
+			],
+			product_filters:[
+				{
+					title:'Min price',
+					source:'',
+					show:false
+				},
+				{
+					title:'Max price',
+					source:'',
+					show:false
+				},
+				{
+					title:'Min rate',
+					source:'',
+					show:false
+				},
+				{
+					title:'Min count in stock',
+					source:'',
+					show:false
+				},
+				{
+					title:'Featured',
+					source:'',
+					show:false
+				},
+			],
+			order_filters:[
+				{
+					title:'Min price',
+					source:'',
+					show:false
+				},
+				{
+					title:'Max price',
+					source:'',
+					show:false
+				},
+			],
+			sorts:{
+				user:'',
+				product:'',
+				order:''
+			}
 		}
 	},
 	computed:{
@@ -145,7 +192,9 @@ export default {
 				setItem('sorts',this.sorts)
 				setItem('user-options',this.user_options)
 				setItem('product-options',this.product_options)
+				setItem('order-options',this.order_options)
 				setItem('product-filters',this.product_filters)
+				setItem('order-filters',this.order_filters)
 			});
 		}
 	}

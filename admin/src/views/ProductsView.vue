@@ -6,7 +6,7 @@
 				<div class="table__nav">
 					<div class="filters">
 						<div class="search">
-							<input type="text" placeholder="Search" v-model="search" class="search__input">
+							<input type="text" placeholder="Search" v-model="search" class="search__input" @change="getProducts(1,this.$route.query.limit)">
 							<div v-if="!search" class="search__span"><i class="fa fa-search" aria-hidden="true"></i></div>
 							<button v-if="search" @click="cleanSearch" class="search__btn"><i class="fa fa-times" aria-hidden="true"></i></button>
 						</div>
@@ -51,7 +51,7 @@
 							<tr >
 								<th v-if="!productsError">
 									<span></span>
-									<input class="checkbox" ref="foomain" @click="allCheck()" type="checkbox">
+									<input class="checkbox" ref="foomain" @click="allCheck" type="checkbox">
 								</th>
 								<th v-if="options[0].show">{{options[0].title}}</th>
 								<th v-if="options[1].show"  >
@@ -110,7 +110,6 @@
 					</table>
 					<loading v-if="productsLoading"/>
 					<error v-if="productsError" :error="productsError"/>
-
 				</div>
 				<pagination :getData="getProducts" :page="page" :pageSize="pageSize"/>
 			</div>
@@ -149,6 +148,9 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				changePage:'product/changePage',
 				changeLimit:'product/changeLimit'
 			}),
+			productDetail(id){
+				this.$router.push(`/products/${id}`)
+			},
 			ratingCalc(ratings){
 				let items = Object.entries(ratings);
             let sum = 0;
@@ -217,19 +219,21 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				setItem('product-options',this.options)
 			},
 			cleanSearch(){
-				this.search=''
+				this.search='';
+				this.getProducts()
 			},
-			removedProductsId(checkbox,productId){
+			// delete checked data logic
+			removedProductsId(checkbox,id){
 				if(checkbox.target.checked){
-					this.removedProdId.push(productId)
-					this.addChecked()
+					this.removedProdId.push(id)
+					this.countCheckedItems()
 				}else{
-					this.removedProdId=this.removedProdId.filter(item=>item!==productId)
-					this.addChecked()
+					this.removedProdId=this.removedProdId.filter(item=>item!==id)
+					this.countCheckedItems()
 					console.log('not checked')
 				}
 			},
-			addChecked(){
+			countCheckedItems(){
 				let k=0;
 				for(let i of this.$refs.foo ){
 					if(i.checked){
@@ -237,6 +241,12 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					}
 				}
 				this.checked=k
+			},
+			toggle(){
+				for(let i of this.$refs.foo ){
+				i.checked=this.$refs.foomain.checked
+				}
+				this.countCheckedItems()
 			},
 			removeCheck(){
 				this.$refs.foomain.checked=false;
@@ -250,29 +260,23 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				}
 				this.toggle()
 			},
-			toggle(){
-				for(let i of this.$refs.foo ){
-				i.checked=this.$refs.foomain.checked
-				}
-				this.addChecked()
-			},
-
-			productDetail(id){
-				this.$router.push(`/products/${id}`)
-			},
 
 			deleteProducts(){
 				const data= {
 					products:this.removedProdId
 				}
-				this.$store.dispatch('product/deleteProducts',data);
+				this.$store.dispatch('product/deleteProducts',data).then(()=>{
+					location.reload()
+				});
 
 			},
+			//------------------------------------------------------------------------
 			getProducts(page,limit){
 				const queries = {
 					page:page,
 					limit:limit,
 					sort:this.sort,
+					search:this.search,
 					min_price:this.filters[0].source,
 					max_price:this.filters[1].source,
 					min_count:this.filters[3].source,
@@ -286,7 +290,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 		},
 		watch:{
 			page(newp,old){
-				this.delete=[];
+				this.removedProdId=[];
 				this.checked=0
 			},
 			filters(newFilter,oldFilter){

@@ -122,11 +122,12 @@ export const productsModule = {
          });
       },
       deleteProducts(context, payload) {
-         return new Promise(() => {
+         return new Promise((resolve) => {
             context.commit("deleteProductStart");
             ProductService.deleteProducts(payload)
                .then((res) => {
                   context.commit("deleteProductSuccess");
+                  resolve();
                })
                .catch((error) => {
                   context.commit("deleteProductFailure", error.response.data);

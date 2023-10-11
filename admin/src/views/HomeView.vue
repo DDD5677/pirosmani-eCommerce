@@ -1,6 +1,7 @@
 <template>
 	<section class="dashboard">
 		<div class="container">
+			<loading v-if="ordersLoading||usersLoading||reviewsLoading"/>
 			<div v-if="!ordersLoading&&!usersLoading&&!reviewsLoading" class="dashboard_inner">
 				<div class="left">
 					<div class="info">
@@ -98,7 +99,7 @@ import { mapState } from 'vuex';
 		mounted(){
 			if(!this.authError){
 				console.log("mounted homeview")
-				this.$store.dispatch('order/getOrders',{user:''})
+				this.$store.dispatch('order/getOrders',{page:1,limit:10})
 				this.$store.dispatch('review/getReviews',{user:''})
 				this.$store.dispatch('user/getUsers',{page:1})
 			}

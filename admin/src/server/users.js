@@ -7,6 +7,7 @@ const UserService = {
             page: payload.page,
             limit: payload.limit,
             sort: payload.sort,
+            search: payload.search,
          },
       });
    },
@@ -36,6 +37,9 @@ const UserService = {
       formData.append("extraPhone", user.extraPhone);
       formData.append("password", user.password);
       return axios.put(`/users/${user.id}`, formData);
+   },
+   deleteUsers(payload) {
+      return axios.delete("/users", { data: payload });
    },
 };
 

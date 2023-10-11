@@ -15,7 +15,7 @@
 						
 						<li><router-link :to="{name:'products',query:{page:1,limit:productLimit}}" class="nav-link">Products</router-link></li>
 						<li><router-link :to="{name:'users',query:{page:1,limit:userLimit}}" class="nav-link">Users</router-link></li>
-						<li><a href="" class="nav-link">Orders</a></li>
+						<li><router-link :to="{name:'orders',query:{page:1,limit:orderLimit}}" class="nav-link">Orders</router-link></li>
 						<li><a href="" class="nav-link">Category</a></li>
 						<li><a href="" class="nav-link">Reviews</a></li>
 						
@@ -42,7 +42,8 @@ import { mapState } from 'vuex';
 				user:state=>state.auth.user,
 				isLoading:state=>state.auth.isLoading,
 				userLimit:state=>state.user.limit,
-				productLimit:state=>state.product.limit
+				productLimit:state=>state.product.limit,
+				orderLimit:state=>state.order.limit
 			})
 		}
 	}

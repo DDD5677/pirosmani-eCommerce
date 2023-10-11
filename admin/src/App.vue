@@ -21,7 +21,7 @@ import { getItem } from './helpers/localStorage';
 			const token= getItem('token');
 			if(token){
 				this.$store.dispatch('auth/refresh').then((res)=>{
-					this.$store.dispatch('order/getOrders',{user:''})
+					this.$store.dispatch('order/getOrders',{page:1,limit:10})
 					this.$store.dispatch('review/getReviews',{user:''})
 					this.$store.dispatch('user/getUsers',{page:1})
 				}).catch((err)=>{
