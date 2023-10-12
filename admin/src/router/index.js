@@ -8,6 +8,7 @@ import ProductsView from "../views/ProductsView.vue";
 import CreateProductView from "../views/CreateProductView.vue";
 import ProductDetailView from "../views/ProductDetailView.vue";
 import OrdersView from "../views/OrdersView.vue";
+import OrderDetailView from "../views/OrderDetailView.vue";
 
 const routes = [
    {
@@ -63,6 +64,12 @@ const routes = [
       name: "orders",
       meta: { layout: "main" },
       component: OrdersView,
+   },
+   {
+      path: "/orders/:id",
+      name: "order-detail",
+      meta: { layout: "main" },
+      component: OrderDetailView,
    },
 ];
 

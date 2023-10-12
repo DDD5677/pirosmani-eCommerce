@@ -58,11 +58,9 @@ import {mapState, mapGetters, mapMutations} from 'vuex';
 		computed:{
 			pages(){
 				let pages=[]
-				console.log(this.pageSize)
 				for( let i=1; i<=this.pageSize;i++){
 					pages.push(i)
 				}
-				console.log(pages)
 				return pages
 			},
 			links(){

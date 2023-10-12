@@ -3,23 +3,7 @@ const router = express.Router();
 const Order = require("../models/order");
 const OrderItem = require("../models/order-items");
 const User = require("../models/user");
-
-// const orderErrors = (err) => {
-//    console.log(err.message, err.code);
-//    let errors = {
-//       name: "",
-//       shippingAdress1: "",
-//       city: "",
-//       phone: "",
-//    };
-//    if (err.message.includes("Order validation failed")) {
-//       Object.values(err.errors).forEach(({ properties }) => {
-//          errors[properties.path] = properties.message;
-//       });
-//    }
-
-//    return errors;
-// };
+const mongoose = require("mongoose");
 
 router.get(`/`, async (req, res, next) => {
    try {
@@ -75,9 +59,13 @@ router.get(`/`, async (req, res, next) => {
       console.log(filter);
       totalOrders = await Order.countDocuments(filter).exec();
       if (!totalOrders) {
-         return res.status(404).json({
-            success: false,
-            message: "There is not order",
+         return res.status(200).json({
+            orderList: [],
+            pagination: {
+               pageSize: 1,
+               limit: limit,
+               page: page,
+            },
          });
       }
       pageSize = Math.ceil(totalOrders / limit);
@@ -104,7 +92,7 @@ router.get(`/`, async (req, res, next) => {
             success: false,
          });
       }
-      res.send({
+      res.status(200).send({
          orderList: orderList,
          pagination: {
             pageSize: pageSize,
@@ -119,19 +107,24 @@ router.get(`/`, async (req, res, next) => {
 
 router.get(`/:id`, async (req, res, next) => {
    try {
+      if (!mongoose.isValidObjectId(req.params.id)) {
+         return res.status(400).json({
+            success: false,
+            message: "Invalid Id",
+         });
+      }
       const order = await Order.findById(req.params.id)
-         .populate("user", "name")
+         .populate("user")
          .populate({
             path: "orderItems",
-            populate: { path: "product", populate: "category" },
+            populate: "product",
          });
-
       if (!order) {
          res.status(500).json({
             success: false,
          });
       }
-      res.send(order);
+      res.status(200).send(order);
    } catch (error) {
       next(error);
    }
@@ -227,40 +220,65 @@ router.post("/", async (req, res, next) => {
    }
 });
 
-router.put("/:id", async (req, res) => {
-   const order = await Order.findByIdAndUpdate(
-      req.params.id,
-      {
-         status: req.body.status,
-      },
-      { new: true }
-   );
-   if (!order) {
-      return res.status(404).send("the order cannot be updated!");
-   }
+router.put("/:id", async (req, res, next) => {
+   try {
+      const order = await Order.findByIdAndUpdate(
+         req.params.id,
+         {
+            status: req.body.status,
+         },
+         { new: true }
+      )
+         .populate("user")
+         .populate({
+            path: "orderItems",
+            populate: "product",
+         });
+      if (!order) {
+         return res.status(404).send("the order cannot be updated!");
+      }
 
-   res.send(order);
+      res.status(200).send(order);
+   } catch (error) {
+      next(error);
+   }
 });
 
-router.delete("/:id", (req, res) => {
-   Order.findByIdAndRemove(req.params.id)
-      .then(async (order) => {
-         if (order) {
-            await order.orderItems.map(async (orderItem) => {
-               await OrderItem.findByIdAndRemove(orderItem);
-            });
-            return res
-               .status(200)
-               .json({ success: true, message: "The order was deleted." });
-         } else {
-            return res
-               .status(404)
-               .json({ success: false, message: "The order is not found." });
-         }
-      })
-      .catch((err) => {
-         return res.status(400).json({ success: false, error: err });
-      });
+router.delete("/", async (req, res, next) => {
+   try {
+      const orders = req.body.orders;
+      console.log("orders", orders);
+      if (orders) {
+         await orders.forEach(async (order) => {
+            const removedOrder = await Order.findByIdAndRemove(order);
+            if (removedOrder) {
+               await removedOrder.orderItems.map(async (orderItem) => {
+                  await OrderItem.findByIdAndRemove(orderItem);
+               });
+               // return res.status(200).json({
+               //    success: true,
+               //    message: "The order was deleted.",
+               // });
+            } else {
+               return res.status(404).json({
+                  success: false,
+                  message: "The order is not found.",
+               });
+            }
+         });
+         return res.status(200).json({
+            success: true,
+            message: "The order was deleted.",
+         });
+      } else {
+         return res.status(200).json({
+            success: true,
+            message: "There is not order in request.",
+         });
+      }
+   } catch (error) {
+      next(error);
+   }
 });
 
 router.get("/get/totalsales", async (req, res) => {

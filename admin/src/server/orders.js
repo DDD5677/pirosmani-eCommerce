@@ -16,8 +16,18 @@ const OrderService = {
          },
       });
    },
+
+   getOrderById(payload) {
+      return axios.get(`/orders/${payload}`);
+   },
+   updateOrder(payload) {
+      return axios.put(`/orders/${payload.id}`, { status: payload.status });
+   },
    getSaledCount(payload) {
       return axios.get(`/orders/saled/${payload}`);
+   },
+   deleteOrders(payload) {
+      return axios.delete(`/orders`, { data: payload });
    },
 };
 

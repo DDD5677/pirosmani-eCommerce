@@ -50,7 +50,6 @@ const ProductService = {
       return axios.put(`/products/${data.id}`, formData);
    },
    deleteProducts(payload) {
-      console.log(payload);
       return axios.delete(`/products`, { data: payload });
    },
 };

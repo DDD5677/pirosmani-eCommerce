@@ -34,7 +34,6 @@
 									</label>
 								</li>
 						</ul>
-						<router-link :to="{name:'create-user'}" class="btn"><i class="fa fa-plus" aria-hidden="true"></i>Create</router-link>
 						
 						<button @click="toggleFilters" class="btn"><i class="fa fa-filter" aria-hidden="true"></i>Filter</button>
 						<ul v-show="filter_box" class="filter__box">
@@ -53,12 +52,14 @@
 									<span></span>
 									<input class="checkbox" ref="foomain" @click="allCheck" type="checkbox">
 								</th>
-								<th v-if="options[0].show">{{options[0].title}}</th>
-								<th v-if="options[1].show"  >
+								<th v-if="options[0].show">
 									<span class="sort_btn" @click="sortHandler('name')">
-									{{options[1].title}}
+									{{options[0].title}}
 									<i v-if="sort==='name'||sort==='-name'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
 									</span>
+								</th>
+								<th v-if="options[1].show"  >
+									{{options[1].title}}
 								</th>
 								<th v-if="options[2].show" >
 									<span @click="sortHandler('city')" class="sort_btn">
@@ -76,7 +77,12 @@
 									<i v-if="sort==='totalPrice'||sort==='-totalPrice'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
 									</span>
 								</th>
-								<th v-if="options[6].show">{{options[6].title}}</th>
+								<th v-if="options[6].show">
+									<span class="sort_btn" @click="sortHandler('dateOrdered')">
+									{{options[6].title}}
+									<i v-if="sort==='dateOrdered'||sort==='-dateOrdered'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
+									</span>
+								</th>
 							</tr>
 							<div v-if="checked>0" class="checked__block">
 								<div>
@@ -98,8 +104,8 @@
 									<span></span>
 									<input class="checkbox" ref="foo" @click="removedOrdersId($event,order.id)" type="checkbox">
 								</td>
-								<td v-if="options[0].show">
-									<avatar :info="{image:order.user.image, name:order.user.name}"/> {{ order.name }}
+								<td v-if="options[0].show" class="customer">
+									<avatar :info="{image:order.user.image, name:order.user.name}"/> <span>{{ order.name }}</span>
 								</td>
 								<td v-if="options[1].show" @click="orderDetail(order.id)">{{ order.phone }}</td>
 								<td v-if="options[2].show" @click="orderDetail(order.id)">{{ order.city }}</td>
@@ -110,6 +116,9 @@
 							</tr>
 						</tbody>
 					</table>
+					<div v-if="!ordersLoading">
+						<h3 class="empty" v-if="orders.length===0">There is not orders yet!</h3>
+					</div>
 					<loading v-if="ordersLoading"/>
 					<error v-if="ordersError" :error="ordersError"/>
 				</div>
@@ -153,21 +162,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 			orderDetail(id){
 				this.$router.push(`/orders/${id}`)
 			},
-			// ratingCalc(ratings){
-			// 	let items = Object.entries(ratings);
-         //    let sum = 0;
-         //    let total = 0;
-
-         //    for (let [key, value] of items) {
-         //       total += value;
-         //       sum += value * parseInt(key);
-         //    }
-			// 	if(total){
-         //    	return Math.round(sum / total);
-			// 	}else{
-			// 		return 0
-			// 	}
-			// },
+			
 			formatDate (dateString){
   				const options = { year: "numeric", month: "long", day: "numeric" }
   				return new Date(dateString).toLocaleDateString(undefined, options) +" " + new Date(dateString).toLocaleTimeString('it-IT')
@@ -245,10 +240,13 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				this.checked=k
 			},
 			toggle(){
-				for(let i of this.$refs.foo ){
-				i.checked=this.$refs.foomain.checked
+				console.log(this.$refs.foo)
+				if(this.$refs.foo){
+					for(let i of this.$refs.foo ){
+						i.checked=this.$refs.foomain.checked
+					}
+					this.countCheckedItems()
 				}
-				this.countCheckedItems()
 			},
 			removeCheck(){
 				this.$refs.foomain.checked=false;
@@ -263,14 +261,14 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				this.toggle()
 			},
 
-			deleteProducts(){
+			deleteOrders(){
 				const data= {
-					products:this.removedOrderId
+					orders:this.removedOrderId
 				}
 				console.log(data)
-				// this.$store.dispatch('order/deleteOrders',data).then(()=>{
-				// 	location.reload()
-				// });
+				this.$store.dispatch('order/deleteOrders',data).then(()=>{
+					location.reload()
+				});
 
 			},
 			//------------------------------------------------------------------------
@@ -303,18 +301,19 @@ import { getItem, setItem } from '@/helpers/localStorage';
 			this.options=getItem('order-options')
 			this.filters=getItem('order-filters')
 			this.sort=getItem('sorts').order
+			this.getOrders(this.$route.query.page,this.$route.query.limit)
 
 		},
-		mounted(){
-			this.getOrders(this.$route.query.page,this.$route.query.limit)
-		}
 	}
 </script>
 
 <style lang="scss" scoped>
 	.orders{
 		padding: 100px 0 40px;
-
+		.empty{
+			margin:20px 30px;
+			color: red;
+		}
 		.table__nav{
 			display: flex;
 			justify-content: space-between;
@@ -492,6 +491,15 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				width: 100%;
 				border-collapse: collapse;
 				border-spacing: 0px;
+				.customer{
+					display: flex;
+					gap: 15px;
+					align-items: center;
+					span{
+						text-align: start;
+					}
+
+				}
 				.rotate{
 					transition: all 0.3s ease-in-out;
 					transform: rotate(180deg);
@@ -583,6 +591,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					font-size: 18px;
 					font-weight: 500;
 					text-transform: uppercase;
+					cursor: pointer;
 					transition: all 0.3s ease-in;
 					&:hover{
 						background-color: rgba(140, 0, 0, 0.238);

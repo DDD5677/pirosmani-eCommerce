@@ -14,6 +14,7 @@
 					</div>
 					<div class="orders">
 						<h3 class="title">Pending Orders</h3>
+						<h3 class="empty" v-if="orders.length===0">There is not orders yet!</h3>
 						<ul>
 							<li v-for="order in orders" class="order__item">
 								<avatar :info="order.user"/>
@@ -96,7 +97,10 @@ import { mapState } from 'vuex';
   				return new Date(dateString).toLocaleDateString(undefined, options) +" " + new Date(dateString).toLocaleTimeString('it-IT')
 			},
 		},
-		mounted(){
+		updated(){
+			console.log("updated")
+		},
+		created(){
 			if(!this.authError){
 				console.log("mounted homeview")
 				this.$store.dispatch('order/getOrders',{page:1,limit:10})
@@ -121,6 +125,10 @@ import { mapState } from 'vuex';
 		}
 		.left{
 			width: 60%;
+			.empty{
+				padding: 15px;
+				color: red;
+			}
 			.info{
 				display: flex;
 				justify-content: space-between;
