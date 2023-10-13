@@ -12,11 +12,19 @@
 						</div>
 						<div class="filter">
 							<div v-for="(filter,index) in filters" :id="index">
-									<div v-if="filter.show">
-										<input type="text" :placeholder="filter.title" v-model="filter.source" @change="sumbitFilters">
-										<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
-									</div>
-								
+								<div v-if="filter.show&&(filter.title!=='Status')">
+									<input type="number" :placeholder="filter.title" v-model="filter.source" @change="sumbitFilters">
+									<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
+								</div>
+								<div v-if="filter.show&&(filter.title==='Status')">
+									<select name="status" id="status" v-model="filter.source" @change="sumbitFilters">
+										<option value="" selected disabled hidden >Select the status</option>
+										<option value="Delivered">Delivered</option>
+										<option value="Pending">Pending</option>
+										<option value="Canceled">Canceled</option>
+									</select>
+									<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -142,6 +150,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				removedOrderId:[],
 				options:[],
 				filters:[],
+				status:''
 			}
 		},
 		computed:{
@@ -280,6 +289,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					search:this.search,
 					min_price:this.filters[0].source,
 					max_price:this.filters[1].source,
+					status:this.filters[2].source,
 				}
 				this.$store.dispatch('order/getOrders',queries);
 				this.changePage(page);
@@ -357,6 +367,14 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				}
 				.filter{
 					display: flex;
+					select{
+						width: 140px;
+						padding: 9px ;
+						border-radius: 10px 10px 0 0;
+						border-bottom: 1px solid #000;
+						background-color: $light-color;
+						display: inline-block;
+					}
 					div{
 						position: relative;
 						margin-right: 5px;

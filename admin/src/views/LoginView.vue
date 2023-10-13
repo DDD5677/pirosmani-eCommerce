@@ -167,6 +167,11 @@ export default {
 					source:'',
 					show:false
 				},
+				{
+					title:'Status',
+					source:'',
+					show:false
+				},
 			],
 			sorts:{
 				user:'',

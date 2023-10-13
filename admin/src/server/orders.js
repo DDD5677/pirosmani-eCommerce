@@ -12,6 +12,7 @@ const OrderService = {
                lte: payload.max_price,
                gte: payload.min_price,
             },
+				status:payload.status,
             user: payload.user,
          },
       });

@@ -22,6 +22,9 @@ router.get(`/`, async (req, res, next) => {
       if (req.query.user) {
          filter["user"] = req.query.user;
       }
+      if (req.query.status) {
+         filter["status"] = req.query.status;
+      }
       if (req.query.totalPrice) {
          if (req.query.totalPrice.lte) {
             filter = {

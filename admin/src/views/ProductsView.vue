@@ -4,46 +4,54 @@
 			
 			<div  class="users__inner">
 				<div class="table__nav">
+					<div class="filter">
+						<div v-for="(filter,index) in filters" :id="index">
+							<div v-if="filter.show&&(filter.title!=='Featured')">
+								<input type="number" :placeholder="filter.title" v-model="filter.source" @change="sumbitFilters">
+								<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
+							</div>
+							<div v-if="filter.show&&(filter.title==='Featured')">
+								<select name="status" id="status" v-model="filter.source" @change="sumbitFilters">
+									<option value="" selected disabled hidden >Select an option</option>
+									<option value="true">Featured</option>
+									<option value="false">Not Featured</option>
+								</select>
+								<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
+							</div>
+						</div>
+					</div>
 					<div class="filters">
 						<div class="search">
 							<input type="text" placeholder="Search" v-model="search" class="search__input" @change="getProducts(1,this.$route.query.limit)">
 							<div v-if="!search" class="search__span"><i class="fa fa-search" aria-hidden="true"></i></div>
 							<button v-if="search" @click="cleanSearch" class="search__btn"><i class="fa fa-times" aria-hidden="true"></i></button>
 						</div>
-						<div class="filter">
-							<div v-for="(filter,index) in filters" :id="index">
-									<div v-if="filter.show">
-										<input type="text" :placeholder="filter.title" v-model="filter.source" @change="sumbitFilters">
-										<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
-									</div>
-								
-							</div>
+						<div class="buttons">
+							<button @click="toggleColumns" class="btn"><i class="fa fa-th" aria-hidden="true"></i>Columns</button>
+							<ul v-show="columns" class="columns">
+									<li v-for="(option,index) in options" class="options">
+										<label @click="addOptions(index)" :for="'option-'+index">
+											<input checked type="checkbox" ref="option" :id="'option-'+index">
+											<span class="shortline" :class="{'checked':option.show}" ref="shortline">
+												<span class="circle"></span>
+											</span>
+										
+										{{ option.title }}
+										</label>
+									</li>
+							</ul>
+							<router-link :to="{name:'create-product'}" class="btn"><i class="fa fa-plus" aria-hidden="true"></i>Create</router-link>
+							
+							<button @click="toggleFilters" class="btn"><i class="fa fa-filter" aria-hidden="true"></i>Filter</button>
+							<ul v-show="filter_box" class="filter__box">
+									<li v-for="(option,index) in filters" :id="index" @click="addFilter(index)" class="options">
+										{{ option.title }}
+									</li>
+							</ul>
+							<button class="btn"><i class="fa fa-download" aria-hidden="true"></i>Export</button>
 						</div>
 					</div>
-					<div class="buttons">
-						<button @click="toggleColumns" class="btn"><i class="fa fa-th" aria-hidden="true"></i>Columns</button>
-						<ul v-show="columns" class="columns">
-								<li v-for="(option,index) in options" class="options">
-									<label @click="addOptions(index)" :for="'option-'+index">
-										<input checked type="checkbox" ref="option" :id="'option-'+index">
-										<span class="shortline" :class="{'checked':option.show}" ref="shortline">
-											<span class="circle"></span>
-										</span>
-									
-									{{ option.title }}
-									</label>
-								</li>
-						</ul>
-						<router-link :to="{name:'create-product'}" class="btn"><i class="fa fa-plus" aria-hidden="true"></i>Create</router-link>
-						
-						<button @click="toggleFilters" class="btn"><i class="fa fa-filter" aria-hidden="true"></i>Filter</button>
-						<ul v-show="filter_box" class="filter__box">
-								<li v-for="(option,index) in filters" :id="index" @click="addFilter(index)" class="options">
-									{{ option.title }}
-								</li>
-						</ul>
-						<button class="btn"><i class="fa fa-download" aria-hidden="true"></i>Export</button>
-					</div>
+					
 				</div>
 				<div class="users__table">
 					<table>
@@ -102,7 +110,7 @@
 								<td v-if="options[1].show" @click="productDetail(product.id)">{{ product.name }}</td>
 								<td v-if="options[2].show" @click="productDetail(product.id)">{{ product.price }}$</td>
 								<td v-if="options[3].show" @click="productDetail(product.id)">{{ product.countInStock }}</td>
-								<td v-if="options[4].show" @click="productDetail(product.id)">{{ ratingCalc(product.ratings) }}</td>
+								<td v-if="options[4].show" @click="productDetail(product.id)"><product-rating :rating="ratingCalc(product.ratings)"/></td>
 								<td v-if="options[5].show" @click="productDetail(product.id)">{{ product.isFeatured }}</td>
 								<td v-if="options[6].show" @click="productDetail(product.id)">{{ formatDate(product.dateCreated) }}</td>
 							</tr>
@@ -315,15 +323,48 @@ import { getItem, setItem } from '@/helpers/localStorage';
 		padding: 100px 0 40px;
 
 		.table__nav{
+			margin-bottom: 10px;
+			.filter{
+				display: flex;
+				margin-bottom: 10px;
+				select{
+					width: 140px;
+					padding: 9px ;
+					border-radius: 10px 10px 0 0;
+					border-bottom: 1px solid #000;
+					background-color: $light-color;
+					display: inline-block;
+				}
+				div{
+					position: relative;
+					margin-right: 5px;
+				}
+				input{
+					width: 100px;
+					padding: 10px ;
+					border-radius: 10px 10px 0 0;
+					border-bottom: 1px solid #000;
+					background-color: $light-color;
+					display: inline-block;
+				}
+				button{
+					position: absolute;
+					top: -5px;
+					right: -5px;
+					width: 20px;
+					height: 20px;
+					border-radius: 50%;
+					cursor: pointer;
+					background-color: $light-color;
+				}
+			}
+			.filters{
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			margin-bottom: 10px;
-			.filters{
-			display: flex;
-			align-items: center;
 				.search{
-					display: inline-block;
+					display: inline-flex;
+					flex-wrap: nowrap;
 					border-bottom: 1px solid #454444;
 					border-radius: 10px 10px 0 0;
 					margin-right: 10px;
@@ -355,31 +396,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 						font-size: 13px;
 					}
 				}
-				.filter{
-					display: flex;
-					div{
-						position: relative;
-						margin-right: 5px;
-					}
-					input{
-						width: 100px;
-						padding: 10px ;
-						border-radius: 10px 10px 0 0;
-						border-bottom: 1px solid #000;
-						background-color: $light-color;
-						display: inline-block;
-					}
-					button{
-						position: absolute;
-						top: -5px;
-						right: -5px;
-						width: 20px;
-						height: 20px;
-						border-radius: 50%;
-						cursor: pointer;
-						background-color: $light-color;
-					}
-				}
+				
 			}
 			.buttons{
 				position: relative;
