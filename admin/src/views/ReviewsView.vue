@@ -1,96 +1,87 @@
 <template>
-	<section class="orders">
+	<section class="reviews">
 		<div class="container">
 			
-			<div  class="orders__inner">
+			<div  class="reviews__inner">
 				<div class="table__nav">
-					<div class="filters">
-						<div class="search">
-							<input type="text" placeholder="Search" v-model="search" class="search__input" @change="getOrders(1,this.$route.query.limit)">
-							<div v-if="!search" class="search__span"><i class="fa fa-search" aria-hidden="true"></i></div>
-							<button v-if="search" @click="cleanSearch" class="search__btn"><i class="fa fa-times" aria-hidden="true"></i></button>
-						</div>
-						<div class="filter">
-							<div v-for="(filter,index) in filters" :id="index">
-								<div v-if="filter.show&&(filter.title!=='Status')">
-									<input type="number" :placeholder="filter.title" v-model="filter.source" @change="sumbitFilters">
-									<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
-								</div>
-								<div v-if="filter.show&&(filter.title==='Status')">
-									<select name="status" id="status" v-model="filter.source" @change="sumbitFilters">
-										<option value="" selected disabled hidden >Select the status</option>
-										<option value="Delivered">Delivered</option>
-										<option value="Pending">Pending</option>
-										<option value="Canceled">Canceled</option>
-									</select>
-									<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
-								</div>
+					<div class="filter">
+						<div v-for="(filter,index) in filters" :id="index">
+							<div v-if="filter.show&&(filter.title!=='Featured')">
+								<input type="number" :placeholder="filter.title" v-model="filter.source" @change="sumbitFilters">
+								<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
+							</div>
+							<div v-if="filter.show&&(filter.title==='Featured')">
+								<select name="status" id="status" v-model="filter.source" @change="sumbitFilters">
+									<option value="" selected disabled hidden >Select an option</option>
+									<option value="true">Featured</option>
+									<option value="false">Not Featured</option>
+								</select>
+								<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
 							</div>
 						</div>
 					</div>
-					<div class="buttons">
-						<button @click="toggleColumns" class="btn"><i class="fa fa-th" aria-hidden="true"></i>Columns</button>
-						<ul v-show="columns" class="columns">
-								<li v-for="(option,index) in options" class="options">
-									<label @click="addOptions(index)" :for="'option-'+index">
-										<input checked type="checkbox" ref="option" :id="'option-'+index">
-										<span class="shortline" :class="{'checked':option.show}" ref="shortline">
-											<span class="circle"></span>
-										</span>
-									
-									{{ option.title }}
-									</label>
-								</li>
-						</ul>
-						
-						<button @click="toggleFilters" class="btn"><i class="fa fa-filter" aria-hidden="true"></i>Filter</button>
-						<ul v-show="filter_box" class="filter__box">
-								<li v-for="(option,index) in filters" :id="index" @click="addFilter(index)" class="options">
-									{{ option.title }}
-								</li>
-						</ul>
-						<button class="btn"><i class="fa fa-download" aria-hidden="true"></i>Export</button>
+					<div class="filters">
+						<div class="search">
+							<input type="text" placeholder="Search" v-model="search" class="search__input" @change="getReviews(1,this.$route.query.limit)">
+							<div v-if="!search" class="search__span"><i class="fa fa-search" aria-hidden="true"></i></div>
+							<button v-if="search" @click="cleanSearch" class="search__btn"><i class="fa fa-times" aria-hidden="true"></i></button>
+						</div>
+						<div class="buttons">
+							<button @click="toggleColumns" class="btn"><i class="fa fa-th" aria-hidden="true"></i>Columns</button>
+							<ul v-show="columns" class="columns">
+									<li v-for="(option,index) in options" class="options">
+										<label @click="addOptions(index)" :for="'option-'+index">
+											<input checked type="checkbox" ref="option" :id="'option-'+index">
+											<span class="shortline" :class="{'checked':option.show}" ref="shortline">
+												<span class="circle"></span>
+											</span>
+										
+										{{ option.title }}
+										</label>
+									</li>
+							</ul>
+							<router-link :to="{name:'create-product'}" class="btn"><i class="fa fa-plus" aria-hidden="true"></i>Create</router-link>
+							
+							<button @click="toggleFilters" class="btn"><i class="fa fa-filter" aria-hidden="true"></i>Filter</button>
+							<ul v-show="filter_box" class="filter__box">
+									<li v-for="(option,index) in filters" :id="index" @click="addFilter(index)" class="options">
+										{{ option.title }}
+									</li>
+							</ul>
+							<button class="btn"><i class="fa fa-download" aria-hidden="true"></i>Export</button>
+						</div>
 					</div>
+					
 				</div>
-				<div class="orders__table">
+				<div class="reviews__table">
 					<table>
 						<thead>
 							<tr >
-								<th v-if="!ordersError">
+								<th v-if="!reviewsError">
 									<span></span>
 									<input class="checkbox" ref="foomain" @click="allCheck" type="checkbox">
 								</th>
-								<th v-if="options[0].show">
+								<th v-if="options[0].show">{{options[0].title}}</th>
+								<th v-if="options[1].show"  >
 									<span class="sort_btn" @click="sortHandler('name')">
-									{{options[0].title}}
+									{{options[1].title}}
 									<i v-if="sort==='name'||sort==='-name'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
 									</span>
 								</th>
-								<th v-if="options[1].show"  >
-									{{options[1].title}}
-								</th>
 								<th v-if="options[2].show" >
-									<span @click="sortHandler('city')" class="sort_btn">
+									<span @click="sortHandler('price')" class="sort_btn">
 									{{options[2].title}} 
-									<i v-if="sort==='city'||sort==='-city'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
+									<i v-if="sort==='price'||sort==='-price'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
 									</span>
 								</th>
 								<th v-if="options[3].show" >
+									<span @click="sortHandler('countInStock')" class="sort_btn">
 									{{options[3].title}} 
+									<i v-if="sort==='countInStock'||sort==='-countInStock'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
+									</span>
 								</th>
 								<th v-if="options[4].show">{{options[4].title}}</th>
-								<th v-if="options[5].show">
-									<span class="sort_btn" @click="sortHandler('totalPrice')">
-									{{options[5].title}}
-									<i v-if="sort==='totalPrice'||sort==='-totalPrice'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
-									</span>
-								</th>
-								<th v-if="options[6].show">
-									<span class="sort_btn" @click="sortHandler('dateOrdered')">
-									{{options[6].title}}
-									<i v-if="sort==='dateOrdered'||sort==='-dateOrdered'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
-									</span>
-								</th>
+								<th v-if="options[5].show">{{options[5].title}}</th>
 							</tr>
 							<div v-if="checked>0" class="checked__block">
 								<div>
@@ -101,39 +92,33 @@
 									></button>
 									<span class="checked">{{ checked }} Items selected</span>
 								</div>
-								<a @click.prevent="deleteOrders" class="delete__btn"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
+								<a @click.prevent="deleteReviews" class="delete__btn"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
 							</div>
 						</thead>
 						
-						<tbody v-if="!ordersLoading&&!ordersError">
-							
-							<tr v-for="order in orders" :id="order.id" >
+						<tbody v-if="!isLoading&&!reviewsError">
+							<tr v-for="review in reviews" :id="review.id">
 								<td>
 									<span></span>
-									<input class="checkbox" ref="foo" @click="removedOrdersId($event,order.id)" type="checkbox">
+									<input class="checkbox" ref="foo" @click="removedReviewsId($event,review.id)" type="checkbox">
 								</td>
-								<td v-if="options[0].show" >
-									<span class="customer">
-										<avatar :width="'30px'" :info="{image:order.user.image, name:order.user.name}"/> <span>{{ order.name }}</span>
-									</span>
+								<td v-if="options[0].show">
+									{{ formatDate(review.createdAt) }}
 								</td>
-								<td v-if="options[1].show" @click="orderDetail(order.id)">{{ order.phone }}</td>
-								<td v-if="options[2].show" @click="orderDetail(order.id)">{{ order.city }}</td>
-								<td v-if="options[3].show" @click="orderDetail(order.id)">{{ order.shippingAdress1 }}</td>
-								<td v-if="options[4].show" @click="orderDetail(order.id)">{{ order.status }}</td>
-								<td v-if="options[5].show" @click="orderDetail(order.id)">{{ order.totalPrice }}$</td>
-								<td v-if="options[6].show" @click="orderDetail(order.id)">{{ formatDate(order.dateOrdered) }}</td>
+								<td  v-if="options[1].show" @click="reviewDetail(review._id)"><span class="customer"><avatar :info="review.user" :width="'30px'"/><span>{{ review.user.name }}</span></span></td>
+								<td v-if="options[2].show" @click="reviewDetail(review._id)">{{ review.product.name }}</td>
+								<td v-if="options[3].show" @click="reviewDetail(review._id)"><product-rating :rating="review.rating"/></td>
+								<td v-if="options[4].show" @click="reviewDetail(review._id)">{{ review.bodyText }}</td>
+								<td v-if="options[5].show" @click="reviewDetail(review._id)">{{ review.status }}</td>
 							</tr>
 						</tbody>
 					</table>
-					<div v-if="!ordersLoading">
-						<h3 class="empty" v-if="orders.length===0">There is not orders yet!</h3>
-					</div>
-					<loading v-if="ordersLoading"/>
-					<error v-if="ordersError" :error="ordersError"/>
+					<loading v-if="isLoading"/>
+					<error v-if="reviewsError" :error="reviewsError"/>
 				</div>
-				<pagination :getData="getOrders" :page="page" :pageSize="pageSize"/>
+				<pagination :getData="getReviews" :page="page" :pageSize="pageSize"/>
 			</div>
+			<review-detail v-if="reviewDetailShow" class="review-detail" @close="reviewDetailToggle"/>
 		</div>
 	</section>
 </template>
@@ -149,34 +134,53 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				search:'',
 				columns:false,
 				filter_box:false,
-				removedOrderId:[],
+				removedReviewId:[],
 				options:[],
 				filters:[],
-				status:''
+				reviewDetailShow:false,
 			}
 		},
 		computed:{
 			...mapState({
-				orders:state=>state.order.orders,
-				page:state=>state.order.page,
-				pageSize:state=>state.order.pageSize,
-				ordersLoading:state=>state.order.isLoading,
-				ordersError:state=>state.order.errors
+				reviews:state=>state.review.reviews,
+				page:state=>state.review.page,
+				pageSize:state=>state.review.pageSize,
+				isLoading:state=>state.review.isLoading,
+				reviewLoading:state=>state.review.reviewLoading,
+				reviewsError:state=>state.review.errors
 			}),
 			
 		},
 		methods:{
 			...mapMutations({
-				changePage:'order/changePage',
-				changeLimit:'order/changeLimit'
+				changePage:'review/changePage',
+				changeLimit:'review/changeLimit'
 			}),
-			orderDetail(id){
-				this.$router.push(`/orders/${id}`)
+			reviewDetailToggle(item){
+				this.reviewDetailShow=item
 			},
-			
+			reviewDetail(id){
+				this.reviewDetailToggle(true)
+				this.$store.dispatch('review/getReviewById',id)
+			},
+			ratingCalc(ratings){
+				let items = Object.entries(ratings);
+            let sum = 0;
+            let total = 0;
+
+            for (let [key, value] of items) {
+               total += value;
+               sum += value * parseInt(key);
+            }
+				if(total){
+            	return Math.round(sum / total);
+				}else{
+					return 0
+				}
+			},
 			formatDate (dateString){
-  				const options = { year: "numeric", month: "long", day: "numeric" }
-  				return new Date(dateString).toLocaleDateString(undefined, options) +" " + new Date(dateString).toLocaleTimeString('it-IT')
+  				const options = { year: "numeric", month: "numeric", day: "numeric" }
+  				return new Date(dateString).toLocaleDateString(undefined, options)
 			},
 			sortHandler(sort){
 				if(this.sort===sort){
@@ -188,9 +192,9 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				}else{
 					this.sort=sort
 				}
-				this.getOrders(this.$route.query.page,this.$route.query.limit)
+				this.getReviews(this.$route.query.page,this.$route.query.limit)
 				const sorts=getItem('sorts')
-				setItem('sorts',{...sorts,order:this.sort})
+				setItem('sorts',{...sorts,review:this.sort})
 			},
 			toggleColumns(){
 				this.columns=!this.columns
@@ -206,13 +210,13 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				this.filters[index].show=false
 				if(this.filters[index].source){
 					this.filters[index].source=''
-					setItem('order-filters',this.filters);
-					this.getOrders(1,this.$route.query.limit)
+					setItem('review-filters',this.filters);
+					this.getReviews(1,this.$route.query.limit)
 				}
 			},
 			sumbitFilters(){
-				setItem('order-filters',this.filters);
-				this.getOrders(1,this.$route.query.limit)
+				setItem('review-filters',this.filters);
+				this.getReviews(1,this.$route.query.limit)
 			},
 			addOptions(index){
 				const shortline = this.$refs.shortline
@@ -224,19 +228,19 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					shortline[index].classList.remove('checked')
 					this.options[index].show=false
 				}
-				setItem('order-options',this.options)
+				setItem('review-options',this.options)
 			},
 			cleanSearch(){
 				this.search='';
-				this.getOrders()
+				this.getReviews()
 			},
 			// delete checked data logic
-			removedOrdersId(checkbox,id){
+			removedReviewsId(checkbox,id){
 				if(checkbox.target.checked){
-					this.removedOrderId.push(id)
+					this.removedReviewId.push(id)
 					this.countCheckedItems()
 				}else{
-					this.removedOrderId=this.removedOrderId.filter(item=>item!==id)
+					this.removedReviewId=this.removedReviewId.filter(item=>item!==id)
 					this.countCheckedItems()
 					console.log('not checked')
 				}
@@ -251,91 +255,131 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				this.checked=k
 			},
 			toggle(){
-				console.log(this.$refs.foo)
-				if(this.$refs.foo){
-					for(let i of this.$refs.foo ){
-						i.checked=this.$refs.foomain.checked
-					}
-					this.countCheckedItems()
+				for(let i of this.$refs.foo ){
+				i.checked=this.$refs.foomain.checked
 				}
+				this.countCheckedItems()
 			},
 			removeCheck(){
 				this.$refs.foomain.checked=false;
-				this.removedOrderId=[]
+				this.removedReviewId=[]
 				this.toggle()
 			},
 			allCheck(){
-				this.removedOrderId=[];
-				for( let order of this.orders){
-					this.removedOrderId.push(order.id)
+				this.removedReviewId=[];
+				for( let product of this.products){
+					this.removedReviewId.push(product.id)
 				}
 				this.toggle()
 			},
 
-			deleteOrders(){
+			deleteReviews(){
 				const data= {
-					orders:this.removedOrderId
+					reviews:this.removedReviewId
 				}
-				console.log(data)
-				this.$store.dispatch('order/deleteOrders',data).then(()=>{
+				this.$store.dispatch('review/deleteReviews',data).then(()=>{
 					location.reload()
 				});
 
 			},
 			//------------------------------------------------------------------------
-			getOrders(page,limit){
+			getReviews(page,limit){
 				const queries = {
 					page:page,
 					limit:limit,
 					sort:this.sort,
 					search:this.search,
-					min_price:this.filters[0].source,
-					max_price:this.filters[1].source,
-					status:this.filters[2].source,
+					// min_price:this.filters[0].source,
+					// max_price:this.filters[1].source,
+					// min_count:this.filters[3].source,
+					// isFeatured:this.filters[4].source,
 				}
-				this.$store.dispatch('order/getOrders',queries);
+				this.$store.dispatch('review/getReviews',queries);
 				this.changePage(page);
 				this.changeLimit(limit);
-				this.$router.push({ path: "/orders", query: queries });
+				this.$router.push({ path: "/reviews", query: queries });
 			}
 		},
 		watch:{
 			page(newp,old){
-				this.removedOrderId=[];
+				this.removedReviewId=[];
 				this.checked=0
 			},
 			filters(newFilter,oldFilter){
-				setItem('order-filters',newFilter);
-				this.getOrders(this.$route.query.page,this.$route.query.limit)
+				setItem('review-filters',newFilter);
+				this.getReviews(this.$route.query.page,this.$route.query.limit)
 			}
 		},
 		created(){
-			this.options=getItem('order-options')
-			this.filters=getItem('order-filters')
-			this.sort=getItem('sorts').order
-			this.getOrders(this.$route.query.page,this.$route.query.limit)
+			this.options=getItem('review-options')
+			this.filters=getItem('review-filters')
+			this.sort=getItem('sorts').review
 
 		},
+		mounted(){
+			this.getReviews(this.$route.query.page,this.$route.query.limit)
+		}
 	}
 </script>
 
 <style lang="scss" scoped>
-	.orders{
+	.reviews{
 		padding: 100px 0 40px;
-		.empty{
-			margin:20px 30px;
-			color: red;
+		position: relative;
+		.review-detail{
+			background-color: #fff;
+			width: 500px;
+			position: absolute;
+			z-index: 99;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			border-left: 1px solid #9d9d9d;
+			padding: 100px 0 50px;
 		}
 		.table__nav{
+			margin-bottom: 10px;
+			.filter{
+				display: flex;
+				margin-bottom: 10px;
+				select{
+					width: 140px;
+					padding: 9px ;
+					border-radius: 10px 10px 0 0;
+					border-bottom: 1px solid #000;
+					background-color: $light-color;
+					display: inline-block;
+				}
+				div{
+					position: relative;
+					margin-right: 5px;
+				}
+				input{
+					width: 100px;
+					padding: 10px ;
+					border-radius: 10px 10px 0 0;
+					border-bottom: 1px solid #000;
+					background-color: $light-color;
+					display: inline-block;
+				}
+				button{
+					position: absolute;
+					top: -5px;
+					right: -5px;
+					width: 20px;
+					height: 20px;
+					border-radius: 50%;
+					cursor: pointer;
+					background-color: $light-color;
+				}
+			}
+			.filters{
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			margin-bottom: 10px;
-			.filters{
-			display: flex;
-			align-items: center;
 				.search{
-					display: inline-block;
+					display: inline-flex;
+					flex-wrap: nowrap;
 					border-bottom: 1px solid #454444;
 					border-radius: 10px 10px 0 0;
 					margin-right: 10px;
@@ -367,39 +411,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 						font-size: 13px;
 					}
 				}
-				.filter{
-					display: flex;
-					select{
-						width: 140px;
-						padding: 9px ;
-						border-radius: 10px 10px 0 0;
-						border-bottom: 1px solid #000;
-						background-color: $light-color;
-						display: inline-block;
-					}
-					div{
-						position: relative;
-						margin-right: 5px;
-					}
-					input{
-						width: 100px;
-						padding: 10px ;
-						border-radius: 10px 10px 0 0;
-						border-bottom: 1px solid #000;
-						background-color: $light-color;
-						display: inline-block;
-					}
-					button{
-						position: absolute;
-						top: -5px;
-						right: -5px;
-						width: 20px;
-						height: 20px;
-						border-radius: 50%;
-						cursor: pointer;
-						background-color: $light-color;
-					}
-				}
+				
 			}
 			.buttons{
 				position: relative;
@@ -515,10 +527,6 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					display: flex;
 					gap: 10px;
 					align-items: center;
-					span{
-						text-align: start;
-					}
-
 				}
 				.rotate{
 					transition: all 0.3s ease-in-out;
@@ -539,6 +547,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					padding-right: 15px;
 				}
 				th,td{
+					text-align: start;
 					padding: 5px;
 					border-bottom: 1px solid #d3d3d3;
 				}
@@ -561,7 +570,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					th{
 						font-weight: 500;
 						background-color: #fff;
-						padding: 18px 0;
+						padding: 18px 10px;
 					}
 				}
 				tbody tr{
@@ -611,7 +620,6 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					font-size: 18px;
 					font-weight: 500;
 					text-transform: uppercase;
-					cursor: pointer;
 					transition: all 0.3s ease-in;
 					&:hover{
 						background-color: rgba(140, 0, 0, 0.238);

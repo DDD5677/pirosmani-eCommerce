@@ -129,6 +129,32 @@ export default {
 				}
 				
 			],
+			review_options:[
+				{
+					title:'Date',
+					show:true
+				},
+				{
+					title:'Customer',
+					show:true
+				},
+				{
+					title:'Product',
+					show:true
+				},
+				{
+					title:'Rating',
+					show:true
+				},
+				{
+					title:'Comment',
+					show:true
+				},
+				{
+					title:'Status',
+					show:true
+				}
+			],
 			product_filters:[
 				{
 					title:'Min price',
@@ -173,10 +199,28 @@ export default {
 					show:false
 				},
 			],
+			review_filters:[
+				{
+					title:'Status',
+					source:'',
+					show:false
+				},
+				{
+					title:'Posted since',
+					source:'',
+					show:false
+				},
+				{
+					title:'Posted before',
+					source:'',
+					show:false
+				},
+			],
 			sorts:{
 				user:'',
 				product:'',
-				order:''
+				order:'',
+				review:''
 			}
 		}
 	},
@@ -198,8 +242,10 @@ export default {
 				setItem('user-options',this.user_options)
 				setItem('product-options',this.product_options)
 				setItem('order-options',this.order_options)
+				setItem('review-options',this.review_options)
 				setItem('product-filters',this.product_filters)
 				setItem('order-filters',this.order_filters)
+				setItem('review-filters',this.review_filters)
 			});
 		}
 	}

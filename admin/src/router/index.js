@@ -9,6 +9,7 @@ import CreateProductView from "../views/CreateProductView.vue";
 import ProductDetailView from "../views/ProductDetailView.vue";
 import OrdersView from "../views/OrdersView.vue";
 import OrderDetailView from "../views/OrderDetailView.vue";
+import ReviewsView from "../views/ReviewsView.vue";
 
 const routes = [
    {
@@ -70,6 +71,12 @@ const routes = [
       name: "order-detail",
       meta: { layout: "main" },
       component: OrderDetailView,
+   },
+   {
+      path: "/reviews",
+      name: "reviews",
+      meta: { layout: "main" },
+      component: ReviewsView,
    },
 ];
 

@@ -3,44 +3,83 @@ const router = express.Router();
 const Review = require("../models/review");
 const Product = require("../models/product");
 
-router.get(`/`, async (req, res) => {
+router.get(`/`, async (req, res, next) => {
    try {
       let filter = {};
+      let page = 1;
+      let limit = 10;
+      let totalReviews = 0;
+      let pageSize = 1;
 
+      if (req.query.page) {
+         page = req.query.page;
+      }
+      if (req.query.limit) {
+         limit = req.query.limit;
+      }
+      //Building filter object
       if (req.query.user) {
          filter["user"] = req.query.user;
       }
       if (req.query.product) {
          filter["product"] = req.query.product;
       }
-      const reviewsList = await Review.find(filter).populate([
-         "user",
-         "product",
-      ]);
+      //--------------------------------------------
+      totalReviews = await Review.countDocuments(filter).exec();
+      if (!totalReviews) {
+         return res.status(200).json({
+            reviewsList: [],
+            pagination: {
+               pageSize: pageSize,
+               limit: limit,
+               page: page,
+            },
+         });
+      }
+      pageSize = Math.ceil(totalReviews / limit);
+      if (page > pageSize) {
+         return res.status(404).json({
+            success: false,
+            message: "Page is not found!",
+         });
+      }
+      const reviewsList = await Review.find(filter)
+         .sort(req.query.sort)
+         .skip((page - 1) * limit)
+         .limit(limit)
+         .populate(["user", "product"]);
 
       if (!reviewsList) {
          res.status(500).json({
             success: false,
          });
       }
-      res.send(reviewsList);
+      res.status(200).send({
+         reviewsList: reviewsList,
+         pagination: {
+            pageSize: pageSize,
+            limit: limit,
+            page: page,
+         },
+      });
    } catch (error) {
-      res.status(500).json({ error });
+      next(error);
    }
 });
 
 router.get(`/:id`, async (req, res, next) => {
    try {
-      const reviewsList = await Review.find({
-         product: req.params.id,
-      }).populate(["user", "product"]);
-
-      if (!reviewsList) {
+      const review = await Review.findById(req.params.id).populate([
+         "user",
+         "product",
+      ]);
+      console.log(review);
+      if (!review) {
          res.status(500).json({
             success: false,
          });
       }
-      res.send(reviewsList);
+      res.status(200).send(review);
    } catch (error) {
       next(error);
    }
@@ -115,5 +154,21 @@ router.post("/", async (req, res, next) => {
       next(error);
    }
 });
-
+router.delete("/", (req, res) => {
+   Review.deleteMany({ _id: { $in: req.body.reviews } })
+      .then((user) => {
+         if (user) {
+            return res
+               .status(200)
+               .json({ success: true, message: "The review was deleted." });
+         } else {
+            return res
+               .status(404)
+               .json({ success: false, message: "The review is not found." });
+         }
+      })
+      .catch((err) => {
+         return res.status(400).json({ success: false, error: err });
+      });
+});
 module.exports = router;

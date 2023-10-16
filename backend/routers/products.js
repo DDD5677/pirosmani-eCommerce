@@ -5,6 +5,7 @@ const Category = require("../models/category");
 const mongoose = require("mongoose");
 const { authAdmin } = require("../helpers/jwt");
 const multer = require("multer");
+const Review = require("../models/review");
 
 const FILE_TYPE_MAP = {
    "image/png": "png",
@@ -122,7 +123,7 @@ router.get(`/`, async (req, res) => {
             message: "Products is not found!",
          });
       }
-      res.send({
+      res.status(200).send({
          productList: productList,
          pagination: {
             pageSize: pageSize,
@@ -244,24 +245,62 @@ router.put("/:id", uploadOptions.single("image"), async (req, res, error) => {
       next(error);
    }
 });
-
-router.delete("/", (req, res) => {
-   Product.deleteMany({ _id: { $in: req.body.products } })
-      .then((product) => {
-         if (product) {
-            return res
-               .status(200)
-               .json({ success: true, message: "The product was deleted." });
-         } else {
-            return res
-               .status(404)
-               .json({ success: false, message: "The product is not found." });
-         }
-      })
-      .catch((err) => {
-         return res.status(400).json({ success: false, error: err });
-      });
+router.delete("/", async (req, res, next) => {
+   try {
+      const products = req.body.products;
+      if (products) {
+         await products.forEach(async (product) => {
+            const removedProduct = await Product.findByIdAndRemove(product);
+            if (removedProduct) {
+               await Review.findOneAndRemove({ product: removedProduct.id });
+            } else {
+               return res.status(404).json({
+                  success: false,
+                  message: "The Product is not found.",
+               });
+            }
+         });
+         return res.status(200).json({
+            success: true,
+            message: "The Product was deleted.",
+         });
+      } else {
+         return res.status(200).json({
+            success: true,
+            message: "There is not Product in request.",
+         });
+      }
+   } catch (error) {
+      next(error);
+   }
 });
+// router.delete("/", (req, res) => {
+//    Product.deleteMany({ _id: { $in: req.body.products } })
+//       .then((product) => {
+//          if (product) {
+//             Review.deleteMany({ product: product.id }).then((review) => {
+//                if (review) {
+//                   return res.status(200).json({
+//                      success: true,
+//                      message: "The product was deleted.",
+//                   });
+//                } else {
+//                   return res.status(404).json({
+//                      success: false,
+//                      message: "The product found but review is not found.",
+//                   });
+//                }
+//             });
+//          } else {
+//             return res
+//                .status(404)
+//                .json({ success: false, message: "The product is not found." });
+//          }
+//       })
+//       .catch((err) => {
+//          return res.status(400).json({ success: false, error: err });
+//       });
+// });
 
 router.get(`/get/count`, async (req, res) => {
    const productCount = await Product.countDocuments();

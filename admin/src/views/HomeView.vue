@@ -197,6 +197,7 @@ import { mapState } from 'vuex';
 				}
 				.item{
 					display: flex;
+					align-items: center;
 					width: 100%;
 					padding: 10px 15px;
 					cursor: pointer;

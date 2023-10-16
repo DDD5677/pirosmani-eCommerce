@@ -258,10 +258,6 @@ router.delete("/", async (req, res, next) => {
                await removedOrder.orderItems.map(async (orderItem) => {
                   await OrderItem.findByIdAndRemove(orderItem);
                });
-               // return res.status(200).json({
-               //    success: true,
-               //    message: "The order was deleted.",
-               // });
             } else {
                return res.status(404).json({
                   success: false,
