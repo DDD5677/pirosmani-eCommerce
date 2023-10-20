@@ -1,20 +1,30 @@
 <template>
-	<section class="users">
+	<section class="products">
 		<div class="container">
 			
-			<div  class="users__inner">
+			<div  class="products__inner">
 				<div class="table__nav">
 					<div class="filter">
 						<div v-for="(filter,index) in filters" :id="index">
-							<div v-if="filter.show&&(filter.title!=='Featured')">
+							<div v-if="filter.show&&(filter.title!=='Featured')&&(filter.title!=='Category')">
+								<span>{{ filter.title }}</span>
 								<input type="number" :placeholder="filter.title" v-model="filter.source" @change="sumbitFilters">
 								<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
 							</div>
 							<div v-if="filter.show&&(filter.title==='Featured')">
+								<span>{{ filter.title }}</span>
 								<select name="status" id="status" v-model="filter.source" @change="sumbitFilters">
 									<option value="" selected disabled hidden >Select an option</option>
 									<option value="true">Featured</option>
 									<option value="false">Not Featured</option>
+								</select>
+								<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
+							</div>
+							<div v-if="filter.show&&(filter.title==='Category')">
+								<span>{{ filter.title }}</span>
+								<select name="Category" id="Category" v-model="filter.source" @change="sumbitFilters">
+									<option value="" selected disabled hidden >Select an option</option>
+									<option v-for="category in categories" :id="category.id" :value="category.id">{{ category.name }}</option>
 								</select>
 								<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
 							</div>
@@ -53,7 +63,7 @@
 					</div>
 					
 				</div>
-				<div class="users__table">
+				<div class="products__table">
 					<table>
 						<thead>
 							<tr >
@@ -80,7 +90,12 @@
 									<i v-if="sort==='countInStock'||sort==='-countInStock'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
 									</span>
 								</th>
-								<th v-if="options[4].show">{{options[4].title}}</th>
+								<th v-if="options[4].show">
+									<span @click="sortHandler('ratings')" class="sort_btn">
+									{{options[4].title}} 
+									<i v-if="sort==='ratings'||sort==='-ratings'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
+									</span>
+								</th>
 								<th v-if="options[5].show">{{options[5].title}}</th>
 								<th v-if="options[6].show">{{options[6].title}}</th>
 							</tr>
@@ -110,7 +125,7 @@
 								<td v-if="options[1].show" @click="productDetail(product.id)">{{ product.name }}</td>
 								<td v-if="options[2].show" @click="productDetail(product.id)">{{ product.price }}$</td>
 								<td v-if="options[3].show" @click="productDetail(product.id)">{{ product.countInStock }}</td>
-								<td v-if="options[4].show" @click="productDetail(product.id)"><product-rating :rating="ratingCalc(product.ratings)"/></td>
+								<td v-if="options[4].show" @click="productDetail(product.id)"><product-rating :rating="product.ratings"/></td>
 								<td v-if="options[5].show" @click="productDetail(product.id)">{{ product.isFeatured }}</td>
 								<td v-if="options[6].show" @click="productDetail(product.id)">{{ formatDate(product.dateCreated) }}</td>
 							</tr>
@@ -147,7 +162,8 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				page:state=>state.product.page,
 				pageSize:state=>state.product.pageSize,
 				productsLoading:state=>state.product.isLoading,
-				productsError:state=>state.product.errors
+				productsError:state=>state.product.errors,
+				categories:state=>state.category.categories,
 			}),
 			
 		},
@@ -201,12 +217,13 @@ import { getItem, setItem } from '@/helpers/localStorage';
 			addFilter(index){
 				this.filters[index].show=true
 				this.filter_box=false
+				setItem('product-filters',this.filters);
 			},
 			removeFilter(index){
 				this.filters[index].show=false
+				setItem('product-filters',this.filters);
 				if(this.filters[index].source){
 					this.filters[index].source=''
-					setItem('product-filters',this.filters);
 					this.getProducts(1,this.$route.query.limit)
 				}
 			},
@@ -289,6 +306,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					max_price:this.filters[1].source,
 					min_count:this.filters[3].source,
 					isFeatured:this.filters[4].source,
+					category:this.filters[5].source,
 				}
 				this.$store.dispatch('product/getProducts',queries);
 				this.changePage(page);
@@ -307,6 +325,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 			}
 		},
 		created(){
+			this.$store.dispatch('category/getCategory')
 			this.options=getItem('product-options')
 			this.filters=getItem('product-filters')
 			this.sort=getItem('sorts').product
@@ -319,7 +338,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 </script>
 
 <style lang="scss" scoped>
-	.users{
+	.products{
 		padding: 100px 0 40px;
 
 		.table__nav{
@@ -329,28 +348,36 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				margin-bottom: 10px;
 				select{
 					width: 140px;
-					padding: 9px ;
+					padding: 20px 8px 5px;
 					border-radius: 10px 10px 0 0;
 					border-bottom: 1px solid #000;
 					background-color: $light-color;
 					display: inline-block;
+					margin-right: 10px;
 				}
 				div{
 					position: relative;
-					margin-right: 5px;
+					span{
+						font-size: 11px;
+						position: absolute;
+						top: 5px;
+						left: 10px;
+						color: $main-color;
+					}
 				}
 				input{
-					width: 100px;
-					padding: 10px ;
+					width: 120px;
+					padding: 20px 10px 5px;
 					border-radius: 10px 10px 0 0;
 					border-bottom: 1px solid #000;
 					background-color: $light-color;
 					display: inline-block;
+					margin-right: 10px;
 				}
 				button{
 					position: absolute;
 					top: -5px;
-					right: -5px;
+					right: 0px;
 					width: 20px;
 					height: 20px;
 					border-radius: 50%;

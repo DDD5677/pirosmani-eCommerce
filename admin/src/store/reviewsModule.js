@@ -47,6 +47,28 @@ export const reviewsModule = {
          state.reviewLoading = false;
          state.errors = payload;
       },
+      updateReviewStart(state) {
+         state.isLoading = true;
+         state.errors = null;
+      },
+      updateReviewSuccess(state) {
+         state.isLoading = false;
+      },
+      updateReviewFailure(state, payload) {
+         state.isLoading = false;
+         state.errors = payload;
+      },
+      deleteReviewStart(state) {
+         state.isLoading = true;
+         state.errors = null;
+      },
+      deleteReviewSuccess(state) {
+         state.isLoading = false;
+      },
+      deleteReviewFailure(state, payload) {
+         state.isLoading = false;
+         state.errors = payload;
+      },
    },
    actions: {
       getReviews(context, payload) {
@@ -71,6 +93,32 @@ export const reviewsModule = {
                })
                .catch((error) => {
                   context.commit("getReviewByIdFailure", error.response.data);
+               });
+         });
+      },
+      updateReview(context, payload) {
+         return new Promise((resolve) => {
+            context.commit("updateReviewStart");
+            ReviewService.updateReview(payload)
+               .then((res) => {
+                  context.commit("updateReviewSuccess");
+                  resolve(res.data);
+               })
+               .catch((error) => {
+                  context.commit("updateReviewFailure", error.response.data);
+               });
+         });
+      },
+      deleteReviews(context, payload) {
+         return new Promise((resolve) => {
+            context.commit("deleteReviewStart");
+            ReviewService.deleteReviews(payload)
+               .then((res) => {
+                  context.commit("deleteReviewSuccess");
+                  resolve();
+               })
+               .catch((error) => {
+                  context.commit("deleteReviewFailure", error.response.data);
                });
          });
       },

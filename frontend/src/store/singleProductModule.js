@@ -43,7 +43,7 @@ export const singleProductModule = {
       },
       getReviewsSuccess(state, payload) {
          //state.isLoading = false;
-         state.reviewsList = payload;
+         state.reviewsList = payload.reviewsList;
       },
       getReviewsFailure(state, payload) {
          //state.isLoading = false;
@@ -77,10 +77,10 @@ export const singleProductModule = {
                });
          });
       },
-      getReviewsByUserId(context, data) {
+      getReviews(context, data) {
          return new Promise(() => {
             context.commit("getReviewsStart");
-            ProductSevice.getReviewsByUserId(data)
+            ProductSevice.getReviews(data)
                .then((response) => {
                   context.commit("getReviewsSuccess", response.data);
                })

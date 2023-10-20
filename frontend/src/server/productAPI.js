@@ -18,8 +18,12 @@ const ProductService = {
    postReviews(data) {
       return axios.put("reviews", data);
    },
-   getReviewsByUserId(id) {
-      return axios.get(`reviews/${id}`);
+   getReviews(id) {
+      return axios.get(`reviews`, {
+         params: {
+            product: id,
+         },
+      });
    },
 };
 

@@ -17,14 +17,61 @@ router.get(`/`, async (req, res, next) => {
       if (req.query.limit) {
          limit = req.query.limit;
       }
+      const skip = (page - 1) * limit;
       //Building filter object
+
+      if (req.query.date) {
+         if (req.query.date.lte) {
+            filter.createdAt = { ...filter.createdAt, lte: req.query.date.lte };
+         }
+         if (req.query.date.gte) {
+            filter.createdAt = { ...filter.createdAt, gte: req.query.date.gte };
+         }
+      }
+      console.log("filter", filter);
       if (req.query.user) {
          filter["user"] = req.query.user;
       }
       if (req.query.product) {
          filter["product"] = req.query.product;
       }
+      if (req.query.status) {
+         console.log(req.query.status);
+         filter["status"] = req.query.status;
+      }
+      if (req.query.search) {
+         filter = {
+            $or: [{ bodyText: { $regex: req.query.search, $options: "i" } }],
+         };
+      }
+      if (req.query.rating) {
+         filter["rating"] = { gte: req.query.rating };
+      }
+      //------------------------------------------
+      let queryStr = JSON.stringify(filter);
+      queryStr = queryStr.replace(
+         /\b(gte|gt|lte|lt)\b/g,
+         (match) => `$${match}`
+      );
+      filter = JSON.parse(queryStr);
       //--------------------------------------------
+      let sort = {};
+      if (req.query.sort) {
+         const key = req.query.sort;
+         if (req.query.sort[0] === "-") {
+            sort[`${key.substring(1)}`] = -1;
+            sort["_id"] = 1;
+         } else {
+            sort[`${key}`] = 1;
+            sort["_id"] = 1;
+         }
+      } else {
+         sort.dateCreated = 1;
+      }
+      console.log("filter", filter);
+      console.log("sort", sort);
+      //---------------------------------------------
+
       totalReviews = await Review.countDocuments(filter).exec();
       if (!totalReviews) {
          return res.status(200).json({
@@ -43,11 +90,37 @@ router.get(`/`, async (req, res, next) => {
             message: "Page is not found!",
          });
       }
-      const reviewsList = await Review.find(filter)
-         .sort(req.query.sort)
-         .skip((page - 1) * limit)
-         .limit(limit)
-         .populate(["user", "product"]);
+      console.log("test", (page - 1) * limit);
+      const reviewsList = await Review.aggregate([
+         { $match: filter },
+         {
+            $lookup: {
+               from: "users",
+               localField: "user",
+               foreignField: "_id",
+               as: "user",
+            },
+         },
+         {
+            $unwind: "$user",
+         },
+         {
+            $lookup: {
+               from: "products",
+               localField: "product",
+               foreignField: "_id",
+               as: "product",
+            },
+         },
+         {
+            $unwind: "$product",
+         },
+         {
+            $sort: sort,
+         },
+         { $skip: skip },
+         { $limit: limit },
+      ]);
 
       if (!reviewsList) {
          res.status(500).json({
@@ -87,39 +160,49 @@ router.get(`/:id`, async (req, res, next) => {
 
 router.put("/", async (req, res, next) => {
    try {
-      const reviews = await Review.findOneAndUpdate(
-         {
-            product: req.body.product,
-            user: req.body.user,
-         },
-         {
-            product: req.body.product,
-            user: req.body.user,
-            bodyText: req.body.bodyText,
-            rating: req.body.rating,
-         },
-         {
-            new: true,
-            runValidators: true,
-            upsert: true,
+      let updateBlock = {};
+      let filter = {};
+      //create filter
+      if (req.body.id) {
+         filter["_id"] = req.body.id;
+      }
+      if (req.body.product) {
+         filter["product"] = req.body.product;
+      }
+      if (req.body.user) {
+         filter["user"] = req.body.user;
+      }
+      //create updateBlock
+      if (req.body.bodyText) {
+         updateBlock["bodyText"] = req.body.bodyText;
+      }
+      if (req.body.status) {
+         updateBlock["status"] = req.body.status;
+      }
+      if (req.body.rating) {
+         filter["rating"] = req.body.rating;
+
+         let key = `ratings.${req.body.rating}`;
+         const product = await Product.findByIdAndUpdate(req.body.product, {
+            $inc: { [key]: 1 },
+         });
+
+         if (!product) {
+            return res.status(404).send("rating is not accepted");
          }
-      );
+      }
+      const reviews = await Review.findOneAndUpdate(filter, updateBlock, {
+         new: true,
+         runValidators: true,
+         upsert: true,
+      });
       if (!reviews) {
          return res
             .status(404)
             .send("the reviews cannot be updated or created!");
       }
 
-      let key = `ratings.${req.body.rating}`;
-      const product = await Product.findByIdAndUpdate(req.body.product, {
-         $inc: { [key]: 1 },
-      });
-
-      if (!product) {
-         return res.status(404).send("rating is not accepted");
-      }
-
-      res.send(reviews);
+      res.status(200).send(reviews);
    } catch (error) {
       next(error);
    }

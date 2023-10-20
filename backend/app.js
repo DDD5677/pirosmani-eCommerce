@@ -19,7 +19,7 @@ const errorHandler = require("./helpers/error-handler");
 
 app.use(cors());
 app.options("*", cors());
-
+mongoose.set("toJSON", { getters: true });
 //*TODO:middleware
 app.use(bodyParser.json());
 app.use(morgan("tiny"));

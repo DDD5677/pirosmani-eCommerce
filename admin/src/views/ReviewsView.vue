@@ -6,16 +6,24 @@
 				<div class="table__nav">
 					<div class="filter">
 						<div v-for="(filter,index) in filters" :id="index">
-							<div v-if="filter.show&&(filter.title!=='Featured')">
-								<input type="number" :placeholder="filter.title" v-model="filter.source" @change="sumbitFilters">
+							<div v-if="filter.show&&(filter.title!=='Status')&&(filter.title!=='Min Rate')">
+								<span>{{ filter.title }}</span>
+								<input type="date" :placeholder="filter.title" v-model="filter.source" @change="sumbitFilters">
 								<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
 							</div>
-							<div v-if="filter.show&&(filter.title==='Featured')">
+							<div v-if="filter.show&&(filter.title==='Status')">
+								<span>{{ filter.title }}</span>
 								<select name="status" id="status" v-model="filter.source" @change="sumbitFilters">
 									<option value="" selected disabled hidden >Select an option</option>
-									<option value="true">Featured</option>
-									<option value="false">Not Featured</option>
+									<option value="Pending">Pending</option>
+									<option value="Accepted">Accepted</option>
+									<option value="Rejected">Rejected</option>
 								</select>
+								<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
+							</div>
+							<div v-if="filter.show&&(filter.title==='Min Rate')">
+								<span>{{ filter.title }}</span>
+								<input type="number" :placeholder="filter.title" v-model="filter.source" @change="sumbitFilters">
 								<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
 							</div>
 						</div>
@@ -61,27 +69,37 @@
 									<span></span>
 									<input class="checkbox" ref="foomain" @click="allCheck" type="checkbox">
 								</th>
-								<th v-if="options[0].show">{{options[0].title}}</th>
+								<th v-if="options[0].show">
+									<span class="sort_btn" @click="sortHandler('createdAt')">
+									{{options[0].title}}
+									<i v-if="sort==='createdAt'||sort==='-createdAt'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
+									</span>
+								</th>
 								<th v-if="options[1].show"  >
-									<span class="sort_btn" @click="sortHandler('name')">
+									<span class="sort_btn" @click="sortHandler('user.name')">
 									{{options[1].title}}
-									<i v-if="sort==='name'||sort==='-name'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
+									<i v-if="sort==='user.name'||sort==='-user.name'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
 									</span>
 								</th>
 								<th v-if="options[2].show" >
-									<span @click="sortHandler('price')" class="sort_btn">
+									<span class="sort_btn" @click="sortHandler('product.name')">
 									{{options[2].title}} 
-									<i v-if="sort==='price'||sort==='-price'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
+									<i v-if="sort==='product.name'||sort==='-product.name'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
 									</span>
 								</th>
 								<th v-if="options[3].show" >
-									<span @click="sortHandler('countInStock')" class="sort_btn">
+									<span @click="sortHandler('rating')" class="sort_btn">
 									{{options[3].title}} 
-									<i v-if="sort==='countInStock'||sort==='-countInStock'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
+									<i v-if="sort==='rating'||sort==='-rating'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
 									</span>
 								</th>
 								<th v-if="options[4].show">{{options[4].title}}</th>
-								<th v-if="options[5].show">{{options[5].title}}</th>
+								<th v-if="options[5].show">
+									<span @click="sortHandler('status')" class="sort_btn">
+									{{options[5].title}} 
+									<i v-if="sort==='status'||sort==='-status'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
+									</span>
+								</th>
 							</tr>
 							<div v-if="checked>0" class="checked__block">
 								<div>
@@ -100,12 +118,12 @@
 							<tr v-for="review in reviews" :id="review.id">
 								<td>
 									<span></span>
-									<input class="checkbox" ref="foo" @click="removedReviewsId($event,review.id)" type="checkbox">
+									<input class="checkbox" ref="foo" @click="removedReviewsId($event,review._id)" type="checkbox">
 								</td>
 								<td v-if="options[0].show">
 									{{ formatDate(review.createdAt) }}
 								</td>
-								<td  v-if="options[1].show" @click="reviewDetail(review._id)"><span class="customer"><avatar :info="review.user" :width="'30px'"/><span>{{ review.user.name }}</span></span></td>
+								<td v-if="options[1].show" @click="reviewDetail(review._id)"><span class="customer"><avatar :info="review.user" :width="'30px'"/><span>{{ review.user.name }}</span></span></td>
 								<td v-if="options[2].show" @click="reviewDetail(review._id)">{{ review.product.name }}</td>
 								<td v-if="options[3].show" @click="reviewDetail(review._id)"><product-rating :rating="review.rating"/></td>
 								<td v-if="options[4].show" @click="reviewDetail(review._id)">{{ review.bodyText }}</td>
@@ -118,7 +136,7 @@
 				</div>
 				<pagination :getData="getReviews" :page="page" :pageSize="pageSize"/>
 			</div>
-			<review-detail v-if="reviewDetailShow" class="review-detail" @close="reviewDetailToggle"/>
+			<review-detail v-if="reviewDetailShow" :getData="getReviews" class="review-detail" @close="reviewDetailToggle"/>
 		</div>
 	</section>
 </template>
@@ -205,14 +223,15 @@ import { getItem, setItem } from '@/helpers/localStorage';
 			addFilter(index){
 				this.filters[index].show=true
 				this.filter_box=false
+				setItem('review-filters',this.filters);
 			},
 			removeFilter(index){
 				this.filters[index].show=false
 				if(this.filters[index].source){
 					this.filters[index].source=''
-					setItem('review-filters',this.filters);
 					this.getReviews(1,this.$route.query.limit)
 				}
+				setItem('review-filters',this.filters);
 			},
 			sumbitFilters(){
 				setItem('review-filters',this.filters);
@@ -267,8 +286,8 @@ import { getItem, setItem } from '@/helpers/localStorage';
 			},
 			allCheck(){
 				this.removedReviewId=[];
-				for( let product of this.products){
-					this.removedReviewId.push(product.id)
+				for( let review of this.reviews){
+					this.removedReviewId.push(review._id)
 				}
 				this.toggle()
 			},
@@ -289,10 +308,10 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					limit:limit,
 					sort:this.sort,
 					search:this.search,
-					// min_price:this.filters[0].source,
-					// max_price:this.filters[1].source,
-					// min_count:this.filters[3].source,
-					// isFeatured:this.filters[4].source,
+					status:this.filters[0].source,
+					posted_since:this.filters[1].source,
+					posted_before:this.filters[2].source,
+					rating:this.filters[3].source,
 				}
 				this.$store.dispatch('review/getReviews',queries);
 				this.changePage(page);
@@ -307,17 +326,19 @@ import { getItem, setItem } from '@/helpers/localStorage';
 			},
 			filters(newFilter,oldFilter){
 				setItem('review-filters',newFilter);
-				this.getReviews(this.$route.query.page,this.$route.query.limit)
+				console.log("watch filter")
+				//this.getReviews(this.$route.query.page,this.$route.query.limit)
 			}
 		},
 		created(){
 			this.options=getItem('review-options')
 			this.filters=getItem('review-filters')
 			this.sort=getItem('sorts').review
+			this.getReviews(this.$route.query.page,this.$route.query.limit)
 
 		},
 		mounted(){
-			this.getReviews(this.$route.query.page,this.$route.query.limit)
+			//setItem('sorts',{user:'',product:'',order:'',review:''})
 		}
 	}
 </script>
@@ -344,7 +365,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				margin-bottom: 10px;
 				select{
 					width: 140px;
-					padding: 9px ;
+					padding: 20px 8px 5px ;
 					border-radius: 10px 10px 0 0;
 					border-bottom: 1px solid #000;
 					background-color: $light-color;
@@ -352,11 +373,17 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				}
 				div{
 					position: relative;
-					margin-right: 5px;
+					span{
+						font-size: 11px;
+						position: absolute;
+						top: 5px;
+						left: 10px;
+						color: $main-color;
+					}
 				}
 				input{
-					width: 100px;
-					padding: 10px ;
+					width: 120px;
+					padding: 20px 10px 5px ;
 					border-radius: 10px 10px 0 0;
 					border-bottom: 1px solid #000;
 					background-color: $light-color;

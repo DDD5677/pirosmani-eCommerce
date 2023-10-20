@@ -93,7 +93,7 @@ import {mapActions, mapMutations, mapState} from 'vuex';
 		},
 		mounted(){
 			this.$store.dispatch('singleProduct/getProductById',this.productId);
-			this.$store.dispatch('singleProduct/getReviewsByUserId',this.productId);
+			this.$store.dispatch('singleProduct/getReviews',this.productId);
 		}
 	}
 </script>

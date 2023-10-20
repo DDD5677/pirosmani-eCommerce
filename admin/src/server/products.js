@@ -13,6 +13,7 @@ const ProductService = {
                gte: payload.min_price,
             },
             isFeatured: payload.isFeatured,
+            category: payload.category,
             countInStock: { gte: payload.min_count },
          },
       });

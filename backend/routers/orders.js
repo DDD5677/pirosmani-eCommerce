@@ -13,10 +13,10 @@ router.get(`/`, async (req, res, next) => {
       let totalOrders = 0;
       let pageSize = 1;
       if (req.query.page) {
-         page = req.query.page;
+         page = +req.query.page;
       }
       if (req.query.limit) {
-         limit = req.query.limit;
+         limit = +req.query.limit;
       }
       //Building filter object
       if (req.query.user) {
@@ -78,7 +78,38 @@ router.get(`/`, async (req, res, next) => {
             message: "Page is not found!",
          });
       }
-      console.log("sort", req.query.sort);
+      // let sort = {};
+      // if (req.query.sort) {
+      //    const key = req.query.sort;
+      //    if (req.query.sort[0] === "-") {
+      //       sort[`${key.substring(1)}`] = -1;
+      //    } else {
+      //       sort[`${key}`] = 1;
+      //    }
+      // } else {
+      //    sort.dateCreated = 1;
+      // }
+      // console.log("filter", filter);
+      // console.log("sort", sort);
+      // const orderList = await Order.aggregate([
+      //    { $match: filter },
+      //    {
+      //       $sort: sort,
+      //    },
+      //    { $skip: (page - 1) * limit },
+      //    { $limit: limit },
+      //    {
+      //       $lookup: {
+      //          from: "users",
+      //          localField: "user",
+      //          foreignField: "_id",
+      //          as: "user",
+      //       },
+      //    },
+      //    {
+      //       $unwind: "$user",
+      //    },
+      // ]);
 
       const orderList = await Order.find(filter)
          .sort(req.query.sort)
@@ -149,7 +180,6 @@ router.get(`/saled/:id`, async (req, res, next) => {
       orderItemsList.forEach((item) => {
          saledCount += item.quantity;
       });
-      console.log(saledCount);
       res.status(200).send({ saledCount });
    } catch (error) {
       next(error);

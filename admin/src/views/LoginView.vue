@@ -181,6 +181,11 @@ export default {
 					source:'',
 					show:false
 				},
+				{
+					title:'Category',
+					source:'',
+					show:false
+				},
 			],
 			order_filters:[
 				{
@@ -215,6 +220,11 @@ export default {
 					source:'',
 					show:false
 				},
+				{
+					title:'Min Rate',
+					source:'',
+					show:false
+				}
 			],
 			sorts:{
 				user:'',

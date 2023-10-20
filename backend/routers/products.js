@@ -60,6 +60,9 @@ router.get(`/`, async (req, res) => {
             };
          }
       }
+      if (req.query.rating) {
+         filter["ratings"] = req.query.rating;
+      }
       if (req.query.isFeatured) {
          filter = { ...filter, isFeatured: req.query.isFeatured };
       }
@@ -156,6 +159,7 @@ router.get(`/:id`, async (req, res, next) => {
             success: false,
          });
       }
+      console.log(product.ratings);
       res.status(200).send(product);
    } catch (error) {
       next(error);

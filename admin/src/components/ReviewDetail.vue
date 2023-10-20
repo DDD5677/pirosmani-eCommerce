@@ -12,12 +12,12 @@
 						<span class="title">Customer</span>
 						<div class="customer">
 							<avatar :info="review.user" :width="'30px'"/>
-							<span class="info-link">{{ review.user.name+' '+review.user.surname }}</span>
+							<span @click="this.$router.push(`/users/${review.user.id}`)" class="info-link">{{ review.user.name+' '+review.user.surname }}</span>
 						</div>
 					</div>
 					<div class="info-item">
 						<span class="title">Product</span>
-						<span class="info-link">{{ review.product.name }}</span>
+						<span @click="this.$router.push(`/products/${review.product.id}`)" class="info-link">{{ review.product.name }}</span>
 					</div>
 				</div>
 				<div class="info">
@@ -27,7 +27,7 @@
 					</div>
 					<div class="info-item">
 						<span class="title">Rating</span>
-						<product-rating :rating="5"/>
+						<product-rating :rating="review.rating"/>
 					</div>
 				</div>
 			</div>
@@ -36,12 +36,12 @@
 				<textarea name="" id="" cols="30" rows="10" @change="assignData($event)">{{ review.bodyText }}</textarea>
 			</div>
 			<div v-if="review.status!=='Pending'" class="review-btns">
-				<button class="review-save"><i class="fa fa-save" aria-hidden="true"></i> Save</button>
-				<button class="review-delete"><i class="fa fa-trash" aria-hidden="true"></i> Delete</button>
+				<button @click.prevent="updateReview" class="review-save"><i class="fa fa-save" aria-hidden="true"></i> Save</button>
+				<button @click.prevent="deleteReviews" class="review-delete"><i class="fa fa-trash" aria-hidden="true"></i> Delete</button>
 			</div>
 			<div v-if="review.status==='Pending'" class="review-btns">
-				<button class="review-accept"><i class="fa fa-thumbs-up" aria-hidden="true"></i> Accept</button>
-				<button class="review-reject"><i class="fa fa-thumbs-down" aria-hidden="true"></i> Reject</button>
+				<button @click.prevent="updateReviewStatus(true)" class="review-accept"><i class="fa fa-thumbs-up" aria-hidden="true"></i> Accept</button>
+				<button @click.prevent="updateReviewStatus(false)" class="review-reject"><i class="fa fa-thumbs-down" aria-hidden="true"></i> Reject</button>
 			</div>
 		</div>
 	</div>
@@ -51,6 +51,12 @@
 	import { mapState } from 'vuex';
 	export default {
 		name:'review-detail',
+		props:{
+			getData:{
+				type:Function,
+				required:true
+			}
+		},
 		data(){
 			return{
 				reviewText:''
@@ -73,7 +79,42 @@
 			},
 			assignData(e){
 				this.reviewText=e.target.value
-			}
+			},
+			updateReviewStatus(status){
+				let data={
+					id:this.review._id
+				};
+				if(status){
+					data['status']='Accepted';
+				}else{
+					data['status']='Rejected';
+				}
+				this.$store.dispatch('review/updateReview',data).then((res)=>{
+					this.getData(this.$route.query.page,this.$route.query.limit);
+					this.closeSidebar()
+				})
+			},
+			updateReview(){
+				let data={
+					id:this.review._id,
+					bodyText:this.reviewText
+				};
+
+				this.$store.dispatch('review/updateReview',data).then((res)=>{
+					this.getData(this.$route.query.page,this.$route.query.limit);
+					this.closeSidebar()
+				})
+			},
+			deleteReviews(){
+				const data= {
+					reviews:[this.review._id]
+				}
+				this.$store.dispatch('review/deleteReviews',data).then(()=>{
+					this.getData(this.$route.query.page,this.$route.query.limit);
+					this.closeSidebar()
+				});
+
+			},
 		},
 		mounted(){
 

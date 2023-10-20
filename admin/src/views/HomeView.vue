@@ -103,9 +103,9 @@ import { mapState } from 'vuex';
 		created(){
 			if(!this.authError){
 				console.log("mounted homeview")
-				this.$store.dispatch('order/getOrders',{page:1,limit:10})
-				this.$store.dispatch('review/getReviews',{user:''})
-				this.$store.dispatch('user/getUsers',{page:1})
+				this.$store.dispatch('order/getOrders',{page:1,limit:10,status:'Pending'})
+				this.$store.dispatch('review/getReviews',{status:'Pending'})
+				this.$store.dispatch('user/getUsers',{sort:'createdAt'})
 			}
 			
 		}
