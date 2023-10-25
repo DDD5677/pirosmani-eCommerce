@@ -13,10 +13,10 @@
 				<div class="nav-blocks">
 					<ul class="nav-menu">
 						
-						<li><router-link :to="{name:'products',query:{page:1,limit:productLimit}}" class="nav-link">Products</router-link></li>
+						<li><router-link :to="{name:'products',query:{page:1,limit:productLimit,category:''}}" class="nav-link">Products</router-link></li>
 						<li><router-link :to="{name:'users',query:{page:1,limit:userLimit}}" class="nav-link">Users</router-link></li>
 						<li><router-link :to="{name:'orders',query:{page:1,limit:orderLimit}}" class="nav-link">Orders</router-link></li>
-						<li><a href="" class="nav-link">Category</a></li>
+						<li><router-link :to="{name:'categories'}" class="nav-link">Category</router-link></li>
 						<li><router-link :to="{name:'reviews',query:{page:1,limit:productLimit}}"  class="nav-link">Reviews</router-link></li>
 						
 					</ul>

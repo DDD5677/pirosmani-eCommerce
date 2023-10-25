@@ -4,6 +4,19 @@ const CategoryService = {
    getCategory() {
       return axios.get("/categories");
    },
+   getCategoryById(payload) {
+      return axios.get(`/categories/${payload}`);
+   },
+   deleteCategory(payload) {
+      return axios.delete(`/categories/${payload}`);
+   },
+   updateCategory(data) {
+      console.log("server", data);
+      let formData = new FormData();
+      formData.append("image", data.image);
+      formData.append("name", data.name);
+      return axios.put(`/categories/${data.id}`, formData);
+   },
    // postUsers(data) {
    //    let formData = new FormData();
    //    formData.append("avatar", data.avatar);

@@ -1,7 +1,6 @@
 <template>
 	<section class="products">
 		<div class="container">
-			
 			<div  class="products__inner">
 				<div class="table__nav">
 					<div class="filter">
@@ -221,11 +220,11 @@ import { getItem, setItem } from '@/helpers/localStorage';
 			},
 			removeFilter(index){
 				this.filters[index].show=false
-				setItem('product-filters',this.filters);
 				if(this.filters[index].source){
 					this.filters[index].source=''
 					this.getProducts(1,this.$route.query.limit)
 				}
+				setItem('product-filters',this.filters);
 			},
 			sumbitFilters(){
 				setItem('product-filters',this.filters);
@@ -329,10 +328,10 @@ import { getItem, setItem } from '@/helpers/localStorage';
 			this.options=getItem('product-options')
 			this.filters=getItem('product-filters')
 			this.sort=getItem('sorts').product
+			this.getProducts(this.$route.query.page,this.$route.query.limit)
 
 		},
 		mounted(){
-			this.getProducts(this.$route.query.page,this.$route.query.limit)
 		}
 	}
 </script>

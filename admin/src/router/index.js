@@ -10,6 +10,7 @@ import ProductDetailView from "../views/ProductDetailView.vue";
 import OrdersView from "../views/OrdersView.vue";
 import OrderDetailView from "../views/OrderDetailView.vue";
 import ReviewsView from "../views/ReviewsView.vue";
+import CategoryView from "../views/CategoryView.vue";
 
 const routes = [
    {
@@ -77,6 +78,12 @@ const routes = [
       name: "reviews",
       meta: { layout: "main" },
       component: ReviewsView,
+   },
+   {
+      path: "/categories",
+      name: "categories",
+      meta: { layout: "main" },
+      component: CategoryView,
    },
 ];
 

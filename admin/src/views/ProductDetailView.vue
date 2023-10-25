@@ -28,7 +28,7 @@
 							</div>
 						</div>
 					</div>
-					<div v-if="!reviewsLoading" class="reviews">
+					<div v-if="!reviewsLoading&&!reviewsError" class="reviews">
 						<div>
 							<info class="info-item" title="Reviews" :amount="reviews.length" :src="require('@/assets/images/reviews-icon.svg')"/>
 							<ul>
@@ -46,7 +46,7 @@
 					</div>
 				</div>
 				<div class="right">
-					<form @submit.prevent="submitHandler" action="" class="product-info">
+					<form @submit.prevent="submitHandler" action="" enctype="multipart/form-data" class="product-info">
 						<form-input
 						class="inputs" 
 						:label="'Name'" 
@@ -56,7 +56,7 @@
 						:error="errors?errors.name:''" 
 						v-model="name"/>
 						<div class="blocks">
-							<div class="rating"><span>Rate:  </span><product-rating :rating="ratingCalc(ratings)"/></div>
+							<div class="rating"><span>Rate:  </span><product-rating :rating="ratings"/></div>
 							<label class="isFeatured" @click="isFeaturedHandler" for="">
 								<input  type="checkbox" name="">
 								<span class="shortline" :class="{'checked':isFeatured}">
@@ -152,7 +152,7 @@ import { mapMutations, mapState } from 'vuex';
 				country:'',
 				category:'',
 				countInStock:'',
-				ratings:{},
+				ratings:0,
 				img:'',
 				image:null,
 				dateCreated:'',
@@ -170,6 +170,7 @@ import { mapMutations, mapState } from 'vuex';
 				categories:state=>state.category.categories,
 				reviews:state=>state.review.reviews,
 				reviewsLoading:state=>state.review.isLoading,
+				reviewsError:state=>state.review.errors,
 			})
 		},
 		methods:{

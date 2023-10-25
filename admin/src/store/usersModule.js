@@ -112,7 +112,7 @@ export const usersModule = {
             context.commit("postUserStart");
             UserService.updateUser(payload)
                .then((response) => {
-                  context.commit("postUserSuccess", response.data);
+                  context.commit("postUserSuccess");
                   resolve();
                })
                .catch((error) => {

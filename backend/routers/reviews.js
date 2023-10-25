@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Review = require("../models/review");
 const Product = require("../models/product");
+const mongoose = require("mongoose");
 
 router.get(`/`, async (req, res, next) => {
    try {
@@ -12,10 +13,10 @@ router.get(`/`, async (req, res, next) => {
       let pageSize = 1;
 
       if (req.query.page) {
-         page = req.query.page;
+         page = +req.query.page;
       }
       if (req.query.limit) {
-         limit = req.query.limit;
+         limit = +req.query.limit;
       }
       const skip = (page - 1) * limit;
       //Building filter object
@@ -28,13 +29,10 @@ router.get(`/`, async (req, res, next) => {
             filter.createdAt = { ...filter.createdAt, gte: req.query.date.gte };
          }
       }
-      console.log("filter", filter);
       if (req.query.user) {
          filter["user"] = req.query.user;
       }
-      if (req.query.product) {
-         filter["product"] = req.query.product;
-      }
+
       if (req.query.status) {
          console.log(req.query.status);
          filter["status"] = req.query.status;
@@ -54,6 +52,11 @@ router.get(`/`, async (req, res, next) => {
          (match) => `$${match}`
       );
       filter = JSON.parse(queryStr);
+      console.log(req.query.product);
+      //console.log("test", mongoose.Types.ObjectId(req.query.product));
+      if (req.query.product) {
+         filter["product"] = new mongoose.Types.ObjectId(req.query.product);
+      }
       //--------------------------------------------
       let sort = {};
       if (req.query.sort) {
@@ -73,6 +76,7 @@ router.get(`/`, async (req, res, next) => {
       //---------------------------------------------
 
       totalReviews = await Review.countDocuments(filter).exec();
+      console.log("total", totalReviews);
       if (!totalReviews) {
          return res.status(200).json({
             reviewsList: [],
@@ -92,7 +96,9 @@ router.get(`/`, async (req, res, next) => {
       }
       console.log("test", (page - 1) * limit);
       const reviewsList = await Review.aggregate([
-         { $match: filter },
+         {
+            $match: filter,
+         },
          {
             $lookup: {
                from: "users",
