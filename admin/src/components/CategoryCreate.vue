@@ -1,45 +1,39 @@
 <template>
 	<div class="category-detail">
 		<div class="top">
-			<h2 class="title">Category Detail</h2>
+			<h2 class="title">Category Create</h2>
 			<button class="close-btn" @click.prevent="closeSidebar"><i class="fa fa-times" aria-hidden="true"></i></button>
 		</div>
-		<loading v-if="categoryLoading"/>
-		<form  v-if="!categoryLoading" enctype="multipart/form-data">
+		<form  enctype="multipart/form-data">
 			<div class="category-info">
 				<div class="name">
 					<span class="title">Category name</span>
-					<input type="text" :value="category.name"  @change="assignData($event)">
+					<input type="text" v-model="name">
 				</div>
-				<div class="icon">
-					<span>Icon: </span>
-					<img :src="category.icon" alt="icon">
-				</div>
-			</div>
-			<div class="img-box">
-				<img :src="category.image" :alt="category.name">
+				<span v-if="errors" class="error">{{ errors.name }}</span>
 			</div>
 			<div class="category-img">
 				<label class="custom-file-upload">
-					<span class="upload__title">Update Image<i class="fa fa-cloud-upload" aria-hidden="true"></i></span>
+					<span class="upload__title">Upload Image<i class="fa fa-cloud-upload" aria-hidden="true"></i></span>
 					<input class="input_file" type="file" id="image" @change.stop="changeImage"/>
 					
 				</label>
 					<span class="image_name" ref="imageName"></span>
+					<span v-if="errors&&errors.image" class="error">{{ errors.image }}</span>
 			</div>
 			
 			<div class="category-img">
 				<label class="custom-file-upload">
-					<span class="upload__title">Update Icon<i class="fa fa-cloud-upload" aria-hidden="true"></i></span>
+					<span class="upload__title">Upload Icon<i class="fa fa-cloud-upload" aria-hidden="true"></i></span>
 					<input class="input_file" type="file" id="icon" @change.stop="changeIcon"/>
 					
 				</label>
 					<span class="image_name" ref="iconName"></span>
+					<span v-if="errors&&errors.icon" class="error">{{ errors.icon }}</span>
 			</div>
 			
 			<div class="review-btns">
 				<button @click.prevent="submitHandler" class="review-save"><i class="fa fa-save" aria-hidden="true"></i> Save</button>
-				<button @click.prevent="deleteCategory" class="review-delete"><i class="fa fa-trash" aria-hidden="true"></i> Delete</button>
 			</div>
 		</form>
 	</div>
@@ -48,7 +42,7 @@
 <script>
 	import { mapState } from 'vuex';
 	export default {
-		name:'category-detail',
+		name:'category-create',
 		data(){
 			return{
 				name:'',
@@ -58,21 +52,12 @@
 		},
 		computed:{
 			...mapState({
-				category:state=>state.category.category,
-				categoryLoading:state=>state.category.categoryLoading,
-				categoryError:state=>state.category.errors
+				errors:state=>state.category.errors
 			}),
 		},
 		methods:{
-			assignData(e){
-				this.name=e.target.value
-			},
 			closeSidebar(){
 				this.$emit('close',false)
-			},
-			formatDate (dateString){
-  				const options = { year: "numeric", month: "numeric", day: "numeric" }
-  				return new Date(dateString).toLocaleDateString(undefined, options)
 			},
 			changeImage(event){
             let inputImage = document.querySelector("#image").files[0];
@@ -90,33 +75,28 @@
 				console.log("icon",inputImage,event.target.value)
 				this.icon=inputImage;
 			},
-			deleteCategory(){
-				console.log(this.category.id)
-				this.$store.dispatch('category/deleteCategory',this.category.id).then((res)=>{
-					this.$store.dispatch('category/getCategory')
-					this.closeSidebar()
-				});
-
-			},
 			submitHandler(){
 				const data={
-					id:this.category.id,
 					name:this.name,
 					image:this.image,
 					icon:this.icon,
 				}
 				console.log(data)
-				this.$store.dispatch('category/updateCategory',data).then((res)=>{
+				this.$store.dispatch('category/postCategory',data).then((res)=>{
 					this.$store.dispatch('category/getCategory')
 					this.closeSidebar()
 				})
 			}
+			
 		},
 	}
 </script>
 
 <style lang="scss" scoped>
 .category-detail{
+	.error{
+		color: red
+	}
 	.top{
 		display: flex;
 		justify-content: space-between;
@@ -145,22 +125,6 @@
 	}
 	.category-info{
 		padding: 0 20px;
-		display: flex;
-		.icon{
-			display: flex;
-			align-items: center;
-			margin-top: 20px;
-			padding: 0 20px;
-			span{
-				font-size: 16px;
-				font-weight: 500;
-				margin-right: 20px;
-			}
-			img{
-				width: 30px;
-				height: 30px;
-			}
-		}
 		.title{
 			margin-bottom: 5px;
 			display: block;
@@ -172,6 +136,7 @@
 		background: #FCFCFC;
 		border: 1.1194px solid #EBEBEB;
 		border-radius: 7.11356px;
+		//margin-bottom: 15px;
 		font-size: 16px;
 		&:focus {
 			border: 1.1194px solid $main-color;
@@ -241,7 +206,7 @@
 	.review-btns{
 		padding: 20px;
 		display: flex;
-		justify-content: space-between;
+		justify-content: flex-end;
 		button{
 			width: 120px;
 			padding: 10px;
@@ -255,15 +220,6 @@
 			}
 		}
 		
-		.review-delete{
-			background-color: transparent;
-			border: 2px solid rgb(149, 2, 2);
-			color: rgb(149, 2, 2);
-			transition:all 0.4s ease-in-out;
-			&:hover{
-				background-color:rgba(149, 2, 2, 0.1);
-			}
-		}
 		.review-save{
 			background-color: transparent;
 			border: 2px solid $main-color;

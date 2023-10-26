@@ -4,15 +4,15 @@ const categorySchema = new mongoose.Schema(
    {
       name: {
          type: String,
-         required: true,
+         required: [true, "Please enter name of category"],
       },
       image: {
          type: String,
-         required: true,
+         required: [true, "Please select image"],
       },
       icon: {
          type: String,
-         required: true,
+         required: [true, "Please select icon"],
       },
    },
    { timestamps: true }

@@ -84,6 +84,19 @@ export const categoryModule = {
                });
          });
       },
+      postCategory(context, payload) {
+         return new Promise((resolve, reject) => {
+            context.commit("postCategoryStart");
+            CategoryService.postCategory(payload)
+               .then((response) => {
+                  context.commit("postCategorySuccess");
+                  resolve();
+               })
+               .catch((error) => {
+                  context.commit("postCategoryFailure", error.response.data);
+               });
+         });
+      },
       updateCategory(context, payload) {
          return new Promise((resolve, reject) => {
             context.commit("postCategoryStart");
@@ -98,11 +111,12 @@ export const categoryModule = {
          });
       },
       deleteCategory(context, payload) {
-         return new Promise(() => {
+         return new Promise((resolve) => {
             context.commit("deleteCategoryStart");
             CategoryService.deleteCategory(payload)
                .then((res) => {
                   context.commit("deleteCategorySuccess");
+                  resolve();
                })
                .catch((error) => {
                   context.commit("deleteCategoryFailure", error.response.data);

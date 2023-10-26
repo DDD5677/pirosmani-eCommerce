@@ -4,7 +4,8 @@
           <a class="dropdown-item"
 				@click="categoryHandler(item)"
           >
-			<img :src="require(`@/assets/images/dropdown-${index+1}.svg`)">
+			<!-- <img :src="require(`@/assets/images/dropdown-${index+1}.svg`)"> -->
+			<img :src="item.icon">
           <span> {{ item.name }}</span></a
    		>
    	</li>

@@ -1,18 +1,3 @@
-import dataProduct from "@/data/menus/customData.json";
-import icon_1 from "@/assets/images/dropdown-1.svg";
-import icon_2 from "@/assets/images/dropdown-2.svg";
-import icon_3 from "@/assets/images/dropdown-3.svg";
-import icon_4 from "@/assets/images/dropdown-4.svg";
-import icon_5 from "@/assets/images/dropdown-5.svg";
-import icon_6 from "@/assets/images/dropdown-6.svg";
-import icon_7 from "@/assets/images/dropdown-7.svg";
-import icon_8 from "@/assets/images/dropdown-8.svg";
-import icon_9 from "@/assets/images/dropdown-9.svg";
-import icon_10 from "@/assets/images/dropdown-10.svg";
-import icon_11 from "@/assets/images/dropdown-11.svg";
-import icon_12 from "@/assets/images/dropdown-12.svg";
-import icon_13 from "@/assets/images/dropdown-13.svg";
-
 import ProductSevice from "@/server/productAPI.js";
 import CategoryService from "@/server/categoryAPI.js";
 

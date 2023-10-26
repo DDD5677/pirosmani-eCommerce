@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import ReviewDetail from "@/components/ReviewDetail";
 import CategoryDetail from "@/components/CategoryDetail";
+import CategoryCreate from "@/components/CategoryCreate";
 import Info from "@/components/UI/Info";
 import Avatar from "@/components/UI/Avatar";
 import Pagination from "@/components/UI/Pagination";
@@ -14,6 +15,7 @@ export default [
    Navbar,
    ReviewDetail,
    CategoryDetail,
+   CategoryCreate,
    Info,
    GreenButton,
    Avatar,

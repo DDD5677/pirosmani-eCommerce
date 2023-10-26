@@ -3,7 +3,7 @@
 		<div class="container">
 			<div class="categories__inner">
 				<div class="buttons">
-					<router-link :to="{name:'create-user'}" class="btn"><i class="fa fa-plus" aria-hidden="true"></i>Create</router-link>
+					<button @click="categoryCreate" class="btn"><i class="fa fa-plus" aria-hidden="true"></i>Create</button>
 					<button class="btn"><i class="fa fa-download" aria-hidden="true"></i>Export</button>
 
 				</div>
@@ -23,7 +23,7 @@
 				</div>
 			</div>
 			<category-detail v-if="categoryDetailShow"  class="category-detail" @close="categoryDetailToggle"/>
-
+			<category-create v-if="categoryCreateShow" class="category-detail"  @close="categoryCreateToggle"/>
 		</div>
 	</section>
 </template>
@@ -34,7 +34,8 @@ import { setItem,getItem } from '@/helpers/localStorage';
 	export default {
 		data(){
 			return{
-				categoryDetailShow:false
+				categoryDetailShow:false,
+				categoryCreateShow:false
 			}
 		},
 		computed:{
@@ -47,9 +48,15 @@ import { setItem,getItem } from '@/helpers/localStorage';
 			categoryDetailToggle(item){
 				this.categoryDetailShow=item
 			},
+			categoryCreateToggle(item){
+				this.categoryCreateShow = item
+			},
 			categoryDetail(id){
 				this.categoryDetailToggle(true)
 				this.$store.dispatch('category/getCategoryById',id)
+			},
+			categoryCreate(){
+				this.categoryCreateShow=true
 			},
 			productPage(id){
 				const filters=getItem('product-filters');
