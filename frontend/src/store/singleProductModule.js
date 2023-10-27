@@ -52,20 +52,22 @@ export const singleProductModule = {
    },
    actions: {
       getProductById(context, payload) {
-         return new Promise(() => {
+         return new Promise((resolve, reject) => {
             context.commit("productStart");
             ProductSevice.getProductById(payload)
                .then((response) => {
                   context.commit("productSuccess", response.data);
+                  resolve(response.data);
                })
                .catch((error) => {
                   context.commit("productFailure", error.response.data);
+                  reject(error.response.data);
                });
          });
       },
 
       postReviews(context, data) {
-         return new Promise((resolve) => {
+         return new Promise((resolve, reject) => {
             context.commit("reviewsStart");
             ProductSevice.postReviews(data)
                .then((response) => {
@@ -74,6 +76,7 @@ export const singleProductModule = {
                })
                .catch((error) => {
                   context.commit("reviewsFailure", error.response.data);
+                  reject(error);
                });
          });
       },

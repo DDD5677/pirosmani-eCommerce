@@ -1,6 +1,4 @@
 <template>
-      
-	
 	<div class="modal__body">
 		<h5 class="title">Добавить отзыв</h5>
 		<div class="rating__box">

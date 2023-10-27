@@ -24,16 +24,17 @@
 				</div>
 			</div>
 			<div v-if="!mobile||(index===activeIndex?true:false)&&showProducts" class="products" id="products" >
-				<div class="order__number">
-					<span @click="showProductHandler(index)" class="green" id="order__number"
-						><img
-							src="@/assets/images/orders__arrow-left.svg"
-							alt=""
-						/>Заказ №2334678954
-					</span>
+				<div>
+					<div class="order__number">
+						<span @click="showProductHandler(index)" class="green" id="order__number"
+							><img
+								src="@/assets/images/orders__arrow-left.svg"
+								alt=""
+							/>Заказ №2334678954
+						</span>
+					</div>
+					<basket-product v-for="product in order.orderItems" :product="product" :id="product.product.id" />
 				</div>
-				<basket-product v-for="product in order.orderItems" :product="product" :id="product.product.id" />
-				<!-- <basket-product/> -->
 				<div class="order__again">
 					<a @click="reOrder(order)" href="#" class="order__again-link"
 						>Повторить заказ<img
@@ -124,7 +125,9 @@ import { mapState } from 'vuex'
          }
 
          .products {
-
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
             .order__number {
                display: none;
 
@@ -199,7 +202,6 @@ import { mapState } from 'vuex'
 
             .order__again {
                text-align: right;
-
                .order__again-link {
 						cursor: pointer;
                   color: $main-color;

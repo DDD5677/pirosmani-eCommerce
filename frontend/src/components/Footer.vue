@@ -5,7 +5,7 @@
                <div class="footer__info">
                   <div class="info__phones">
                      <div class="phone">
-                        <span>Бесплатный звонок по РФ</span>
+                        <span>Бесплатный звонок по Узбекистану</span>
                         <a href="tel:+998903385677" class="phone__link"
                            >+998 (90) 338-56-77</a
                         >
@@ -27,11 +27,11 @@
                   </div>
                </div>
                <div class="info__social">
-                  <a href="" class="social__contact">Мы в вконтакте ></a>
-                  <a href="" class="social__instagram">Мы в instagram ></a>
+                  <a href="https://t.me/DDDJ_5677" class="social__contact">Мы в Телеграмме ></a>
+                  <a href="https://instagram.com/djumaqulov_5677?igshid=OGQ5ZDc2ODk2ZA==" class="social__instagram">Мы в instagram ></a>
                </div>
                <div class="info__login">
-                  <a href="" class="login__link"
+                  <a @click="toggleModalHandler" class="login__link"
                      ><img src="@/assets/images/log_in.svg" alt="" /> Войти /
                      Регистрация</a
                   >
@@ -48,9 +48,19 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 	export default {
 		name:'home-footer',
 		methods:{
+			...mapMutations({
+				toggleModal:'navbar/toggleModal',
+				toggleSignIn:'navbar/toggleSignIn',
+				toggleBookTable:'navbar/toggleBookTable'
+			}),
+			toggleModalHandler(){
+				this.toggleModal(true)
+				this.toggleSignIn()
+			},
 			scrollTop(){
 				window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
 			}
@@ -169,9 +179,9 @@
          a {
             display: block;
             font-weight: 500;
-            font-size: 15.4259px;
+            font-size: 16px;
             line-height: 32px;
-            letter-spacing: 3.08517px;
+            letter-spacing: 2px;
             font-variant: small-caps;
             margin-bottom: 25px;
 				@media (max-width: 630px){
@@ -189,9 +199,10 @@
             font-weight: 500;
             font-size: 15.4259px;
             line-height: 32px;
-
+				display: flex;
+				align-items: center;
+				cursor: pointer;
             img {
-
                margin-right: 8px;
             }
          }

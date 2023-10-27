@@ -4,15 +4,35 @@
 			Бронирование стола
 		</h5>
 		<form action="">
-			<input class="name" type="text" placeholder="Имя" v-model="name"/>
-			<input type="tel" placeholder="+998" v-model="phone"/>
-			<input type="number" placeholder="Количество человек" min="1" v-model="numOfPeople" />
+			<form-input 
+				:label="''" 
+				:type="'text'" 
+				:placeholder="'Имя'" 
+				:errors="errors" 
+				:error="errors?errors.name:''" 
+				v-model="name"/>
+			<form-input 
+			:label="''" 
+			:type="'tel'" 
+			:placeholder="'+998'" 
+			:errors="errors" 
+			:error="errors?errors.phone:''" 
+			v-model="phone"/>
+			<form-input 
+			:label="''" 
+			:type="'number'" 
+			:placeholder="'Количество человек'" 
+			:errors="errors" 
+			:error="errors?errors.numOfPeople:''" 
+			v-model="numOfPeople"/>
+			
 			<input
 				type="time"
 				data-placeholder="Время: _ _ : _ _"
 				required
 				v-model="time"
 			/>
+			<div class="error__message" v-if="errors&&errors.time">{{ errors.time }}</div>
 			<input
 				type="date"
 				data-placeholder="Дата:  дд.мм.гг"
@@ -20,11 +40,12 @@
 				v-model="date"
 				name="trip-start"
 			/>
+			<div class="error__message" v-if="errors&&errors.date">{{ errors.date }}</div>
 			
 		</form>
 	</div>
 	<div class="modal__footer">
-		<green-btn @click.prevent="postReservationHandler" href="" class="green__btn">Забронировать</green-btn>
+		<green-btn @click.prevent="postReservationHandler" class="green__btn">Забронировать</green-btn>
 	</div>
 			
 </template>
@@ -45,6 +66,7 @@ import { mapState,mapMutations } from 'vuex'
 		computed:{
 			...mapState({
 				user:state=>state.auth.user.user,
+				errors:state=>state.order.errors,
 			})
 		},
 		methods:{
@@ -76,6 +98,12 @@ import { mapState,mapMutations } from 'vuex'
 
 <style lang="scss" scoped>
 .modal__body {
+	.error__message{
+		font-size: 14px;
+		color: red;
+		margin-top: -15px;
+		margin-bottom: 10px;
+	}
 		input {
 			margin-bottom: 15px;
 			width: 100%;
@@ -98,22 +126,7 @@ import { mapState,mapMutations } from 'vuex'
 			}
 
 		}
-		.error__text {
-			margin-top: -13px;
-			margin-bottom: 13px;
-			display: none;
-
-			&.active {
-				display: block;
-			}
-
-			font-weight: 400;
-			font-size: 9px;
-			line-height: 8px;
-			text-align: center;
-			color: #EB5757;
-		}
-
+		
 		.green__btn {
 			margin-top: 15px;
 		}
@@ -135,14 +148,6 @@ import { mapState,mapMutations } from 'vuex'
 		}
 	}
 
-	div {
-		display: flex;
-		justify-content: space-between;
-
-		input {
-			width: 254px;
-		}
-	}
 
 	//style of input time
 

@@ -57,13 +57,7 @@
 			:type="'text'" 
 			:placeholder="'Введите ваш комментарий...'" 
 			v-model="customerInfo.comment"/>
-			<!-- <input
-				
-				v-model="customerInfo.comment"
-				
-				type="text"
-				placeholder="Введите ваш комментарий..."
-			/> -->
+			
 		</div>
 		<green-btn  @click.prevent="submitHandler" class="green__btn">Оформить заказ</green-btn>
 	</form>
@@ -117,7 +111,6 @@ import { mapState } from 'vuex';
 		},
 		methods:{
 			commentHandler(){
-				console.log(this.orderProducts,this.user)
 				this.comment=!this.comment
 				this.customerInfo.comment=''
 			},
@@ -125,7 +118,6 @@ import { mapState } from 'vuex';
 				const data={
 					...this.customerInfo,user:this.user.id,orderItems:this.orderProducts
 				}
-				console.log(data)
 				this.$store.dispatch('order/addOrder',data).then(res=>{
 					this.customerInfo.name='';
 					this.customerInfo.city='';

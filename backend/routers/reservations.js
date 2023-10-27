@@ -2,27 +2,18 @@ const express = require("express");
 const router = express.Router();
 const Reservation = require("../models/reservation");
 
-const reservationErrors = (err) => {
-   console.log(err.errors, err.code);
-   let errors = {};
-   if (err.name.includes("ValidationError")) {
-      Object.values(err.errors).forEach(({ properties }) => {
-         errors[properties.path] = properties.message;
-      });
+router.get(`/`, async (req, res, next) => {
+   try {
+      const reservation = await Reservation.find({});
+      if (!reservation) {
+         res.status(500).json({
+            success: false,
+         });
+      }
+      res.send(reservation);
+   } catch (error) {
+      next(error);
    }
-
-   return errors;
-};
-
-router.get(`/`, async (req, res) => {
-   const reservation = await Reservation.find({});
-
-   if (!reservation) {
-      res.status(500).json({
-         success: false,
-      });
-   }
-   res.send(reservation);
 });
 
 router.post("/", async (req, res, next) => {
@@ -45,8 +36,6 @@ router.post("/", async (req, res, next) => {
       res.send(reservation);
    } catch (error) {
       next(error);
-      // const errors = reservationErrors(error);
-      // res.status(500).json(error);
    }
 });
 

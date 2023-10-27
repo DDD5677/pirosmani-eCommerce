@@ -19,7 +19,7 @@
                      </div>
                      <div class="product__total-price">
                         <span>Итого к оплате</span>
-                        <span class="total-price">600 ₽</span>
+                        <span class="total-price">{{totalSumm}} ₽</span>
                      </div>
                      <green-btn  class="green__btn" @click="registerOrder">
 								Оформить заказ

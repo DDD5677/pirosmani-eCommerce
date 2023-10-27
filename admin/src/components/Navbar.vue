@@ -18,6 +18,7 @@
 						<li><router-link :to="{name:'orders',query:{page:1,limit:orderLimit}}" class="nav-link">Orders</router-link></li>
 						<li><router-link :to="{name:'categories'}" class="nav-link">Category</router-link></li>
 						<li><router-link :to="{name:'reviews',query:{page:1,limit:productLimit}}"  class="nav-link">Reviews</router-link></li>
+						<li><router-link :to="{name:'reservations',query:{page:1,limit:productLimit}}"  class="nav-link">Reservations</router-link></li>
 						
 					</ul>
 					<div v-if="!isLoading" class="profile">

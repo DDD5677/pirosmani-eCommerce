@@ -56,10 +56,7 @@ import { mapMutations, mapState } from 'vuex';
 		justify-content: flex-start;
 		align-items: center;
 		border-top: 1px solid #EBEBEB;
-
 		border-bottom: 1px solid #EBEBEB;
-
-
 		.product__cansel {
 			span {
 				position: relative;

@@ -11,6 +11,7 @@ import OrdersView from "../views/OrdersView.vue";
 import OrderDetailView from "../views/OrderDetailView.vue";
 import ReviewsView from "../views/ReviewsView.vue";
 import CategoryView from "../views/CategoryView.vue";
+import ReservationView from "../views/ReservationView.vue";
 
 const routes = [
    {
@@ -84,6 +85,12 @@ const routes = [
       name: "categories",
       meta: { layout: "main" },
       component: CategoryView,
+   },
+   {
+      path: "/reservations",
+      name: "reservations",
+      meta: { layout: "main" },
+      component: ReservationView,
    },
 ];
 

@@ -162,17 +162,24 @@ import {mapActions, mapMutations, mapState} from 'vuex';
 			...mapState({
 				isLoading: state=>state.singleProduct.isLoading,
 				errors: state=>state.singleProduct.errors,
+				isLogged: state=>state.auth.isLogged,
 				reviewsList:state=>state.singleProduct.reviewsList
 			}),
 		},
 		methods:{
 			...mapMutations({
 				toggleModal:'navbar/toggleModal',
-				toggleAddReviews:'navbar/toggleAddReviews'
+				toggleAddReviews:'navbar/toggleAddReviews',
+				toggleSignIn:'navbar/toggleSignIn',
 			}),
 			toggleModalHandler(){
 				this.toggleModal(true)
-				this.toggleAddReviews()
+				if(!this.isLogged){
+					this.toggleSignIn()
+				}else{
+					this.toggleAddReviews()
+
+				}
 			},
 			aboutHandler(){
 				this.about=true

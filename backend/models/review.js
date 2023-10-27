@@ -14,11 +14,11 @@ const reviewSchema = new mongoose.Schema(
       },
       bodyText: {
          type: String,
-         required: true,
+         required: [true, "Please enter a review"],
       },
       rating: {
          type: Number,
-         required: true,
+         required: [true, "Please rate the product"],
       },
       status: {
          type: String,

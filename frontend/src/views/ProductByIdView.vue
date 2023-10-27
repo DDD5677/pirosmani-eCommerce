@@ -38,9 +38,9 @@
                   </div>
                   <div class="product__btns">
                      <green-btn @click.prevent.stop="addProductHandler(product,quantity)" class="product__buy">Купить</green-btn>
-                     <a href="" class="product__basket"
+                     <router-link :to="{name:'basket'}" class="product__basket"
                         ><img src="@/assets/images/shopping-cart-white.svg" alt=""
-                     /></a>
+                     /></router-link>
                   </div>
                </div>
             </div>
@@ -68,16 +68,23 @@ import {mapActions, mapMutations, mapState} from 'vuex';
 				totalSumm: state=>state.singleProduct.totalSumm,
 				isLoading: state=>state.singleProduct.isLoading,
 				errors: state=>state.singleProduct.errors,
+				isLogged: state=>state.auth.isLogged,
 
 			}),
 		},
 		methods:{
 			...mapMutations({
 				changeTotalSumm:'singleProduct/changeTotalSumm',
+				toggleModal:'navbar/toggleModal',
+				toggleSignIn:'navbar/toggleSignIn',
 			}),
 			...mapActions({
 				addProduct:'order/addProduct'
 			}),
+			toggleModalHandler(){
+				this.toggleModal(true)
+				this.toggleSignIn()
+			},
 			totalSummHandler(counter){
 				const summ = counter*this.product.price;
 				this.quantity=counter;
@@ -88,12 +95,18 @@ import {mapActions, mapMutations, mapState} from 'vuex';
 					product:product,
 					quantity:quantity
 				}
-				this.addProduct(order);
+				if(!this.isLogged){
+					this.toggleModal(true)
+					this.toggleSignIn()
+				}else{
+					this.addProduct(order);
+				}
 			}
 		},
 		mounted(){
-			this.$store.dispatch('singleProduct/getProductById',this.productId);
-			this.$store.dispatch('singleProduct/getReviews',this.productId);
+			this.$store.dispatch('singleProduct/getProductById',this.productId).then((res)=>{
+				this.$store.dispatch('singleProduct/getReviews',res.id);
+			})
 		}
 	}
 </script>

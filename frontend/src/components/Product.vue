@@ -19,7 +19,7 @@
 			{{ product.price }} ₽/кг<span>За 500гр.</span>
 			
 		</div>
-		<green-btn @click.prevent.stop="productDetail">В корзину</green-btn>
+		<green-btn @click.prevent="productDetail">В корзину</green-btn>
 		</div>
 	</div>
 </template>
