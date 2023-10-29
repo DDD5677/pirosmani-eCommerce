@@ -1,21 +1,21 @@
 <template>
-	<section class="orders">
+	<section class="reservations">
 		<div class="container">
 			
-			<div  class="orders__inner">
+			<div  class="reservations__inner">
 				<div class="table__nav">
 					<div class="filter">
 						<div v-for="(filter,index) in filters" :id="index">
 							<div v-if="filter.show&&(filter.title!=='Status')">
 								<span>{{ filter.title }}</span>
-								<input type="number" :placeholder="filter.title" v-model="filter.source" @change="sumbitFilters">
+								<input type="date" :placeholder="filter.title" v-model="filter.source" @change="sumbitFilters">
 								<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
 							</div>
 							<div v-if="filter.show&&(filter.title==='Status')">
 								<span>{{ filter.title }}</span>
 								<select name="status" id="status" v-model="filter.source" @change="sumbitFilters">
 									<option value="" selected disabled hidden >Select the status</option>
-									<option value="Delivered">Delivered</option>
+									<option value="Delivered">Serviced</option>
 									<option value="Pending">Pending</option>
 									<option value="Canceled">Canceled</option>
 								</select>
@@ -25,7 +25,7 @@
 					</div>
 					<div class="filters">
 						<div class="search">
-							<input type="text" placeholder="Search" v-model="search" class="search__input" @change="getOrders(1,this.$route.query.limit)">
+							<input type="text" placeholder="Search" v-model="search" class="search__input" @change="getReservations(1,this.$route.query.limit)">
 							<div v-if="!search" class="search__span"><i class="fa fa-search" aria-hidden="true"></i></div>
 							<button v-if="search" @click="cleanSearch" class="search__btn"><i class="fa fa-times" aria-hidden="true"></i></button>
 						</div>
@@ -55,11 +55,11 @@
 					</div>
 					
 				</div>
-				<div class="orders__table">
+				<div class="reservations__table">
 					<table>
 						<thead>
 							<tr >
-								<th v-if="!ordersError">
+								<th v-if="!reservationError">
 									<span></span>
 									<input class="checkbox" ref="foomain" @click="allCheck" type="checkbox">
 								</th>
@@ -73,25 +73,33 @@
 									{{options[1].title}}
 								</th>
 								<th v-if="options[2].show" >
-									<span @click="sortHandler('city')" class="sort_btn">
+									<span @click="sortHandler('numOfPeople')" class="sort_btn">
 									{{options[2].title}} 
-									<i v-if="sort==='city'||sort==='-city'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
+									<i v-if="sort==='numOfPeople'||sort==='-numOfPeople'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
 									</span>
 								</th>
 								<th v-if="options[3].show" >
+									<span @click="sortHandler('time')" class="sort_btn">
 									{{options[3].title}} 
+									<i v-if="sort==='time'||sort==='-time'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
+									</span>
 								</th>
-								<th v-if="options[4].show">{{options[4].title}}</th>
+								<th v-if="options[4].show">
+									<span class="sort_btn" @click="sortHandler('date')">
+									{{options[4].title}}
+									<i v-if="sort==='date'||sort==='-date'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
+									</span>
+								</th>
 								<th v-if="options[5].show">
-									<span class="sort_btn" @click="sortHandler('totalPrice')">
+									<span class="sort_btn" @click="sortHandler('createdAt')">
 									{{options[5].title}}
-									<i v-if="sort==='totalPrice'||sort==='-totalPrice'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
+									<i v-if="sort==='createdAt'||sort==='-createdAt'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
 									</span>
 								</th>
 								<th v-if="options[6].show">
-									<span class="sort_btn" @click="sortHandler('dateOrdered')">
+									<span class="sort_btn" @click="sortHandler('status')">
 									{{options[6].title}}
-									<i v-if="sort==='dateOrdered'||sort==='-dateOrdered'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
+									<i v-if="sort==='status'||sort==='-status'" class="fa fa-arrow-up" :class="sort[0]==='-'?'rotate':''" aria-hidden="true"></i>
 									</span>
 								</th>
 							</tr>
@@ -104,39 +112,36 @@
 									></button>
 									<span class="checked">{{ checked }} Items selected</span>
 								</div>
-								<a @click.prevent="deleteOrders" class="delete__btn"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
+								<a @click.prevent="deleteReservations" class="delete__btn"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
 							</div>
 						</thead>
 						
-						<tbody v-if="!ordersLoading&&!ordersError">
+						<tbody v-if="!reservationLoading&&!reservationError">
 							
-							<tr v-for="order in orders" :id="order.id" >
+							<tr v-for="reserv in reservations" :id="reserv.id" >
 								<td>
 									<span></span>
-									<input class="checkbox" ref="foo" @click="removedOrdersId($event,order.id)" type="checkbox">
+									<input class="checkbox" ref="foo" @click="removedReservsId($event,reserv.id)" type="checkbox">
 								</td>
-								<td v-if="options[0].show" >
-									<span class="customer">
-										<avatar :width="'30px'" :info="{image:order.user.image, name:order.user.name}"/> <span @click="orderDetail(order.id)">{{ order.name }}</span>
-									</span>
-								</td>
-								<td v-if="options[1].show" @click="orderDetail(order.id)">{{ order.phone }}</td>
-								<td v-if="options[2].show" @click="orderDetail(order.id)">{{ order.city }}</td>
-								<td v-if="options[3].show" @click="orderDetail(order.id)">{{ order.shippingAdress1 }}</td>
-								<td v-if="options[4].show" @click="orderDetail(order.id)">{{ order.status }}</td>
-								<td v-if="options[5].show" @click="orderDetail(order.id)">{{ order.totalPrice }}$</td>
-								<td v-if="options[6].show" @click="orderDetail(order.id)">{{ formatDate(order.dateOrdered) }}</td>
+								<td v-if="options[0].show" @click="reservationDetail(reserv.id)">{{ reserv.name }}</td>
+								<td v-if="options[1].show" @click="reservationDetail(reserv.id)">{{ reserv.phone }}</td>
+								<td v-if="options[2].show" @click="reservationDetail(reserv.id)">{{ reserv.numOfPeople }}</td>
+								<td v-if="options[3].show" @click="reservationDetail(reserv.id)">{{ reserv.time }}</td>
+								<td v-if="options[4].show" @click="reservationDetail(reserv.id)">{{ formatDate(reserv.date) }}</td>
+								<td v-if="options[5].show" @click="reservationDetail(reserv.id)">{{ formatDate(reserv.createdAt) }}</td>
+								<td v-if="options[6].show" @click="reservationDetail(reserv.id)">{{ reserv.status }}</td>
 							</tr>
 						</tbody>
 					</table>
-					<div v-if="!ordersLoading">
-						<h3 class="empty" v-if="orders.length===0">There is not orders yet!</h3>
+					<div v-if="!reservationLoading">
+						<h3 class="empty" v-if="reservations.length===0">There is not reservations yet!</h3>
 					</div>
-					<loading v-if="ordersLoading"/>
-					<error v-if="ordersError" :error="ordersError"/>
+					<loading v-if="reservationLoading"/>
+					<error v-if="reservationError" :error="reservationError"/>
 				</div>
-				<pagination :getData="getOrders" :page="page" :pageSize="pageSize"/>
+				<pagination :getData="getReservations" :page="page" :pageSize="pageSize"/>
 			</div>
+			<reservation-detail v-if="reservDetailShow" @close="reservDetailToggle"/>
 		</div>
 	</section>
 </template>
@@ -152,34 +157,37 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				search:'',
 				columns:false,
 				filter_box:false,
-				removedOrderId:[],
+				removedReservId:[],
 				options:[],
 				filters:[],
-				status:''
+				reservDetailShow:false,
 			}
 		},
 		computed:{
 			...mapState({
-				orders:state=>state.order.orders,
-				page:state=>state.order.page,
-				pageSize:state=>state.order.pageSize,
-				ordersLoading:state=>state.order.isLoading,
-				ordersError:state=>state.order.errors
+				reservations:state=>state.reservation.reservations,
+				page:state=>state.reservation.page,
+				pageSize:state=>state.reservation.pageSize,
+				reservationLoading:state=>state.reservation.isLoading,
+				reservationError:state=>state.reservation.errors
 			}),
 			
 		},
 		methods:{
 			...mapMutations({
-				changePage:'order/changePage',
-				changeLimit:'order/changeLimit'
+				changePage:'reservation/changePage',
+				changeLimit:'reservation/changeLimit'
 			}),
-			orderDetail(id){
-				this.$router.push(`/orders/${id}`)
+			reservDetailToggle(item){
+				this.reservDetailShow=item
 			},
-			
+			reservationDetail(id){
+				this.reservDetailToggle(true)
+				this.$store.dispatch('reservation/getReserById',id)
+			},
 			formatDate (dateString){
   				const options = { year: "numeric", month: "long", day: "numeric" }
-  				return new Date(dateString).toLocaleDateString(undefined, options) +" " + new Date(dateString).toLocaleTimeString('it-IT')
+  				return new Date(dateString).toLocaleDateString(undefined, options)
 			},
 			sortHandler(sort){
 				if(this.sort===sort){
@@ -191,9 +199,9 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				}else{
 					this.sort=sort
 				}
-				this.getOrders(this.$route.query.page,this.$route.query.limit)
+				this.getReservations(this.$route.query.page,this.$route.query.limit)
 				const sorts=getItem('sorts')
-				setItem('sorts',{...sorts,order:this.sort})
+				setItem('sorts',{...sorts,reservation:this.sort})
 			},
 			toggleColumns(){
 				this.columns=!this.columns
@@ -209,13 +217,13 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				this.filters[index].show=false
 				if(this.filters[index].source){
 					this.filters[index].source=''
-					setItem('order-filters',this.filters);
-					this.getOrders(1,this.$route.query.limit)
+					setItem('reserv-filters',this.filters);
+					this.getReservations(1,this.$route.query.limit)
 				}
 			},
 			sumbitFilters(){
-				setItem('order-filters',this.filters);
-				this.getOrders(1,this.$route.query.limit)
+				setItem('reserv-filters',this.filters);
+				this.getReservations(1,this.$route.query.limit)
 			},
 			addOptions(index){
 				const shortline = this.$refs.shortline
@@ -227,19 +235,19 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					shortline[index].classList.remove('checked')
 					this.options[index].show=false
 				}
-				setItem('order-options',this.options)
+				setItem('reserv-options',this.options)
 			},
 			cleanSearch(){
 				this.search='';
-				this.getOrders()
+				this.getReservations()
 			},
 			// delete checked data logic
-			removedOrdersId(checkbox,id){
+			removedReservsId(checkbox,id){
 				if(checkbox.target.checked){
-					this.removedOrderId.push(id)
+					this.removedReservId.push(id)
 					this.countCheckedItems()
 				}else{
-					this.removedOrderId=this.removedOrderId.filter(item=>item!==id)
+					this.removedReservId=this.removedReservId.filter(item=>item!==id)
 					this.countCheckedItems()
 					console.log('not checked')
 				}
@@ -264,67 +272,78 @@ import { getItem, setItem } from '@/helpers/localStorage';
 			},
 			removeCheck(){
 				this.$refs.foomain.checked=false;
-				this.removedOrderId=[]
+				this.removedReservId=[]
 				this.toggle()
 			},
 			allCheck(){
-				this.removedOrderId=[];
-				for( let order of this.orders){
-					this.removedOrderId.push(order.id)
+				this.removedReservId=[];
+				for( let reserv of this.reservations){
+					this.removedReservId.push(reserv.id)
 				}
 				this.toggle()
 			},
 
-			deleteOrders(){
+			deleteReservations(){
 				const data= {
-					orders:this.removedOrderId
+					reservations:this.removedReservId
 				}
 				console.log(data)
-				this.$store.dispatch('order/deleteOrders',data).then(()=>{
-					location.reload()
+				this.$store.dispatch('reservation/deleteReservation',data).then(()=>{
+					this.getReservations(this.$route.query.page,this.$route.query.limit)
 				});
 
 			},
 			//------------------------------------------------------------------------
-			getOrders(page,limit){
+			getReservations(page,limit){
 				const queries = {
 					page:page,
 					limit:limit,
 					sort:this.sort,
 					search:this.search,
-					min_price:this.filters[0].source,
-					max_price:this.filters[1].source,
+					date:this.filters[0].source,
+					createdAt:this.filters[1].source,
 					status:this.filters[2].source,
 				}
-				this.$store.dispatch('order/getOrders',queries);
+				this.$store.dispatch('reservation/getReservations',queries);
 				this.changePage(page);
 				this.changeLimit(limit);
-				this.$router.push({ path: "/orders", query: queries });
+				this.$router.push({ path: "/reservations", query: queries });
 			}
 		},
 		watch:{
 			page(newp,old){
-				this.removedOrderId=[];
+				this.removedReservId=[];
 				this.checked=0
 			},
 			filters(newFilter,oldFilter){
-				setItem('order-filters',newFilter);
-				this.getOrders(this.$route.query.page,this.$route.query.limit)
+				setItem('reserv-filters',newFilter);
+				this.getReservations(this.$route.query.page,this.$route.query.limit)
 			}
 		},
 		created(){
-			this.options=getItem('order-options')
-			this.filters=getItem('order-filters')
-			this.sort=getItem('sorts').order
-			this.getOrders(this.$route.query.page,this.$route.query.limit)
-
+			this.options=getItem('reserv-options')
+			this.filters=getItem('reserv-filters')
+			this.sort=getItem('sorts').reservation
+			this.getReservations(this.$route.query.page,this.$route.query.limit)
 		},
 	}
 </script>
 
 <style lang="scss" scoped>
-	.orders{
+	.reservations{
 		padding: 100px 0 40px;
+
+		.reservation-detail{
+			background-color: #fff;
+			width: 500px;
+			position: absolute;
+			z-index: 99;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			border-left: 1px solid #9d9d9d;
+			padding: 100px 0 50px;
+		}
 		.empty{
 			margin:20px 30px;
 			color: red;
@@ -336,7 +355,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				display: flex;
 				margin-bottom: 10px;
 				select{
-					width: 140px;
+					width: 150px;
 					padding: 20px 8px 5px;
 					border-radius: 10px 10px 0 0;
 					border-bottom: 1px solid #000;
@@ -356,7 +375,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					}
 				}
 				input{
-					width: 100px;
+					width: 150px;
 					padding: 20px 10px 5px;
 					border-radius: 10px 10px 0 0;
 					border-bottom: 1px solid #000;
@@ -435,7 +454,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				}
 				.filter__box{
 					position: absolute;
-					left: 50%;
+					left: 35%;
 					z-index: 52;
 					background-color: #fff;
 					padding: 10px 0;

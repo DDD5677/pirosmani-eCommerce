@@ -143,40 +143,6 @@ router.put(
    }
 );
 
-// router.put("/:id", uploadOptions.single("image"), async (req, res, next) => {
-//    try {
-//       if (!mongoose.isValidObjectId(req.params.id)) {
-//          return res.status(400).send("Invalid Product ID");
-//       }
-//       console.log(req.body);
-//       let updateBlock = {};
-//       const file = req.file;
-//       let basePath;
-//       let fileName;
-//       if (req.body.name) {
-//          updateBlock["name"] = req.body.name;
-//       }
-//       if (file) {
-//          basePath = `${req.protocol}://${req.get("host")}/public/categories/`;
-//          fileName = req.file.filename;
-//          updateBlock["image"] = `${basePath}${fileName}`;
-//       }
-
-//       const category = await Category.findByIdAndUpdate(
-//          req.params.id,
-//          updateBlock,
-//          { new: true }
-//       );
-//       if (!category) {
-//          return res.status(404).send("the category cannot be updated!");
-//       }
-
-//       res.send(category);
-//    } catch (error) {
-//       next(error);
-//    }
-// });
-
 router.delete("/:id", (req, res) => {
    Category.findByIdAndRemove(req.params.id)
       .then((category) => {

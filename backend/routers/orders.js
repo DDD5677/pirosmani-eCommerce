@@ -59,7 +59,6 @@ router.get(`/`, async (req, res, next) => {
       );
       filter = JSON.parse(queryStr);
 
-      console.log(filter);
       totalOrders = await Order.countDocuments(filter).exec();
       if (!totalOrders) {
          return res.status(200).json({
@@ -78,39 +77,6 @@ router.get(`/`, async (req, res, next) => {
             message: "Page is not found!",
          });
       }
-      // let sort = {};
-      // if (req.query.sort) {
-      //    const key = req.query.sort;
-      //    if (req.query.sort[0] === "-") {
-      //       sort[`${key.substring(1)}`] = -1;
-      //    } else {
-      //       sort[`${key}`] = 1;
-      //    }
-      // } else {
-      //    sort.dateCreated = 1;
-      // }
-      // console.log("filter", filter);
-      // console.log("sort", sort);
-      // const orderList = await Order.aggregate([
-      //    { $match: filter },
-      //    {
-      //       $sort: sort,
-      //    },
-      //    { $skip: (page - 1) * limit },
-      //    { $limit: limit },
-      //    {
-      //       $lookup: {
-      //          from: "users",
-      //          localField: "user",
-      //          foreignField: "_id",
-      //          as: "user",
-      //       },
-      //    },
-      //    {
-      //       $unwind: "$user",
-      //    },
-      // ]);
-
       const orderList = await Order.find(filter)
          .sort(req.query.sort)
          .skip((page - 1) * limit)
@@ -246,10 +212,6 @@ router.post("/", async (req, res, next) => {
       res.send(order);
    } catch (error) {
       next(error);
-      // console.log(error);
-      // const errors = orderErrors(error);
-      // console.log(errors);
-      // res.status(500).json(errors);
    }
 });
 
@@ -280,7 +242,6 @@ router.put("/:id", async (req, res, next) => {
 router.delete("/", async (req, res, next) => {
    try {
       const orders = req.body.orders;
-      console.log("orders", orders);
       if (orders) {
          await orders.forEach(async (order) => {
             const removedOrder = await Order.findByIdAndRemove(order);

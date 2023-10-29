@@ -23,6 +23,11 @@ const reservationSchema = new mongoose.Schema(
          type: String,
          required: [true, "Please enter time."],
       },
+      status: {
+         type: String,
+         required: true,
+         default: "Pending",
+      },
       date: {
          type: String,
          required: [true, "Please enter date."],
@@ -30,6 +35,13 @@ const reservationSchema = new mongoose.Schema(
    },
    { timestamps: true }
 );
+
+reservationSchema.virtual("id").get(function () {
+   return this._id.toHexString();
+});
+reservationSchema.set("toJSON", {
+   virtuals: true,
+});
 
 const Reservation = mongoose.model("Reservation", reservationSchema);
 module.exports = Reservation;

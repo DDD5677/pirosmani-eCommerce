@@ -97,8 +97,6 @@ router.get(`/`, async (req, res) => {
       );
       filter = JSON.parse(queryStr);
 
-      console.log(filter);
-
       totalProducts = await Product.countDocuments(filter).exec();
       if (!totalProducts) {
          return res.status(404).json({
@@ -113,7 +111,7 @@ router.get(`/`, async (req, res) => {
             message: "Page is not found!",
          });
       }
-      console.log("sort", req.query.sort);
+
       const productList = await Product.find(filter)
          .sort(req.query.sort)
          .skip((page - 1) * limit)
@@ -159,7 +157,7 @@ router.get(`/:id`, async (req, res, next) => {
             success: false,
          });
       }
-      console.log(product.ratings);
+
       res.status(200).send(product);
    } catch (error) {
       next(error);
@@ -278,33 +276,6 @@ router.delete("/", async (req, res, next) => {
       next(error);
    }
 });
-// router.delete("/", (req, res) => {
-//    Product.deleteMany({ _id: { $in: req.body.products } })
-//       .then((product) => {
-//          if (product) {
-//             Review.deleteMany({ product: product.id }).then((review) => {
-//                if (review) {
-//                   return res.status(200).json({
-//                      success: true,
-//                      message: "The product was deleted.",
-//                   });
-//                } else {
-//                   return res.status(404).json({
-//                      success: false,
-//                      message: "The product found but review is not found.",
-//                   });
-//                }
-//             });
-//          } else {
-//             return res
-//                .status(404)
-//                .json({ success: false, message: "The product is not found." });
-//          }
-//       })
-//       .catch((err) => {
-//          return res.status(400).json({ success: false, error: err });
-//       });
-// });
 
 router.get(`/get/count`, async (req, res) => {
    const productCount = await Product.countDocuments();

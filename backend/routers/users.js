@@ -28,34 +28,7 @@ const storage = multer.diskStorage({
 
 const uploadOptions = multer({ storage: storage });
 
-const authErrors = (err) => {
-   console.log(err.message, err.code);
-   let errors = {
-      name: "",
-      email: "",
-      password: "",
-      phone: "",
-   };
-   if (err.code === 11000) {
-      errors.email = "that email is already registered";
-      console.log(errors);
-      return errors;
-   }
-   if (err.message.includes("User validation failed")) {
-      Object.values(err.errors).forEach(({ properties }) => {
-         errors[properties.path] = properties.message;
-      });
-   }
-   if (err.message.includes("Validation failed")) {
-      Object.values(err.errors).forEach(({ properties }) => {
-         errors[properties.path] = properties.message;
-      });
-   }
-
-   return errors;
-};
-
-router.get(`/`, async (req, res) => {
+router.get(`/`, async (req, res, next) => {
    try {
       let filter = {};
       let page = 1;
@@ -77,7 +50,6 @@ router.get(`/`, async (req, res) => {
             ],
          };
       }
-      console.log(filter);
       totalUsers = await User.countDocuments(filter).exec();
       pageSize = Math.ceil(totalUsers / limit);
       if (page > pageSize) {
@@ -106,10 +78,7 @@ router.get(`/`, async (req, res) => {
          },
       });
    } catch (error) {
-      res.status(500).json({
-         success: false,
-         message: error.message,
-      });
+      next(error);
    }
 });
 
@@ -175,18 +144,17 @@ router.post("/", uploadOptions.single("avatar"), async (req, res, next) => {
    }
 });
 
-router.get("/get/user", async (req, res) => {
+router.get("/get/user", async (req, res, next) => {
    try {
       let token;
       let currentUser;
       const secret = process.env.secret;
-      console.log(req.headers["authorization"]);
+      console.log("token", req.headers["authorization"]);
       if (
          req.headers["authorization"] &&
          req.headers["authorization"].split(" ")[0] === "Bearer"
       ) {
          token = req.headers["authorization"].split(" ")[1];
-         console.log("token in if");
       } else {
          console.log("token is not found");
       }
@@ -206,16 +174,14 @@ router.get("/get/user", async (req, res) => {
 
       res.status(200).send({ user: user, token: token });
    } catch (error) {
-      console.log(error);
-      res.send(error);
+      next(error);
    }
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", async (req, res, next) => {
    try {
       const user = await User.findOne({ email: req.body.email });
       const secret = process.env.secret;
-      console.log(user);
       if (!user) {
          return res.status(400).send("the user not found");
       }
@@ -236,11 +202,14 @@ router.post("/login", async (req, res) => {
          res.status(400).send("password is wrong");
       }
    } catch (error) {
-      res.status(500).json(error);
+      next(error);
    }
 });
-router.post("/admin/login", async (req, res) => {
+router.post("/admin/login", async (req, res, next) => {
    try {
+      if (!req.body.email || !req.body.password) {
+         return res.status(400).json({ auth: "Please fill in all inputs" });
+      }
       const user = await User.findOne({ email: req.body.email });
       const secret = process.env.secret;
 
@@ -264,7 +233,7 @@ router.post("/admin/login", async (req, res) => {
          res.status(400).send("password is wrong");
       }
    } catch (error) {
-      res.status(500).json(error);
+      next(error);
    }
 });
 
@@ -338,7 +307,6 @@ router.put("/:id", uploadOptions.single("avatar"), async (req, res, next) => {
          updateBlock["password"] = newPassword;
       }
 
-      console.log(updateBlock);
       const user = await User.findOneAndUpdate(
          { _id: req.params.id },
          updateBlock,

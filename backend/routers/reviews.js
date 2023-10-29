@@ -34,7 +34,6 @@ router.get(`/`, async (req, res, next) => {
       }
 
       if (req.query.status) {
-         console.log(req.query.status);
          filter["status"] = req.query.status;
       }
       if (req.query.search) {
@@ -52,8 +51,6 @@ router.get(`/`, async (req, res, next) => {
          (match) => `$${match}`
       );
       filter = JSON.parse(queryStr);
-      console.log(req.query.product);
-      //console.log("test", mongoose.Types.ObjectId(req.query.product));
       if (req.query.product) {
          filter["product"] = new mongoose.Types.ObjectId(req.query.product);
       }
@@ -71,12 +68,9 @@ router.get(`/`, async (req, res, next) => {
       } else {
          sort.dateCreated = 1;
       }
-      console.log("filter", filter);
-      console.log("sort", sort);
       //---------------------------------------------
 
       totalReviews = await Review.countDocuments(filter).exec();
-      console.log("total", totalReviews);
       if (!totalReviews) {
          return res.status(200).json({
             reviewsList: [],
@@ -94,7 +88,6 @@ router.get(`/`, async (req, res, next) => {
             message: "Page is not found!",
          });
       }
-      console.log("test", (page - 1) * limit);
       const reviewsList = await Review.aggregate([
          {
             $match: filter,
@@ -152,7 +145,7 @@ router.get(`/:id`, async (req, res, next) => {
          "user",
          "product",
       ]);
-      console.log(review);
+
       if (!review) {
          res.status(500).json({
             success: false,
@@ -178,13 +171,6 @@ router.put("/", async (req, res, next) => {
       if (req.body.user) {
          filter["user"] = req.body.user;
       }
-      //create updateBlock
-      if (req.body.bodyText) {
-         updateBlock["bodyText"] = req.body.bodyText;
-      }
-      if (req.body.status) {
-         updateBlock["status"] = req.body.status;
-      }
       if (req.body.rating) {
          filter["rating"] = req.body.rating;
 
@@ -197,6 +183,14 @@ router.put("/", async (req, res, next) => {
             return res.status(404).send("rating is not accepted");
          }
       }
+      //create updateBlock
+      if (req.body.bodyText) {
+         updateBlock["bodyText"] = req.body.bodyText;
+      }
+      if (req.body.status) {
+         updateBlock["status"] = req.body.status;
+      }
+
       const reviews = await Review.findOneAndUpdate(filter, updateBlock, {
          new: true,
          runValidators: true,
@@ -214,39 +208,40 @@ router.put("/", async (req, res, next) => {
    }
 });
 
-router.post("/", async (req, res, next) => {
-   try {
-      let review = new Review({
-         product: req.body.product,
-         user: req.body.user,
-         bodyText: req.body.bodyText,
-         rating: req.body.rating,
-      });
+// router.post("/", async (req, res, next) => {
+//    try {
+//       let review = new Review({
+//          product: req.body.product,
+//          user: req.body.user,
+//          bodyText: req.body.bodyText,
+//          rating: req.body.rating,
+//       });
 
-      review = await review.save();
+//       review = await review.save();
 
-      if (!review) {
-         return res.status(404).send("the review cannot be created!");
-      }
+//       if (!review) {
+//          return res.status(404).send("the review cannot be created!");
+//       }
 
-      let key = `ratings.${req.body.rating}`;
-      const product = await Product.findByIdAndUpdate(req.body.product, {
-         $inc: { [key]: 1 },
-      });
+//       let key = `ratings.${req.body.rating}`;
+//       const product = await Product.findByIdAndUpdate(req.body.product, {
+//          $inc: { [key]: 1 },
+//       });
 
-      if (!product) {
-         return res.status(404).send("rating is not accepted");
-      }
+//       if (!product) {
+//          return res.status(404).send("rating is not accepted");
+//       }
 
-      res.send(review);
-   } catch (error) {
-      next(error);
-   }
-});
+//       res.send(review);
+//    } catch (error) {
+//       next(error);
+//    }
+// });
+
 router.delete("/", (req, res) => {
    Review.deleteMany({ _id: { $in: req.body.reviews } })
-      .then((user) => {
-         if (user) {
+      .then((review) => {
+         if (review) {
             return res
                .status(200)
                .json({ success: true, message: "The review was deleted." });

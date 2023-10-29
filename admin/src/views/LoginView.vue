@@ -155,6 +155,36 @@ export default {
 					show:true
 				}
 			],
+			reserv_options:[
+				{
+					title:'Customer',
+					show:true
+				},
+				{
+					title:'Phone',
+					show:true
+				},
+				{
+					title:'Number of people',
+					show:true
+				},
+				{
+					title:'Time',
+					show:true
+				},
+				{
+					title:'Date',
+					show:true
+				},
+				{
+					title:'Booked at',
+					show:true
+				},
+				{
+					title:'Status',
+					show:true
+				}
+			],
 			product_filters:[
 				{
 					title:'Min price',
@@ -226,11 +256,29 @@ export default {
 					show:false
 				}
 			],
+			reserv_filters:[
+				{
+					title:'Date',
+					source:'',
+					show:false
+				},
+				{
+					title:'Booked since',
+					source:'',
+					show:false
+				},
+				{
+					title:'Status',
+					source:'',
+					show:false
+				},
+			],
 			sorts:{
 				user:'',
 				product:'',
 				order:'',
-				review:''
+				review:'',
+				reservation:''
 			}
 		}
 	},
@@ -249,13 +297,17 @@ export default {
 			this.$store.dispatch('auth/login',data).then(()=>{
 				this.$router.push("/");
 				setItem('sorts',this.sorts)
+
 				setItem('user-options',this.user_options)
 				setItem('product-options',this.product_options)
 				setItem('order-options',this.order_options)
 				setItem('review-options',this.review_options)
+				setItem('reserv-options',this.reserv_options)
+
 				setItem('product-filters',this.product_filters)
 				setItem('order-filters',this.order_filters)
 				setItem('review-filters',this.review_filters)
+				setItem('reserv-filters',this.reserv_filters)
 			});
 		}
 	}

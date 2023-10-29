@@ -281,9 +281,8 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				}
 				console.log(data)
 				this.$store.dispatch('order/deleteOrders',data).then(()=>{
-					location.reload()
+					this.getOrders(this.$route.query.page,this.$route.query.limit)
 				});
-
 			},
 			//------------------------------------------------------------------------
 			getOrders(page,limit){

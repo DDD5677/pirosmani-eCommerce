@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import ReviewDetail from "@/components/ReviewDetail";
+import ReservationDetail from "@/components/ReservationDetail";
 import CategoryDetail from "@/components/CategoryDetail";
 import CategoryCreate from "@/components/CategoryCreate";
 import Info from "@/components/UI/Info";
@@ -14,6 +15,7 @@ import ProductRating from "@/components/UI/ProductRating";
 export default [
    Navbar,
    ReviewDetail,
+   ReservationDetail,
    CategoryDetail,
    CategoryCreate,
    Info,
