@@ -41,7 +41,6 @@ import { mapState } from 'vuex'
 
 .swiper {
    z-index: 0 !important;
-		
 	.swiper-pagination-bullet-active {
    	background-color: #fff;
    	width: 40px;

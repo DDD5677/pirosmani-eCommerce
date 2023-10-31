@@ -38,7 +38,7 @@ router.get(`/`, async (req, res, next) => {
             success: false,
          });
       }
-      res.send(categoryList);
+      res.status(200).send(categoryList);
    } catch (error) {
       next(error);
    }
@@ -119,7 +119,6 @@ router.put(
             updateBlock["name"] = req.body.name;
          }
          if (file.image) {
-            console.log("test", file.image[0].filename);
             const fileName = file.image[0].filename;
             updateBlock["image"] = `${basePath}${fileName}`;
          }

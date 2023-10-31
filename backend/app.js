@@ -14,6 +14,7 @@ const usersRouter = require("./routers/users");
 const ordersRouter = require("./routers/orders");
 const reviewsRouter = require("./routers/reviews");
 const reservationRouter = require("./routers/reservations");
+const bannerRouter = require("./routers/banners");
 const { authJwt } = require("./helpers/jwt");
 const errorHandler = require("./helpers/error-handler");
 
@@ -33,6 +34,7 @@ app.use(`${api}/users`, usersRouter);
 app.use(`${api}/orders`, ordersRouter);
 app.use(`${api}/reviews`, reviewsRouter);
 app.use(`${api}/reservations`, reservationRouter);
+app.use(`${api}/banners`, bannerRouter);
 
 app.use(errorHandler);
 mongoose

@@ -3,7 +3,7 @@ import OrderService from "@/server/orders";
 export const orderModule = {
    state: () => ({
       userOrder: {
-         orderNum: Math.floor(Math.random() * 10000000),
+         //orderNum: Math.floor(Math.random() * 10000000),
          orderProducts: [],
          totalSumm: 0,
       },
