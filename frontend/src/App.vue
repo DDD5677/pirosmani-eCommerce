@@ -4,14 +4,11 @@
 	<home-footer/>
 </template>
 <script>
-import HomeView from './views/HomeView.vue';
 export default{
-	components:{
-		HomeView
-	},
 	created(){
 		console.log('created');
 		this.$store.dispatch('product/getCategory');
+		this.$store.dispatch('info/getInfo');
 		this.$store.dispatch('auth/refresh');
 
 	},

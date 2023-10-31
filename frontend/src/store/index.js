@@ -5,6 +5,7 @@ import { navbarModule } from "@/store/navbarModule";
 import { authModule } from "./authModule";
 import { orderModule } from "./orderModule";
 import { bannerModule } from "./bannerModule";
+import { infoModule } from "./infoModule";
 
 export default createStore({
    modules: {
@@ -14,5 +15,6 @@ export default createStore({
       auth: authModule,
       order: orderModule,
       banner: bannerModule,
+      info: infoModule,
    },
 });

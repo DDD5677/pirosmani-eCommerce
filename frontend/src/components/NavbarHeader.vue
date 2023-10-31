@@ -72,9 +72,9 @@
                      </ul>
                   </div>
                   <div class="header__info">
-                     <a class="phone" href="tel:+998903385677">
+                     <a v-if="!infoLoading" class="phone" :href="'tel:'+mainPhone">
                         <img src="@/assets/images/nav-phone.svg" alt="" />
-                        <span>+998 (90) 338-56-77</span>
+                        <span>{{ mainPhone }}</span>
                      </a>
                      <a
 							v-if="!isLogged"
@@ -128,7 +128,8 @@ import { mapState,mapMutations } from 'vuex';
 				user:state=>state.auth.user,
 				isLogged:state=>state.auth.isLogged,
 				orderProducts:state=>state.order.userOrder.orderProducts,
-
+				mainPhone:state=>state.info.info.mainPhone,
+				infoLoading:state=>state.info.isLoading
 			}),
 			afterShoppingCard(){
 				if(this.orderProducts.length===0){

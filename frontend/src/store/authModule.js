@@ -73,14 +73,11 @@ export const authModule = {
             context.commit("loginStart");
             AuthService.login(user)
                .then((response) => {
-                  console.log("login response", response);
                   setItem("token", response.data.token);
                   context.commit("loginSuccess", response.data);
-                  window.location.reload();
                   resolve();
                })
                .catch((error) => {
-                  console.log("error login", error);
                   context.commit("loginFailure", error.response.data);
                });
          });
@@ -90,12 +87,10 @@ export const authModule = {
             context.commit("loginStart");
             AuthService.refresh()
                .then((response) => {
-                  console.log("refresh");
                   setItem("token", response.data.token);
                   context.commit("loginSuccess", response.data);
                })
                .catch((error) => {
-                  console.log("error refresh", error);
                   context.commit("loginFailure", error.response.data);
                });
          });
@@ -105,11 +100,9 @@ export const authModule = {
             context.commit("updateStart");
             AuthService.updateUserInfo(updateUser)
                .then((response) => {
-                  console.log("update", response.data);
                   context.commit("updateSuccess", response.data);
                })
                .catch((error) => {
-                  console.log("error update", error);
                   context.commit("updateFailure", error.response.data);
                });
          });

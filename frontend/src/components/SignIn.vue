@@ -59,6 +59,7 @@ export default {
 	},
 	methods:{
 		...mapMutations({
+			toggleModal:'navbar/toggleModal',
 			toggleSignUp:'navbar/toggleSignUp',
 			toggleForgotPassword:'navbar/toggleForgotPassword'
 		}),
@@ -69,7 +70,8 @@ export default {
 			}
 			
 			this.$store.dispatch('auth/login',data).then(user=>{
-				//window.location.reload()
+				this.$store.dispatch('auth/refresh');
+				this.toggleModal(false)
 			});
 		}
 	}

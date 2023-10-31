@@ -6,29 +6,29 @@
                   <div class="info__phones">
                      <div class="phone">
                         <span>Бесплатный звонок по Узбекистану</span>
-                        <a href="tel:+998903385677" class="phone__link"
-                           >+998 (90) 338-56-77</a
+                        <a v-if="!isLoading" :href="'tel:'+info.mainPhone" class="phone__link"
+                           >{{ info.mainPhone }}</a
                         >
                      </div>
                      <div class="phone">
                         <span>Для приема заказов</span>
-                        <a href="tel:+998903385677" class="phone__link"
-                           >+998 (90) 338-56-77</a
+                        <a v-if="!isLoading" :href="'tel:'+info.orderPhone" class="phone__link"
+                           >{{ info.orderPhone }}</a
                         >
                      </div>
                   </div>
-                  <div class="info__right">
+                  <div v-if="!isLoading" class="info__right">
                      <div class="info__data">
-                        График работы по будням с 9:00 до 18:00
+                        График работы по будням с {{ info.workingTimeFrom }} до {{ info.workingTimeTo }}
                      </div>
                      <a href="email:djumaqulovdonisher@mail.ru" class="info__email"
-                        >Email: djumaqulovdonisher@mail.ru</a
+                        >Email: {{ info.email }}</a
                      >
                   </div>
                </div>
-               <div class="info__social">
-                  <a href="https://t.me/DDDJ_5677" class="social__contact">Мы в Телеграмме ></a>
-                  <a href="https://instagram.com/djumaqulov_5677?igshid=OGQ5ZDc2ODk2ZA==" class="social__instagram">Мы в instagram ></a>
+               <div v-if="!isLoading" class="info__social">
+                  <a :href="info.telegram" class="social__contact">Мы в Телеграмме ></a>
+                  <a :href="info.instagram" class="social__instagram">Мы в instagram ></a>
                </div>
                <div class="info__login">
                   <a @click="toggleModalHandler" class="login__link"
@@ -48,9 +48,15 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 	export default {
 		name:'home-footer',
+		computed:{
+			...mapState({
+				info:state=>state.info.info,
+				isLoading:state=>state.info.isLoading
+			})
+		},
 		methods:{
 			...mapMutations({
 				toggleModal:'navbar/toggleModal',

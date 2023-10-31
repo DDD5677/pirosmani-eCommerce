@@ -3,6 +3,7 @@
          <div class="container">
             <div class="home__video-wrapper">
 					<iframe
+						v-if="!isLoading"
 						class="video"
 						:src="videoLink+'&rel=0'"
 						title="YouTube video player"
@@ -16,13 +17,20 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 	export default {
 		name:'home-video',
 		data(){
 			return{
-				videoLink:'https://www.youtube.com/embed/bQUg2Z2Gny4?si=vqf8D0JiHNoMJFPf',
+				//videoLink:'https://www.youtube.com/embed/bQUg2Z2Gny4?si=vqf8D0JiHNoMJFPf',
 				
 			}
+		},
+		computed:{
+			...mapState({
+				videoLink:state=>state.info.info.video,
+				isLoading:state=>state.info.isLoading
+			})
 		},
 		methods:{
 			
