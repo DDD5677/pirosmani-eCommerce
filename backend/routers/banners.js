@@ -46,7 +46,6 @@ router.get(`/`, async (req, res, next) => {
 
 router.post("/", uploadOptions.single("image"), async (req, res, next) => {
    try {
-      console.log(req.body);
       let postBlock = {
          title: req.body.title,
          subtitle: req.body.subtitle,
