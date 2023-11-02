@@ -15,18 +15,22 @@
 				:pagination="{ clickable: true }"
 				class="swiper home__bannerSwiper">
                
-                  <swiper-slide v-for="(banner,index) in banners" :key="index" class="home__banner-wrapper swiper-slide">
-                     <div class="left">
-                        <h1 class="title">{{ banner.title }}</h1>
-                        <div class="subtitle">
-                           {{ banner.subtitle }}
-                        </div>
-                        <green-btn @click="this.$router.push(banner.link)">{{ banner.button }}</green-btn>
-                     </div>
-                     <div class="right">
-                        <img :src="banner.image" alt="" />
-                     </div>
-                  </swiper-slide>
+					<swiper-slide v-for="(banner,index) in banners" :key="index" class="home__banner-wrapper swiper-slide">
+						<div class="left">
+							<div>
+								<h1 class="title">{{ banner.title }}</h1>
+								<div class="subtitle">
+									{{ banner.subtitle }}
+								</div>
+							</div>
+							<div>
+								<green-btn @click="this.$router.push(banner.link)">{{ banner.button }}</green-btn>
+							</div>
+						</div>
+						<div class="right">
+							<img :src="banner.image" alt="" />
+						</div>
+					</swiper-slide>
             </swiper>
          </div>
       </section>
@@ -125,6 +129,9 @@ import img1 from '@/assets/images/home__banner-bg.png';
       .left {
          padding: 40px 0 50px 40px;
          flex: 0 0 60%;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
       }
 
       .right {
@@ -161,7 +168,7 @@ import img1 from '@/assets/images/home__banner-bg.png';
 
 	@media (max-width: 1019px){
 		.home__banner-wrapper{
-			height: 250px;
+			height: 300px;
 			.left{
 				.subtitle{
 					margin-bottom: 20px;

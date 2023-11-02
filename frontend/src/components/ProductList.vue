@@ -46,6 +46,7 @@ import {mapState, mapGetters} from 'vuex';
       display: grid;
 		grid-template-columns: repeat(5,1fr);
       grid-column-gap:15px;
+		margin-bottom: 20px;
 		@media (max-width: 1030px){
 			grid-template-columns: repeat(4, 1fr);
 

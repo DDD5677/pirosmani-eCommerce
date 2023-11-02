@@ -50,6 +50,7 @@
 		</div>
 		<green-btn
 			class="green__btn"
+			:disabled="isLoading"
 			@click.prevent="submitHandler">
 		Зарегистрироваться
 		</green-btn>
@@ -73,7 +74,8 @@ import { mapMutations, mapState } from 'vuex';
 		},
 		computed:{
 			...mapState({
-				errors:state=>state.auth.errors
+				errors:state=>state.auth.errors,
+				isLoading:state=>state.auth.isLoading,
 			})
 		},
 		methods:{

@@ -14,7 +14,7 @@
 			</p>
 		</div>
 		<div class="card__box">
-			<product-rating :rating="product.rate"/>
+			<product-rating :rating="product.ratings"/>
 		<div class="card__price">
 			{{ product.price }} ₽/кг<span>За 500гр.</span>
 			

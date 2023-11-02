@@ -12,6 +12,9 @@ export const orderModule = {
    }),
    getters: {},
    mutations: {
+      cleanErrors(state) {
+         state.errors = null;
+      },
       deleteProduct(state, id) {
          state.userOrder.orderProducts = state.userOrder.orderProducts.filter(
             (order) => order.product.id !== id

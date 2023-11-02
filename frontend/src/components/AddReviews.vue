@@ -50,6 +50,7 @@ export default {
 				bodyText:this.bodyText
 			}
 			this.$store.dispatch('singleProduct/postReviews',data).then(()=>{
+				this.$store.dispatch('singleProduct/getReviews',this.$route.params.id);
 				this.toggleModal(false)
 				this.bodyText=null;
 				this.rating=null;

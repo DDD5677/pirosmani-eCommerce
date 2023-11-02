@@ -14,7 +14,7 @@
                <div class="product__info">
                   <div class="product__info-left">
                      <h3 class="title">{{ product.name }}</h3>
-                     <product-rating :rating="product.rate"></product-rating>
+                     <product-rating :rating="product.ratings"></product-rating>
                      <div class="product__reviews">
                         Кол-во отзывов: <span>23</span>
                      </div>
@@ -25,7 +25,7 @@
                      </div>
                      <div class="product__amount">
                         <span>Кол-во шт в упаковке</span
-                        ><span class="num">4 шт.</span>
+                        ><span class="num">{{ product.countInStock }} шт.</span>
                      </div>
                      <div class="amount__calc">
                         <span>Количество</span>
@@ -400,8 +400,6 @@ import {mapActions, mapMutations, mapState} from 'vuex';
 }
 @media(max-width:540px){
 	.page__product {
-      padding-bottom: 0;
-
       .product__top {
          .product__img {
 

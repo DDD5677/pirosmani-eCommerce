@@ -3,7 +3,7 @@
          <div class="container">
             <div class="home__video-wrapper">
 					<iframe
-						v-if="!isLoading"
+						
 						class="video"
 						:src="videoLink+'&rel=0'"
 						title="YouTube video player"
@@ -22,13 +22,13 @@ import { mapState } from 'vuex';
 		name:'home-video',
 		data(){
 			return{
-				//videoLink:'https://www.youtube.com/embed/bQUg2Z2Gny4?si=vqf8D0JiHNoMJFPf',
+				videoLink:'https://www.youtube.com/embed/bQUg2Z2Gny4?si=vqf8D0JiHNoMJFPf',
 				
 			}
 		},
 		computed:{
 			...mapState({
-				videoLink:state=>state.info.info.video,
+				//videoLink:state=>state.info.info.video,
 				isLoading:state=>state.info.isLoading
 			})
 		},
@@ -39,13 +39,20 @@ import { mapState } from 'vuex';
 </script>
 
 <style lang="scss" scoped>
-	.home__video-wrapper {
-	
+.home__video-wrapper {
 	iframe {
 		width: 100%;
 		height: auto;
 		aspect-ratio: 21 / 9;
     	border: 0;
+	}
+}
+@media(max-width:540px){
+	.home__video-wrapper {
+	
+		iframe {
+			aspect-ratio: 16 / 9;
+		}
 	}
 }
 </style>

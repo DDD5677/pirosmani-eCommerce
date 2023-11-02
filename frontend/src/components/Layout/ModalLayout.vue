@@ -6,7 +6,7 @@
 			<button
 				type="button"
 				class="btn-close"
-				@click="toggleModal(false)"
+				@click="close"
 			></button>
 			
 			<slot></slot>
@@ -21,12 +21,23 @@
 			computed:{
 				...mapState({
 					showModal:state=>state.navbar.showModal,
+					bookTable:state=>state.navbar.bookTable,
 				})
 			},
 			methods:{
 				...mapMutations({
 					toggleModal:'navbar/toggleModal',
-			}),
+					cleanOrderErrors:'order/cleanErrors',
+					cleanAuthErrors:'auth/cleanErrors',
+				}),
+				close(){
+					this.toggleModal(false);
+					if(this.bookTable){
+						this.cleanOrderErrors()
+					}else{
+						this.cleanAuthErrors()
+					}
+				}
 			}
 		}
 	</script>
@@ -51,16 +62,17 @@
 			margin: 0 auto;
 			position: relative;
 			text-align: center;
-			width: 384px;
-			padding: 30px 46px;
+			width: min(384px, 90%);
+			padding: 30px 35px;
 			.btn-close {
-				width: 25px;
-				height: 25px;
+				width: 30px;
+				height: 30px;
 				position: absolute;
 				top: 15px;
 				right: 15px;
 				background-image: url(@/assets/images/modal__btn-close.svg);
-				background-size: cover;
+				background-size: 130%;
+				background-position: center;
 				background-color: transparent;
 				opacity: 1;
 				cursor: pointer;

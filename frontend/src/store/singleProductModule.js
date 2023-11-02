@@ -6,6 +6,7 @@ export const singleProductModule = {
       totalSumm: 0,
       reviewsList: null,
       isLoading: true,
+      reviewLoading: true,
       errors: null,
    }),
    mutations: {
@@ -27,14 +28,14 @@ export const singleProductModule = {
          state.errors = payload;
       },
       reviewsStart(state) {
-         state.isLoading = true;
+         state.reviewLoading = true;
          state.errors = null;
       },
       reviewsSuccess(state) {
-         state.isLoading = false;
+         state.reviewLoading = false;
       },
       reviewsFailure(state, payload) {
-         state.isLoading = false;
+         state.reviewLoading = false;
          state.errors = payload;
       },
       getReviewsStart(state) {

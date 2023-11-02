@@ -970,7 +970,9 @@
 
    .personal__tab {
       .personal__info {
-         flex-direction: column;
+         form {
+            flex-direction: column;
+         }
       }
    }
 }
@@ -1242,18 +1244,18 @@
 
 
 
-            img {
-               width: 20px;
-               height: 20px;
-            }
+            // img {
+            //    width: 25px;
+            //    height: 25px;
+            // }
 
             .phone {
                height: 24px;
 
-               img {
-                  width: 18px;
-                  height: 18px;
-               }
+               // img {
+               //    width: 25px;
+               //    height: 25px;
+               // }
             }
          }
       }
@@ -1660,7 +1662,7 @@
       .navbar {
          .logo-wrapper {
             .navbar-brand {
-               margin-left: 25px;
+               margin: 0 10px;
             }
          }
 

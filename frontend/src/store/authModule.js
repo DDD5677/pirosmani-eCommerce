@@ -6,15 +6,19 @@ export const authModule = {
       isLoading: true,
       user: null,
       errors: null,
+      updateErrors: null,
       isLogged: null,
    }),
    mutations: {
+      cleanErrors(state) {
+         state.errors = null;
+      },
       addOrder(state, product) {
          state.user.user.orders.push(product);
       },
       registerStart(state) {
          state.isLoading = true;
-         state.user = null;
+         //state.user = null;
          state.errors = null;
       },
       registerSuccess(state, payload) {
@@ -27,7 +31,7 @@ export const authModule = {
       },
       loginStart(state) {
          state.isLoading = true;
-         state.user = null;
+         //state.user = null;
          state.errors = null;
          state.isLogged = null;
       },
@@ -43,7 +47,7 @@ export const authModule = {
       },
       updateStart(state) {
          state.isLoading = true;
-         state.errors = null;
+         state.updateErrors = null;
       },
       updateSuccess(state, payload) {
          state.isLoading = false;
@@ -51,7 +55,7 @@ export const authModule = {
       },
       updateFailure(state, payload) {
          state.isLoading = false;
-         state.errors = payload;
+         state.updateErrors = payload;
       },
    },
    actions: {

@@ -121,7 +121,7 @@ import { removeItem } from "@/helpers/localStorage";
 		computed:{
 			...mapState({
 				user:state=>state.auth.user.user,
-				errors:state=>state.auth.errors,
+				errors:state=>state.auth.updateErrors,
 			})
 		},
 		methods:{

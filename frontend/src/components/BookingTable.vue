@@ -134,9 +134,9 @@ import { mapState,mapMutations } from 'vuex'
 .modal__body {
 	.title {
 		font-weight: 500;
-		font-size: 24px;
+		font-size: 18px;
 		line-height: 18px;
-		margin: 20px 0;
+		margin: 20px 0 30px;
 	}
 	
 
@@ -234,6 +234,7 @@ import { mapState,mapMutations } from 'vuex'
 		font-weight: 500;
 		font-size: 16.2592px;
 		line-height: 21px;
+		margin-top: 10px;
 	}
 }
    

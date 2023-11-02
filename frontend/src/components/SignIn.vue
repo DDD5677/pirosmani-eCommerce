@@ -16,7 +16,7 @@
 					v-model="password"
 				/>
 				<span class="error__text active"
-					>{{ errors?errors.auth:'' }}</span
+					>{{ errors?errors:'' }}</span
 				>
 				<div class="forgot__password">
 					<a
@@ -144,13 +144,14 @@ export default {
 	}
 
 	.enter__profile {
+		margin-top: 20px;
 		padding-top: 13px;
 		padding-bottom: 13px;
 		display: inline-block;
 		width: 143.2px;
 		height: 45.41px;
 		font-weight: 500;
-		font-size: 14.1972px;
+		font-size: 16px;
 		line-height: 18px;
 	}
 

@@ -90,8 +90,8 @@ box-shadow: -1px 10px 17px -5px rgba(45, 104, 45, 0.2);
 		}
 	}
 	.profile{
-		width: 30px;
-		height: 30px;
+		width: 35px;
+		height: 35px;
 		background-color: $main-color;
 		color: #fff;
 		display: flex;
@@ -101,13 +101,14 @@ box-shadow: -1px 10px 17px -5px rgba(45, 104, 45, 0.2);
 		border-radius: 50%;
 		cursor: pointer;
 		a{
-			height: 30px;
-			width: 30px;
+			height: 35px;
+			width: 35px;
 		}
 		img{
-			width: 30px;
-			height: 30px;
+			width: 35px;
+			height: 35px;
 			border-radius: 50%;
+			object-fit: cover;
 		}
 	}
 	&-toggle{

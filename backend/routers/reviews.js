@@ -171,8 +171,9 @@ router.put("/", async (req, res, next) => {
       if (req.body.user) {
          filter["user"] = req.body.user;
       }
+      //create updateBlock
       if (req.body.rating) {
-         filter["rating"] = req.body.rating;
+         updateBlock["rating"] = req.body.rating;
 
          let key = `ratings.${req.body.rating}`;
          const product = await Product.findByIdAndUpdate(req.body.product, {
@@ -183,7 +184,7 @@ router.put("/", async (req, res, next) => {
             return res.status(404).send("rating is not accepted");
          }
       }
-      //create updateBlock
+
       if (req.body.bodyText) {
          updateBlock["bodyText"] = req.body.bodyText;
       }
