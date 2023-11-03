@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const fs = require("fs");
+const path = require("path");
 const Category = require("../models/category");
 const multer = require("multer");
 const mongoose = require("mongoose");
@@ -118,11 +120,26 @@ router.put(
          if (req.body.name) {
             updateBlock["name"] = req.body.name;
          }
+         const categoryInfo = await Category.findById(req.params.id);
          if (file.image) {
+            if (categoryInfo.image) {
+               const img = categoryInfo.image.split("/");
+               img.splice(0, 3);
+               const result = path.join(__dirname, "../", ...img);
+               console.log("result", result);
+               fs.unlinkSync(result);
+            }
             const fileName = file.image[0].filename;
             updateBlock["image"] = `${basePath}${fileName}`;
          }
          if (file.icon) {
+            if (categoryInfo.icon) {
+               const img = categoryInfo.icon.split("/");
+               img.splice(0, 3);
+               const result = path.join(__dirname, "../", ...img);
+               console.log("result", result);
+               fs.unlinkSync(result);
+            }
             const fileName = file.icon[0].filename;
             updateBlock["icon"] = `${basePath}${fileName}`;
          }
@@ -146,6 +163,20 @@ router.delete("/:id", (req, res) => {
    Category.findByIdAndRemove(req.params.id)
       .then((category) => {
          if (category) {
+            if (category.image) {
+               const img = category.image.split("/");
+               img.splice(0, 3);
+               const result = path.join(__dirname, "../", ...img);
+               console.log("result", result);
+               fs.unlinkSync(result);
+            }
+            if (category.icon) {
+               const img = category.icon.split("/");
+               img.splice(0, 3);
+               const result = path.join(__dirname, "../", ...img);
+               console.log("result", result);
+               fs.unlinkSync(result);
+            }
             return res
                .status(200)
                .json({ success: true, message: "The category was deleted." });

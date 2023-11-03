@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const fs = require("fs");
+const path = require("path");
 const Product = require("../models/product");
 const Category = require("../models/category");
 const mongoose = require("mongoose");
@@ -99,9 +101,13 @@ router.get(`/`, async (req, res) => {
 
       totalProducts = await Product.countDocuments(filter).exec();
       if (!totalProducts) {
-         return res.status(404).json({
-            success: false,
-            message: "There is not product",
+         return res.status(200).send({
+            productList: [],
+            pagination: {
+               pageSize: pageSize,
+               limit: limit,
+               page: page,
+            },
          });
       }
       pageSize = Math.ceil(totalProducts / limit);
@@ -199,7 +205,7 @@ router.post(`/`, uploadOptions.single("image"), async (req, res, next) => {
    }
 });
 
-router.put("/:id", uploadOptions.single("image"), async (req, res, error) => {
+router.put("/:id", uploadOptions.single("image"), async (req, res, next) => {
    try {
       if (!mongoose.isValidObjectId(req.params.id)) {
          return res.status(400).send("Invalid Product ID");
@@ -228,6 +234,13 @@ router.put("/:id", uploadOptions.single("image"), async (req, res, error) => {
       }
 
       if (file) {
+         const productInfo = await Product.findById(req.params.id);
+         if (productInfo.img) {
+            const img = productInfo.img.split("/");
+            img.splice(0, 3);
+            const result = path.join(__dirname, "../", ...img);
+            fs.unlinkSync(result);
+         }
          basePath = `${req.protocol}://${req.get("host")}/public/uploads/`;
          fileName = req.file.filename;
          updateBlock["img"] = `${basePath}${fileName}`;
@@ -255,6 +268,13 @@ router.delete("/", async (req, res, next) => {
             const removedProduct = await Product.findByIdAndRemove(product);
             if (removedProduct) {
                await Review.findOneAndRemove({ product: removedProduct.id });
+               if (removedProduct.img) {
+                  const img = removedProduct.img.split("/");
+                  img.splice(0, 3);
+                  const result = path.join(__dirname, "../", ...img);
+                  console.log("result", result);
+                  fs.unlinkSync(result);
+               }
             } else {
                return res.status(404).json({
                   success: false,

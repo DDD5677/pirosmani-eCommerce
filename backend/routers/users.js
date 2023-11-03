@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const fs = require("fs");
+const path = require("path");
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -283,6 +285,14 @@ router.put("/:id", uploadOptions.single("avatar"), async (req, res, next) => {
       const file = req.file;
 
       if (file) {
+         const userInfo = await User.findById(req.params.id);
+         if (userInfo.image) {
+            const img = userInfo.image.split("/");
+            img.splice(0, 3);
+            const result = path.join(__dirname, "../", ...img);
+            console.log("result", result);
+            fs.unlinkSync(result);
+         }
          basePath = `${req.protocol}://${req.get("host")}/public/avatars/`;
          fileName = req.file.filename;
          updateBlock["image"] = `${basePath}${fileName}`;
@@ -324,22 +334,41 @@ router.put("/:id", uploadOptions.single("avatar"), async (req, res, next) => {
    }
 });
 
-router.delete("/", (req, res) => {
-   User.deleteMany({ _id: { $in: req.body.users } })
-      .then((user) => {
-         if (user) {
-            return res
-               .status(200)
-               .json({ success: true, message: "The user was deleted." });
-         } else {
-            return res
-               .status(404)
-               .json({ success: false, message: "The user is not found." });
-         }
-      })
-      .catch((err) => {
-         return res.status(400).json({ success: false, error: err });
-      });
+router.delete("/", async (req, res) => {
+   try {
+      const users = req.body.users;
+      if (users) {
+         await users.forEach(async (user) => {
+            const removedUser = await User.findByIdAndRemove(user);
+            console.log("removedUser", removedUser);
+            if (removedUser) {
+               if (removedUser.image) {
+                  const img = removedUser.image.split("/");
+                  img.splice(0, 3);
+                  const result = path.join(__dirname, "../", ...img);
+                  console.log("result", result);
+                  fs.unlinkSync(result);
+               }
+            } else {
+               return res.status(404).json({
+                  success: false,
+                  message: "The User is not found.",
+               });
+            }
+         });
+         return res.status(200).json({
+            success: true,
+            message: "The User was deleted.",
+         });
+      } else {
+         return res.status(200).json({
+            success: true,
+            message: "There is not User in request.",
+         });
+      }
+   } catch (error) {
+      next(error);
+   }
 });
 
 router.get(`/get/count`, async (req, res) => {

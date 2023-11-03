@@ -8,7 +8,6 @@
                      /></router-link>
                      <button
                         class="navbar-toggler"
-								
 								@click="showNavbarHandler(!showNavbar)"
 								:class="{'collapsed':showNavbar}"
                      >
