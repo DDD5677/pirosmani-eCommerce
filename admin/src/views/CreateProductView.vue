@@ -1,5 +1,5 @@
 <template>
-	<section class="create__users">
+	<section class="create__products">
 		<div class="container">
 			<h2 class="title">Please fill in the Product information</h2>
 			<div class="blocks">
@@ -157,8 +157,7 @@ import { mapMutations, mapState } from 'vuex';
 </script>
 
 <style lang="scss" scoped>
-.create__users{
-	padding: 120px 0 50px;
+.create__products{
 	.title{
 		font-size: 24px;
 		font-weight: 500;

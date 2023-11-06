@@ -125,7 +125,7 @@ import img1 from '@/assets/images/home__banner-bg.png';
       border-radius: 18px;
 		overflow: hidden;
       display: flex;
-		//height: 200px;
+		height: 300px;
       .left {
          padding: 40px 0 50px 40px;
          flex: 0 0 60%;

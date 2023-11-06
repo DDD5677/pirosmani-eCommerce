@@ -240,7 +240,6 @@ import { getItem, setItem } from '@/helpers/localStorage';
 
 <style lang="scss" scoped>
 	.users{
-		padding: 100px 0 40px;
 
 		.table__nav{
 			display: flex;
@@ -305,7 +304,6 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					background-color: #fff;
 					padding: 15px;
 					border-radius: 15px;
-					width: 160px;
 					-webkit-box-shadow: 2px 12px 59px 3px rgba(34, 60, 80, 0.2);
 					-moz-box-shadow: 2px 12px 59px 3px rgba(34, 60, 80, 0.2);
 					box-shadow: 2px 12px 59px 3px rgba(34, 60, 80, 0.2);	

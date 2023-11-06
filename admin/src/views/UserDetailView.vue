@@ -211,7 +211,6 @@ import { mapMutations, mapState } from 'vuex';
 
 <style lang="scss" scoped>
 .user__detail{
-	padding: 120px 0 50px;
 	.title{
 		font-size: 24px;
 		font-weight: 500;

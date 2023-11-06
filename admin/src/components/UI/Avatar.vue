@@ -25,6 +25,7 @@
 
 <style lang="scss" scoped>
 .avatar__link{
+	display: inline-block;
 	width: v-bind(width);
 	height: v-bind(width);
 }

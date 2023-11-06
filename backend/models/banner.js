@@ -18,6 +18,10 @@ const bannerSchema = new mongoose.Schema(
          type: String,
          required: [true, "Please select image"],
       },
+      button: {
+         type: String,
+         required: [true, "Please enter button text"],
+      },
    },
    { timestamps: true }
 );

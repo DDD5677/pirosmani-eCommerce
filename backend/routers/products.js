@@ -242,7 +242,7 @@ router.put("/:id", uploadOptions.single("image"), async (req, res, next) => {
             fs.unlinkSync(result);
          }
          basePath = `${req.protocol}://${req.get("host")}/public/uploads/`;
-         fileName = req.file.filename;
+         fileName = file.filename;
          updateBlock["img"] = `${basePath}${fileName}`;
       }
 

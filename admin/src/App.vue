@@ -50,7 +50,9 @@ html {
    height: 100vh;
    //overflow-x: hidden;
 }
-
+body{
+	background-color: rgba($color: $main-color, $alpha: .03);
+}
 a{
 	text-decoration: none;
 
@@ -59,8 +61,12 @@ ul{
 	list-style: none;
 }
 .container{
-	max-width: 1200px;
-	margin: 0 auto;
-	padding: 0 10px;
+	margin: 0 20px 0px 0;
+	padding: 15px 15px 30px;
+	background-color: #fff;
+	border-radius: 10px;
+	-webkit-box-shadow: 1px -1px 8px 0px rgba($color: $main-color, $alpha: .2);
+	-moz-box-shadow: 1px -1px 8px 0px rgba($color: $main-color, $alpha: .2);
+	box-shadow: 1px -1px 8px 0px rgba($color: $main-color, $alpha: .2);
 }
 </style>

@@ -121,7 +121,17 @@ import { mapMutations, mapState } from 'vuex';
 					avatar:this.avatar,
 				}
 				console.log(data)
-				this.$store.dispatch('user/postUsers',data)
+				this.$store.dispatch('user/postUsers',data).then(()=>{
+					this.name='';
+					this.surname='';
+					this.email=''
+					this.admin=false
+					this.phone=''
+					this.extraPhone=null
+					this.password=''
+					this.avatar=null
+					this.$refs.imageName.innerText = '';
+				})
 			}
 		}
 		
@@ -130,7 +140,6 @@ import { mapMutations, mapState } from 'vuex';
 
 <style lang="scss" scoped>
 .create__users{
-	padding: 120px 0 50px;
 	.title{
 		font-size: 24px;
 		font-weight: 500;

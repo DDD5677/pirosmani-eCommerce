@@ -133,7 +133,6 @@ import { mapMutations, mapState } from 'vuex';
 
 <style lang="scss" scoped>
 .order-detail{
-	padding: 120px 0 50px;
 	.order-detail__inner{
 		font-size: 16px;
 		.main-title{

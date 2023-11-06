@@ -202,7 +202,6 @@
 			resize: none;
 			padding: 10px;
 			font-size: 16px;
-			
 		}
 	}
 	.review-btns{

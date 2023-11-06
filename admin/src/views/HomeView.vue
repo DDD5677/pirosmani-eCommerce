@@ -45,7 +45,7 @@
 								</li>
 							</ul>
 						</div>
-						<a class="see__all" href="">See all reviews</a>
+						<router-link class="see__all" :to="{name:'reviews',query:{page:1,limit:10}}">See all reviews</router-link>
 
 
 					</div>
@@ -63,7 +63,7 @@
 								</li>
 							</ul>
 						</div>
-						<a class="see__all" href="">See all reviews</a>
+						<router-link class="see__all" :to="{name:'users',query:{page:1,limit:10}}">See all customers</router-link>
 
 					</div>
 				</div>
@@ -114,7 +114,6 @@ import { mapState } from 'vuex';
 
 <style lang="scss" scoped>
 .dashboard{
-	padding: 100px 0 50px;
 	.dashboard_inner{
 		display: flex;
 		align-items: flex-start;
@@ -199,7 +198,7 @@ import { mapState } from 'vuex';
 					display: flex;
 					align-items: center;
 					width: 100%;
-					padding: 10px 15px;
+					padding: 5px 15px;
 					cursor: pointer;
 					transition: all 0.3s ease-in-out;
 					&:hover{
@@ -223,8 +222,7 @@ import { mapState } from 'vuex';
 			}
 			.reviews{
 				.review__info{
-					
-					margin-left: 15px;
+					margin-left: 10px;
 					font-size: 14px;
 					line-height: 1.2;
 					color: rgba(0, 0, 0, 0.6);
@@ -237,7 +235,7 @@ import { mapState } from 'vuex';
 			}
 			.customers{
 				.user__info{
-					margin-left: 15px;
+					margin-left: 10px;
 				}
 				.item{
 					align-items: center;

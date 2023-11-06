@@ -1,34 +1,35 @@
 <template>
 	<section class="products">
+		<div class="filter">
+			<div v-for="(filter,index) in filters" :id="index">
+				<div v-if="filter.show&&(filter.title!=='Featured')&&(filter.title!=='Category')">
+					<span>{{ filter.title }}</span>
+					<input type="number" :placeholder="filter.title" v-model="filter.source" @change="sumbitFilters">
+					<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
+				</div>
+				<div v-if="filter.show&&(filter.title==='Featured')">
+					<span>{{ filter.title }}</span>
+					<select name="status" id="status" v-model="filter.source" @change="sumbitFilters">
+						<option value="" selected disabled hidden >Select an option</option>
+						<option value="true">Featured</option>
+						<option value="false">Not Featured</option>
+					</select>
+					<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
+				</div>
+				<div v-if="filter.show&&(filter.title==='Category')">
+					<span>{{ filter.title }}</span>
+					<select name="Category" id="Category" v-model="filter.source" @change="sumbitFilters">
+						<option value="" selected disabled hidden >Select an option</option>
+						<option v-for="category in categories" :id="category.id" :value="category.id">{{ category.name }}</option>
+					</select>
+					<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
+				</div>
+			</div>
+		</div>
 		<div class="container">
 			<div  class="products__inner">
 				<div class="table__nav">
-					<div class="filter">
-						<div v-for="(filter,index) in filters" :id="index">
-							<div v-if="filter.show&&(filter.title!=='Featured')&&(filter.title!=='Category')">
-								<span>{{ filter.title }}</span>
-								<input type="number" :placeholder="filter.title" v-model="filter.source" @change="sumbitFilters">
-								<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
-							</div>
-							<div v-if="filter.show&&(filter.title==='Featured')">
-								<span>{{ filter.title }}</span>
-								<select name="status" id="status" v-model="filter.source" @change="sumbitFilters">
-									<option value="" selected disabled hidden >Select an option</option>
-									<option value="true">Featured</option>
-									<option value="false">Not Featured</option>
-								</select>
-								<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
-							</div>
-							<div v-if="filter.show&&(filter.title==='Category')">
-								<span>{{ filter.title }}</span>
-								<select name="Category" id="Category" v-model="filter.source" @change="sumbitFilters">
-									<option value="" selected disabled hidden >Select an option</option>
-									<option v-for="category in categories" :id="category.id" :value="category.id">{{ category.name }}</option>
-								</select>
-								<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
-							</div>
-						</div>
-					</div>
+					
 					<div class="filters">
 						<div class="search">
 							<input type="text" placeholder="Search" v-model="search" class="search__input" @change="getProducts(1,this.$route.query.limit)">
@@ -338,11 +339,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 
 <style lang="scss" scoped>
 	.products{
-		padding: 100px 0 40px;
-
-		.table__nav{
-			margin-bottom: 10px;
-			.filter{
+		.filter{
 				display: flex;
 				margin-bottom: 10px;
 				select{
@@ -384,6 +381,9 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					background-color: $light-color;
 				}
 			}
+		.table__nav{
+			margin-bottom: 10px;
+			
 			.filters{
 			display: flex;
 			justify-content: space-between;
@@ -450,7 +450,6 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					background-color: #fff;
 					padding: 10px 0;
 					border-radius: 10px;
-					width: 180px;
 					-webkit-box-shadow: 2px 12px 59px 3px rgba(34, 60, 80, 0.2);
 					-moz-box-shadow: 2px 12px 59px 3px rgba(34, 60, 80, 0.2);
 					box-shadow: 2px 12px 59px 3px rgba(34, 60, 80, 0.2);	
@@ -469,7 +468,6 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					background-color: #fff;
 					padding: 15px;
 					border-radius: 15px;
-					width: 160px;
 					-webkit-box-shadow: 2px 12px 59px 3px rgba(34, 60, 80, 0.2);
 					-moz-box-shadow: 2px 12px 59px 3px rgba(34, 60, 80, 0.2);
 					box-shadow: 2px 12px 59px 3px rgba(34, 60, 80, 0.2);	
@@ -558,7 +556,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				}
 				thead{
 					position: sticky;
-					top: 85px;
+					top: 69px;
 					z-index: 50;
 					.sort_btn{
 						

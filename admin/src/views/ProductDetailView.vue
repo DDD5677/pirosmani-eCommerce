@@ -252,7 +252,6 @@ import { mapMutations, mapState } from 'vuex';
 
 <style lang="scss" scoped>
 	.product-detail{
-		padding: 100px 0 50px;
 		.product-detail__inner{
 			display: flex;
 			justify-content: space-between;

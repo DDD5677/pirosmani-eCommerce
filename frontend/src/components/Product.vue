@@ -16,7 +16,7 @@
 		<div class="card__box">
 			<product-rating :rating="product.ratings"/>
 		<div class="card__price">
-			{{ product.price }} ₽/кг<span>За 500гр.</span>
+			{{ product.price }} сум<span>За 1 порцию.</span>
 			
 		</div>
 		<green-btn @click.prevent="productDetail">В корзину</green-btn>

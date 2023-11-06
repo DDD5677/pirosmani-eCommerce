@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const fs = require("fs");
+const path = require("path");
 const Banner = require("../models/banner");
 const multer = require("multer");
 const { default: mongoose } = require("mongoose");
@@ -44,6 +46,22 @@ router.get(`/`, async (req, res, next) => {
    }
 });
 
+router.get("/:id", async (req, res, next) => {
+   try {
+      const banner = await Banner.findById(req.params.id);
+
+      if (!banner) {
+         res.status(500).json({
+            message: "The banner with the given ID was not found.",
+         });
+      }
+
+      res.status(200).send(banner);
+   } catch (error) {
+      next(error);
+   }
+});
+
 router.post("/", uploadOptions.single("image"), async (req, res, next) => {
    try {
       let postBlock = {
@@ -79,7 +97,7 @@ router.put("/:id", uploadOptions.single("image"), async (req, res, next) => {
          return res.status(400).send("Invalid ID");
       }
       let updateBlock = {};
-      const file = req.files;
+      const file = req.file;
       const basePath = `${req.protocol}://${req.get("host")}/public/banner/`;
 
       if (req.body.title) {
@@ -94,8 +112,15 @@ router.put("/:id", uploadOptions.single("image"), async (req, res, next) => {
       if (req.body.button) {
          updateBlock["button"] = req.body.button;
       }
-      if (file.image) {
-         const fileName = file.image[0].filename;
+      if (file) {
+         const bannerInfo = await Banner.findById(req.params.id);
+         if (bannerInfo.image) {
+            const img = bannerInfo.image.split("/");
+            img.splice(0, 3);
+            const result = path.join(__dirname, "../", ...img);
+            fs.unlinkSync(result);
+         }
+         const fileName = file.filename;
          updateBlock["image"] = `${basePath}${fileName}`;
       }
       const banner = await Banner.findByIdAndUpdate(
@@ -113,4 +138,27 @@ router.put("/:id", uploadOptions.single("image"), async (req, res, next) => {
    }
 });
 
+router.delete("/:id", (req, res) => {
+   Banner.findByIdAndRemove(req.params.id)
+      .then((banner) => {
+         if (banner) {
+            if (banner.image) {
+               const img = banner.image.split("/");
+               img.splice(0, 3);
+               const result = path.join(__dirname, "../", ...img);
+               fs.unlinkSync(result);
+            }
+            return res
+               .status(200)
+               .json({ success: true, message: "The banner was deleted." });
+         } else {
+            return res
+               .status(404)
+               .json({ success: false, message: "The banner is not found." });
+         }
+      })
+      .catch((err) => {
+         return res.status(400).json({ success: false, error: err });
+      });
+});
 module.exports = router;

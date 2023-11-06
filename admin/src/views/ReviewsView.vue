@@ -1,33 +1,34 @@
 <template>
 	<section class="reviews">
+		<div class="filter">
+			<div v-for="(filter,index) in filters" :id="index">
+				<div v-if="filter.show&&(filter.title!=='Status')&&(filter.title!=='Min Rate')">
+					<span>{{ filter.title }}</span>
+					<input type="date" :placeholder="filter.title" v-model="filter.source" @change="sumbitFilters">
+					<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
+				</div>
+				<div v-if="filter.show&&(filter.title==='Status')">
+					<span>{{ filter.title }}</span>
+					<select name="status" id="status" v-model="filter.source" @change="sumbitFilters">
+						<option value="" selected disabled hidden >Select an option</option>
+						<option value="Pending">Pending</option>
+						<option value="Accepted">Accepted</option>
+						<option value="Rejected">Rejected</option>
+					</select>
+					<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
+				</div>
+				<div v-if="filter.show&&(filter.title==='Min Rate')">
+					<span>{{ filter.title }}</span>
+					<input type="number" :placeholder="filter.title" v-model="filter.source" @change="sumbitFilters">
+					<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
+				</div>
+			</div>
+		</div>
 		<div class="container">
 			
 			<div  class="reviews__inner">
 				<div class="table__nav">
-					<div class="filter">
-						<div v-for="(filter,index) in filters" :id="index">
-							<div v-if="filter.show&&(filter.title!=='Status')&&(filter.title!=='Min Rate')">
-								<span>{{ filter.title }}</span>
-								<input type="date" :placeholder="filter.title" v-model="filter.source" @change="sumbitFilters">
-								<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
-							</div>
-							<div v-if="filter.show&&(filter.title==='Status')">
-								<span>{{ filter.title }}</span>
-								<select name="status" id="status" v-model="filter.source" @change="sumbitFilters">
-									<option value="" selected disabled hidden >Select an option</option>
-									<option value="Pending">Pending</option>
-									<option value="Accepted">Accepted</option>
-									<option value="Rejected">Rejected</option>
-								</select>
-								<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
-							</div>
-							<div v-if="filter.show&&(filter.title==='Min Rate')">
-								<span>{{ filter.title }}</span>
-								<input type="number" :placeholder="filter.title" v-model="filter.source" @change="sumbitFilters">
-								<button @click.prevent="removeFilter(index)"><i class="fa fa-times" aria-hidden="true" ></i></button>
-							</div>
-						</div>
-					</div>
+					
 					<div class="filters">
 						<div class="search">
 							<input type="text" placeholder="Search" v-model="search" class="search__input" @change="getReviews(1,this.$route.query.limit)">
@@ -136,8 +137,8 @@
 				</div>
 				<pagination :getData="getReviews" :page="page" :pageSize="pageSize"/>
 			</div>
-			<review-detail v-if="reviewDetailShow" :getData="getReviews" class="review-detail" @close="reviewDetailToggle"/>
 		</div>
+		<review-detail v-if="reviewDetailShow" :getData="getReviews" class="review-detail" @close="reviewDetailToggle"/>
 	</section>
 </template>
 
@@ -345,12 +346,51 @@ import { getItem, setItem } from '@/helpers/localStorage';
 
 <style lang="scss" scoped>
 	.reviews{
-		padding: 100px 0 40px;
-		position: relative;
+		//position: relative;
+		.filter{
+			display: flex;
+			margin-bottom: 10px;
+			select{
+				width: 140px;
+				padding: 20px 8px 5px ;
+				border-radius: 10px 10px 0 0;
+				border-bottom: 1px solid #000;
+				background-color: $light-color;
+				display: inline-block;
+			}
+			div{
+				position: relative;
+				span{
+					font-size: 11px;
+					position: absolute;
+					top: 5px;
+					left: 10px;
+					color: $main-color;
+				}
+			}
+			input{
+				width: 120px;
+				padding: 20px 10px 5px ;
+				border-radius: 10px 10px 0 0;
+				border-bottom: 1px solid #000;
+				background-color: $light-color;
+				display: inline-block;
+			}
+			button{
+				position: absolute;
+				top: -5px;
+				right: -5px;
+				width: 20px;
+				height: 20px;
+				border-radius: 50%;
+				cursor: pointer;
+				background-color: $light-color;
+			}
+		}
 		.review-detail{
 			background-color: #fff;
 			width: 500px;
-			position: absolute;
+			position: fixed	;
 			z-index: 99;
 			top: 0;
 			right: 0;
@@ -360,46 +400,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 		}
 		.table__nav{
 			margin-bottom: 10px;
-			.filter{
-				display: flex;
-				margin-bottom: 10px;
-				select{
-					width: 140px;
-					padding: 20px 8px 5px ;
-					border-radius: 10px 10px 0 0;
-					border-bottom: 1px solid #000;
-					background-color: $light-color;
-					display: inline-block;
-				}
-				div{
-					position: relative;
-					span{
-						font-size: 11px;
-						position: absolute;
-						top: 5px;
-						left: 10px;
-						color: $main-color;
-					}
-				}
-				input{
-					width: 120px;
-					padding: 20px 10px 5px ;
-					border-radius: 10px 10px 0 0;
-					border-bottom: 1px solid #000;
-					background-color: $light-color;
-					display: inline-block;
-				}
-				button{
-					position: absolute;
-					top: -5px;
-					right: -5px;
-					width: 20px;
-					height: 20px;
-					border-radius: 50%;
-					cursor: pointer;
-					background-color: $light-color;
-				}
-			}
+			
 			.filters{
 			display: flex;
 			justify-content: space-between;
@@ -466,7 +467,6 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					background-color: #fff;
 					padding: 10px 0;
 					border-radius: 10px;
-					width: 180px;
 					-webkit-box-shadow: 2px 12px 59px 3px rgba(34, 60, 80, 0.2);
 					-moz-box-shadow: 2px 12px 59px 3px rgba(34, 60, 80, 0.2);
 					box-shadow: 2px 12px 59px 3px rgba(34, 60, 80, 0.2);	
@@ -485,7 +485,6 @@ import { getItem, setItem } from '@/helpers/localStorage';
 					background-color: #fff;
 					padding: 15px;
 					border-radius: 15px;
-					width: 160px;
 					-webkit-box-shadow: 2px 12px 59px 3px rgba(34, 60, 80, 0.2);
 					-moz-box-shadow: 2px 12px 59px 3px rgba(34, 60, 80, 0.2);
 					box-shadow: 2px 12px 59px 3px rgba(34, 60, 80, 0.2);	
@@ -580,7 +579,7 @@ import { getItem, setItem } from '@/helpers/localStorage';
 				}
 				thead{
 					position: sticky;
-					top: 85px;
+					top: 68px;
 					z-index: 50;
 					.sort_btn{
 						

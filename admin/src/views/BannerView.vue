@@ -1,29 +1,29 @@
 <template>
-	<section class="categories">
+	<section class="banners">
 		<div class="container">
-			<div class="categories__inner">
+			<div class="banners__inner">
 				<div class="buttons">
-					<button @click="categoryCreate" class="btn"><i class="fa fa-plus" aria-hidden="true"></i>Create</button>
+					<button @click="bannerCreate" class="btn"><i class="fa fa-plus" aria-hidden="true"></i>Create</button>
 					<button class="btn"><i class="fa fa-download" aria-hidden="true"></i>Export</button>
 
 				</div>
-				<div v-if="!categoryLoading" class="tables">
-					<div v-for="category in categories" :id="category.id" class="card">
+				<div v-if="!bannerLoading" class="tables">
+					<div v-for="banner in banners" :id="banner.id" class="card">
 						<div class="img-box">
-							<img :src="category.image" :alt="category.name">
+							<img :src="banner.image" alt="image">
 						</div>
 						<div class="info">
-							<span class="title">{{ category.name }}</span>
+							<span class="title">{{ banner.title }}</span>
 							<div class="btns">
 								<a @click="productPage(category.id)" class="products"><i class="fa fa-table" aria-hidden="true"></i> Products</a>
-								<a @click.prevent="categoryDetail(category.id)" class="edit"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
+								<a @click.prevent="bannerDetail(banner.id)" class="edit"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<category-detail v-if="categoryDetailShow"  class="category-detail" @close="categoryDetailToggle"/>
-			<category-create v-if="categoryCreateShow" class="category-detail"  @close="categoryCreateToggle"/>
+			<banner-detail v-if="bannerDetailShow"  class="category-detail" @close="bannerDetailToggle"/>
+			<banner-create v-if="bannerCreateShow" class="category-detail"  @close="bannerCreateToggle"/>
 		</div>
 	</section>
 </template>
@@ -34,29 +34,29 @@ import { setItem,getItem } from '@/helpers/localStorage';
 	export default {
 		data(){
 			return{
-				categoryDetailShow:false,
-				categoryCreateShow:false
+				bannerDetailShow:false,
+				bannerCreateShow:false
 			}
 		},
 		computed:{
 			...mapState({
-				categories:state=>state.category.categories,
-				categoryLoading:state=>state.category.isLoading
+				banners:state=>state.banner.banners,
+				bannerLoading:state=>state.banner.isLoading
 			})
 		},
 		methods:{
-			categoryDetailToggle(item){
-				this.categoryDetailShow=item
+			bannerDetailToggle(item){
+				this.bannerDetailShow=item
 			},
-			categoryCreateToggle(item){
-				this.categoryCreateShow = item
+			bannerCreateToggle(item){
+				this.bannerCreateShow = item
 			},
-			categoryDetail(id){
-				this.categoryDetailToggle(true)
-				this.$store.dispatch('category/getCategoryById',id)
+			bannerDetail(id){
+				this.bannerDetailToggle(true)
+				this.$store.dispatch('banner/getBannerById',id)
 			},
-			categoryCreate(){
-				this.categoryCreateShow=true
+			bannerCreate(){
+				this.bannerCreateShow=true
 			},
 			productPage(id){
 				const filters=getItem('product-filters');
@@ -67,18 +67,18 @@ import { setItem,getItem } from '@/helpers/localStorage';
 			}
 		},
 		created(){
-			this.$store.dispatch('category/getCategory')
+			this.$store.dispatch('banner/getBanner')
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
-.categories{
-	position: relative;
+.banners{
+	//position: relative;
 	.category-detail{
 		background-color: #fff;
 		width: 500px;
-		position: fixed;
+		position: absolute;
 		z-index: 99;
 		top: 0;
 		right: 0;
@@ -112,18 +112,20 @@ import { setItem,getItem } from '@/helpers/localStorage';
 
 	.tables{
 		display: grid;
-		grid-template-columns: 1fr 1fr 1fr 1fr;
+		grid-template-columns: 1fr 1fr 1fr;
 		//grid-template-columns: auto auto auto auto;
 
-		gap: 10px;
+		gap: 20px;
 		.card{
 			border:1px solid #9d9d9d;
 			border-radius: 10px;
-			
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
 			.img-box{
 				width: 100%;
 				border: 1px solid #C6C6C6;
-				height: 150px;
+				height: 200px;
 				border-radius: 10px;
 				background-image: url(@/assets/images/card__bg.svg);
 				background-position: center;
@@ -141,6 +143,10 @@ import { setItem,getItem } from '@/helpers/localStorage';
 			}
 			.info{
 				padding: 10px;
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+				flex-grow: 1;
 				.title{
 					font-size: 22px;
 					text-transform: capitalize;

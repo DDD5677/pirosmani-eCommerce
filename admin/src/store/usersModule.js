@@ -96,11 +96,12 @@ export const usersModule = {
          });
       },
       postUsers(context, payload) {
-         return new Promise(() => {
+         return new Promise((resolve) => {
             context.commit("postUserStart");
             UserService.postUsers(payload)
                .then((res) => {
                   context.commit("postUserSuccess");
+                  resolve();
                })
                .catch((error) => {
                   context.commit("postUserFailure", error.response.data);
