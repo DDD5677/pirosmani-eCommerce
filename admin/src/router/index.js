@@ -13,6 +13,7 @@ import ReviewsView from "../views/ReviewsView.vue";
 import CategoryView from "../views/CategoryView.vue";
 import BannerView from "../views/BannerView.vue";
 import ReservationView from "../views/ReservationView.vue";
+import SettingsView from "../views/SettingsView.vue";
 
 const routes = [
    {
@@ -98,6 +99,12 @@ const routes = [
       name: "reservations",
       meta: { layout: "main" },
       component: ReservationView,
+   },
+   {
+      path: "/settings",
+      name: "settings",
+      meta: { layout: "main" },
+      component: SettingsView,
    },
 ];
 

@@ -7,6 +7,7 @@
 					<button class="btn"><i class="fa fa-download" aria-hidden="true"></i>Export</button>
 
 				</div>
+				<loading v-if="bannerLoading"/>
 				<div v-if="!bannerLoading" class="tables">
 					<div v-for="banner in banners" :id="banner.id" class="card">
 						<div class="img-box">

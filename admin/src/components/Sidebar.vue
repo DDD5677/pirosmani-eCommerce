@@ -82,6 +82,16 @@
 						</transition>
 					</router-link>
 				</li>
+				<li class="nav-item">
+					<router-link
+					:to="{name:'settings'}"  
+					class="nav-link">
+						<span class="nav-icon"><i class="fa-solid fa-gear"></i></span>
+						<transition name="fade">
+							<span v-if="show" class="nav-text">Settings</span>
+						</transition>
+					</router-link>
+				</li>
 			</ul>
 		</div>
 	</section>

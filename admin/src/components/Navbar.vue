@@ -11,12 +11,17 @@
 			</div>
 			<div v-if="!isLoading" class="nav-blocks">
 				<div  class="profile">
-					<a>
-						<img v-if="user.user.image" :src="user.user.image" alt="">
-						<span v-if="!user.user.image">{{ user.user.name[0] }}</span>
-					</a>
+					
+					<img v-if="user.user.image" :src="user.user.image" alt="">
+					<span v-if="!user.user.image">{{ user.user.name[0] }}</span>
+					
 				</div>
-				<span class="user-name">{{ user.user.name }}</span>
+				<span @click="logoutModal" class="user-name">{{ user.user.name }}</span>
+				<Transition name="fade">
+					<div  v-if="dropdown" @click="logoutAdmin" class="dropdown">
+						<span class="logout">Log Out <i class="fa-solid fa-arrow-right-from-bracket"></i></span>
+					</div>
+				</Transition>
 			</div>
 	
 		</div>
@@ -24,12 +29,14 @@
 </template>
 
 <script>
+import { removeItem } from '@/helpers/localStorage';
 import { mapState } from 'vuex';
 	export default {
 		name:'navbar',
 		data(){
 			return{
-				showSidebar:true
+				showSidebar:true,
+				dropdown:false
 			}
 		},
 		computed:{
@@ -42,6 +49,13 @@ import { mapState } from 'vuex';
 			})
 		},
 		methods:{
+			logoutAdmin(){
+				removeItem('token');
+				this.$router.push('/login')
+			},
+			logoutModal(){
+				this.dropdown=!this.dropdown
+			},
 			toggleSidebar(){
 				this.showSidebar=!this.showSidebar
 				this.$emit('toggleSidebar',this.showSidebar)
@@ -51,6 +65,16 @@ import { mapState } from 'vuex';
 </script>
 
 <style lang="scss" scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+	opacity: 0;
+	transform: translate(5px,-5px);
+}
 .navbar{
 	position: fixed;
 	z-index: 9999;
@@ -67,7 +91,30 @@ import { mapState } from 'vuex';
 	justify-content: space-between;
 	align-items: center;
 	padding:10px 20px;
-	
+	.dropdown{
+		padding: 15px 20px;
+		border-radius: 5px;
+		cursor: pointer;
+		color: rgba($color: #000000, $alpha: .7);
+		position: absolute;
+		right: 10px;
+		top: 58px;
+		background-color: #fff;
+		z-index: 99999;
+		-webkit-box-shadow: -2px 1px 8px 2px rgba(34, 60, 80, 0.2);
+		-moz-box-shadow: -2px 1px 8px 2px rgba(34, 60, 80, 0.2);
+		box-shadow: -2px 1px 8px 2px rgba(34, 60, 80, 0.2);
+		&:hover{
+			background-color: $light-color;
+		}
+		.logout{
+			font-size: 20px;
+			font-weight: 500;
+		}
+		i{
+			margin-left: 10px;
+		}
+	}
 	&-blocks{
 		display: flex;
 		justify-content: space-between;
@@ -84,7 +131,7 @@ import { mapState } from 'vuex';
 		}
 	}
 	.user-name{
-		font-size: 20px;
+		font-size: 22px;
 		color: #fff;
 		font-weight: 500;
 		margin-left: 10px;
@@ -99,16 +146,17 @@ import { mapState } from 'vuex';
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		font-size: 18px;
 		border-radius: 50%;
 		cursor: pointer;
-		a{
-			height: 40px;
-			width: 40px;
+		
+		span{
+			font-size: 22px;
+			font-weight: 500;
+			font-family: 'Pacifico', cursive, sans-serif;
 		}
 		img{
-			width: 40px;
-			height: 40px;
+			width: 100%;
+			height: 100%;
 			border-radius: 50%;
 			object-fit: cover;
 		}

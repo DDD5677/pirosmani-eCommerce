@@ -31,7 +31,9 @@ const UserService = {
       formData.append("avatar", user.avatar);
       formData.append("name", user.name);
       formData.append("surname", user.surname);
-      formData.append("isAdmin", user.isAdmin);
+      if (user.isAdmin) {
+         formData.append("isAdmin", user.isAdmin);
+      }
       formData.append("email", user.email);
       formData.append("phone", user.phone);
       formData.append("extraPhone", user.extraPhone);

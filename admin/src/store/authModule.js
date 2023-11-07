@@ -92,7 +92,7 @@ export const authModule = {
                   console.log("refresh");
                   setItem("token", response.data.token);
                   context.commit("loginSuccess", response.data);
-                  resolve();
+                  resolve(response.data.user);
                })
                .catch((error) => {
                   console.log("error refresh", error);

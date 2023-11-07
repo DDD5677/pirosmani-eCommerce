@@ -38,7 +38,8 @@
 						</div>
 						<div class="buttons">
 							<button @click="toggleColumns" class="btn"><i class="fa fa-th" aria-hidden="true"></i>Columns</button>
-							<ul v-show="columns" class="columns">
+							<transition name="modal">
+								<ul v-show="columns" class="columns">
 									<li v-for="(option,index) in options" class="options">
 										<label @click="addOptions(index)" :for="'option-'+index">
 											<input checked type="checkbox" ref="option" :id="'option-'+index">
@@ -49,15 +50,18 @@
 										{{ option.title }}
 										</label>
 									</li>
-							</ul>
+								</ul>
+							</transition>
 							<router-link :to="{name:'create-product'}" class="btn"><i class="fa fa-plus" aria-hidden="true"></i>Create</router-link>
 							
 							<button @click="toggleFilters" class="btn"><i class="fa fa-filter" aria-hidden="true"></i>Filter</button>
-							<ul v-show="filter_box" class="filter__box">
+							<transition name="modal">
+								<ul v-show="filter_box" class="filter__box">
 									<li v-for="(option,index) in filters" :id="index" @click="addFilter(index)" class="options">
 										{{ option.title }}
 									</li>
-							</ul>
+								</ul>
+							</transition>
 							<button class="btn"><i class="fa fa-download" aria-hidden="true"></i>Export</button>
 						</div>
 					</div>
@@ -338,6 +342,16 @@ import { getItem, setItem } from '@/helpers/localStorage';
 </script>
 
 <style lang="scss" scoped>
+.modal-enter-active,
+.modal-leave-active {
+  transition: all 0.5s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+	opacity: 0;
+	transform: translateY(-10px);
+}
 	.products{
 		.filter{
 				display: flex;

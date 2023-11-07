@@ -193,7 +193,9 @@ import { mapMutations, mapState } from 'vuex';
 					avatar:this.avatar,
 				}
 				this.$store.dispatch('user/updateUser',data).then((res)=>{
-					location.reload()
+					this.$store.dispatch('user/getUserById',this.$route.params.id).then(user=>{
+						this.assignUserData(user)
+					});
 				})
 			}
 		},

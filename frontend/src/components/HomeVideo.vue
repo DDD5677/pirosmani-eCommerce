@@ -22,13 +22,13 @@ import { mapState } from 'vuex';
 		name:'home-video',
 		data(){
 			return{
-				videoLink:'https://www.youtube.com/embed/bQUg2Z2Gny4?si=vqf8D0JiHNoMJFPf',
+				//videoLink:'https://www.youtube.com/embed/bQUg2Z2Gny4?si=vqf8D0JiHNoMJFPf',
 				
 			}
 		},
 		computed:{
 			...mapState({
-				//videoLink:state=>state.info.info.video,
+				videoLink:state=>state.info.info.video,
 				isLoading:state=>state.info.isLoading
 			})
 		},

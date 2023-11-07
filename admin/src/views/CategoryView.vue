@@ -7,6 +7,7 @@
 					<button class="btn"><i class="fa fa-download" aria-hidden="true"></i>Export</button>
 
 				</div>
+				<loading v-if="categoryLoading"/>
 				<div v-if="!categoryLoading" class="tables">
 					<div v-for="category in categories" :id="category.id" class="card">
 						<div class="img-box">

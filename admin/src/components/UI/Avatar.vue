@@ -19,6 +19,12 @@
 				type:String,
 				default:'35px'
 			}
+		},
+		computed:{
+			fontSize(){
+				const font = parseInt(this.width)*0.7;
+				return font+'px'
+			}
 		}
 	}
 </script>
@@ -40,10 +46,10 @@
 	text-align: center;
 	text-transform: uppercase;
 	font-weight: 500;
-	font-size: 22px;
+	font-size: v-bind(fontSize);
 	display: inline-block;
 	background-color: $main-color;
 	color: #fff;
-	line-height: 39px;
+	line-height: v-bind(width);;
 }
 </style>
