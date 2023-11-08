@@ -176,6 +176,11 @@ import img1 from '@/assets/images/home__banner-bg.png';
 			}
 		}
 	}
+	@media (max-width: 819px){
+		.home__banner-wrapper{
+			height: 230px;
+		}
+	}
 	@media (max-width: 619px){
 		.home__banner{
 			.home__banner-wrapper {
@@ -190,7 +195,7 @@ import img1 from '@/assets/images/home__banner-bg.png';
 						margin-bottom: 10px;
 					}
 				}
-				height: 180px;
+				height: 160px;
 			}
 		}
 	}
@@ -206,13 +211,13 @@ import img1 from '@/assets/images/home__banner-bg.png';
 					}
 					.subtitle{
 						font-size: 12px;
-						line-height: 10px;
+						line-height: 12px;
 					}
 					.green__btn{
 						font-size: 12px;
 					}
 				}
-				height: 150px;
+				height: 120px;
 			}
 		}
 	}

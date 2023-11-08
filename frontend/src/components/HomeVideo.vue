@@ -3,7 +3,7 @@
          <div class="container">
             <div class="home__video-wrapper">
 					<iframe
-						
+						v-if="!isLoading"
 						class="video"
 						:src="videoLink+'&rel=0'"
 						title="YouTube video player"

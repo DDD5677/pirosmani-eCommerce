@@ -25,7 +25,9 @@
                            >
                               <img src="@/assets/images/nav-item-1.svg" alt="" /> Меню
                            </a>
-									<dropdown-menu v-show="showDropdown"/>
+									<transition name="dropdown">
+										<dropdown-menu v-show="showDropdown"/>
+									</transition>
                         </li>
                         <li class="nav-item">
                            <router-link class="nav-link" :to="{name:'delivery'}" @click="closeNavbarDropdown">
@@ -188,6 +190,16 @@ import { mapState,mapMutations } from 'vuex';
 </script>
 
 <style lang="scss" scoped>
+.dropdown-enter-active,
+.dropdown-leave-active {
+  transition: all 0.5s ease-in-out;
+}
+
+.dropdown-enter-from,
+.dropdown-leave-to {
+	opacity: 0;
+	transform: translateY(-10px);
+}
 .navbar{
 	display: flex;
 	align-items: center;

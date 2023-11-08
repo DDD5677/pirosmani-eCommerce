@@ -41,7 +41,6 @@ import { mapMutations, mapState } from 'vuex';
 			changeQuantityHandler(counter){
 				const id =this.product.product.id;
 				const quantity =counter
-				console.log(id,quantity)
 				this.changeQuantity({id,quantity})
 				this.totalPrice()
 			}

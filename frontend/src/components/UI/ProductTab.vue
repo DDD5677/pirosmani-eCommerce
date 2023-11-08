@@ -81,7 +81,7 @@
       			}
 					}"
 					class="swiper slider__reviews">
-						<swiper-slide v-for="review in reviewsList" class="reviews__item">
+						<swiper-slide v-for="review in reviewsShow" class="reviews__item">
 							<div class="item__top">
 								<img
 									:src="review.user.image"
@@ -165,6 +165,10 @@ import {mapActions, mapMutations, mapState} from 'vuex';
 				isLogged: state=>state.auth.isLogged,
 				reviewsList:state=>state.singleProduct.reviewsList
 			}),
+			reviewsShow(){
+				const reviews = this.reviewsList.filter(review=>review.status==='Accepted')
+				return reviews
+			}
 		},
 		methods:{
 			...mapMutations({

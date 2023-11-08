@@ -1,13 +1,22 @@
 <template>
 	<div class="loading container ">
-		<p>Loading....</p>
+		<half-circle-spinner
+		:animation-duration="1000"
+		:size="50"
+		color="#00AC4E"
+		class="loading-spinner"
+		/>
 	</div>
 
 </template>
 
 <script>
+import { HalfCircleSpinner } from 'epic-spinners'
 	export default {
-		name:'loading'
+		name:'loading',
+		components:{
+			HalfCircleSpinner
+		}
 	}
 </script>
 
@@ -15,11 +24,8 @@
 	.loading{
 		display: flex;
 		justify-content: center;
-		p{
-			font-size: 20px;
-			font-weight: 500;
-			padding-top: 50px;
-			color: $main-color;
+		.loading-spinner{
+			margin-top: 50px;
 		}
 	min-height: 400px;
 }

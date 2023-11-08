@@ -6,7 +6,7 @@
 					Номер заказа:
 					<span
 						@click="showProductHandler(index)"
-						class="green"
+						class="status green"
 						id="order__number-open"
 						>№{{ order.id }}
 						<img src="@/assets/images/orders__arrow.svg" alt=""/>
@@ -20,20 +20,29 @@
 				</div>
 				<div class="order__status">
 					Статус заказа:
-					<span class="green">{{order.status}}</span>
+					<span class ="status" :class="(order.status==='Canceled')?'red':'green'">{{order.status}}</span>
 				</div>
 			</div>
 			<div v-if="!mobile||(index===activeIndex?true:false)&&showProducts" class="products" id="products" >
 				<div>
 					<div class="order__number">
-						<span @click="showProductHandler(index)" class="green" id="order__number"
+						<span @click="showProductHandler(index)" class="status green" id="order__number"
 							><img
 								src="@/assets/images/orders__arrow-left.svg"
 								alt=""
 							/>Заказ №2334678954
 						</span>
 					</div>
-					<basket-product v-for="product in order.orderItems" :product="product" :id="product.product.id" />
+					<div v-for="product in order.orderItems" :id="product.product.id" class="product">
+						<img
+							:src="product.product.img"
+							alt=""
+							class="product__img"
+						/>
+						<span class="product__name">{{product.product.name}}</span>
+						<product-counter :quantity="product.quantity"/>
+						<span class="product__price">{{ totalSumm(product)}} ₽</span>
+					</div>
 				</div>
 				<div class="order__again">
 					<a @click="reOrder(order)" href="#" class="order__again-link"
@@ -66,9 +75,13 @@ import { mapState } from 'vuex'
 		computed:{
 			...mapState({
 				mobile:state=>state.navbar.mobile
-			})
+			}),
+			
 		},
 		methods:{
+			totalSumm(product){
+				return (product.product.price*product.quantity).toFixed(2)
+			},
 			showProductHandler(index){
 				this.activeIndex=index;
 				this.showProducts=!this.showProducts
@@ -109,10 +122,8 @@ import { mapState } from 'vuex'
                   font-weight: 400;
                }
             }
-
-            .green {
-               color: $main-color;
-               display: block;
+				.status{
+					display: block;
                cursor: pointer;
 
                img {
@@ -121,7 +132,14 @@ import { mapState } from 'vuex'
                   transform: scale(1.3);
                   display: none;
                }
+				}
+            .green {
+               color: $main-color;
+               
             }
+				.red{
+					color: red;
+				}
          }
 
          .products {
@@ -147,58 +165,53 @@ import { mapState } from 'vuex'
             }
 
             .product {
-               padding: 14px 5px 14px;
-               display: flex;
-               justify-content: flex-start;
-               align-items: center;
-               border-top: 1px solid #EBEBEB;
-               border-bottom: 1px solid #EBEBEB;
+					padding: 20px 30px 20px 5px;
+					display: flex;
+					justify-content: flex-start;
+					align-items: center;
+					border-top: 1px solid #EBEBEB;
+					border-bottom: 1px solid #EBEBEB;
+					
+					img {
+						width: 60px;
+						object-fit: contain;
+						border-radius: 5px;
+					}
 
+					.product__name {
+						text-align: center;
+						width: 220px;
+						font-weight: 500;
+						font-size: 18px;
+						line-height: 21px;
+						margin-right: 20px;
+					}
+					// .product__counter {
+               //       .items__control {
+               //          padding: 3px 10px;
+               //          display: none;
+               //       }
 
+               //       &::after {
+               //          display: none;
+               //       }
 
-               img {
-                  margin-left: 25px;
-                  width: 78.92px;
-                  object-fit: contain;
-                  border-radius: 5px;
-               }
+               //       .items__current {
+               //          padding: 3px 10px;
+               //          font-size: 12px;
+               //          line-height: 25px;
+               //       }
+               //    }
 
-               .product__name {
-                  text-align: center;
-                  width: 220px;
-                  font-weight: 500;
-                  font-size: 16.1493px;
-                  line-height: 15px;
+					
 
-               }
-
-               .product__counter {
-                  cursor: pointer;
-                  display: flex;
-                  background: #FCFCFC;
-                  border: 0.903636px solid #EBEBEB;
-                  border-radius: 9.03636px;
-                  color: #000000;
-                  position: relative;
-
-                  .items__control {
-                     padding: 10px 16px;
-                  }
-
-                  .items__current {
-                     padding: 10px 10px;
-
-                  }
-               }
-
-               .product__price {
-                  margin-left: 30px;
-                  font-weight: 500;
-                  font-size: 20.1866px;
-                  line-height: 17px;
-                  width: 60px;
-               }
-            }
+					.product__price {
+						margin-left: 20px;
+						font-weight: 500;
+						font-size: 18px;
+						line-height: 21px;
+					}
+				}
 
             .order__again {
                text-align: right;

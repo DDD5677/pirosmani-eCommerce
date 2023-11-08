@@ -86,11 +86,6 @@
 
 @media (max-width: 1030px) {
    .header {
-      // .navbar {
-      //    .dropdown-menu {
-      //       position: absolute;
-      //    }
-      // }
 
       .header__info {
          .phone {
@@ -163,10 +158,6 @@
                .product {
                   .product__name {
                      width: 190px;
-                  }
-
-                  img {
-                     margin-left: 15px;
                   }
                }
             }
@@ -302,10 +293,6 @@
                .product {
                   .product__name {
                      width: 170px;
-                  }
-
-                  img {
-                     margin-left: 10px;
                   }
 
                   .product__price {
@@ -754,10 +741,6 @@
                .product {
                   .product__name {
                      width: 200px;
-                  }
-
-                  img {
-                     margin-left: 10px;
                   }
 
                   .product__price {
@@ -1824,6 +1807,16 @@
                      margin-bottom: 15px;
                   }
                }
+            }
+         }
+      }
+   }
+
+   .personal__tab {
+      .nav {
+         .nav-item {
+            .nav-link-1 {
+               margin-right: 30px;
             }
          }
       }

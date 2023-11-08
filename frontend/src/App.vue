@@ -16,7 +16,6 @@ export default{
 }
 </script>
 <style lang="scss">
-//@import "bootstrap/dist/css/bootstrap.min.css";
 @import "swiper/css";
 @import "swiper/css/pagination";
 @import "@/assets/styles/global.scss";
