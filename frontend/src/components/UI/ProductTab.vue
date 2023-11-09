@@ -149,6 +149,10 @@ import {mapActions, mapMutations, mapState} from 'vuex';
 			product:{
 				type:Object,
 				required:true
+			},
+			reviewsShow:{
+				type:Array,
+				required:true
 			}
 		},
 		data(){
@@ -160,15 +164,8 @@ import {mapActions, mapMutations, mapState} from 'vuex';
 		},
 		computed:{
 			...mapState({
-				isLoading: state=>state.singleProduct.isLoading,
-				errors: state=>state.singleProduct.errors,
 				isLogged: state=>state.auth.isLogged,
-				reviewsList:state=>state.singleProduct.reviewsList
 			}),
-			reviewsShow(){
-				const reviews = this.reviewsList.filter(review=>review.status==='Accepted')
-				return reviews
-			}
 		},
 		methods:{
 			...mapMutations({
@@ -189,16 +186,17 @@ import {mapActions, mapMutations, mapState} from 'vuex';
 				this.about=true
 				this.service=false
 				this.reviews=false
-
 			},
 			serviceHandler(){
 				this.about=false
 				this.service=true
-				this.reviews=false			},
+				this.reviews=false			
+			},
 			reviewsHandler(){
 				this.about=false
 				this.service=false
-				this.reviews=true			}
+				this.reviews=true			
+			}
 		},
 		setup() {
 			const prev = ref(null);

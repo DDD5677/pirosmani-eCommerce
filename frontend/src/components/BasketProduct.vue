@@ -7,8 +7,8 @@
 			class="product__img"
 		/>
 		<span class="product__name">{{product.product.name}}</span>
-		<product-counter @counter="changeQuantityHandler" :quantity="product.quantity"/>
-		<span class="product__price">{{ totalSumm}} ₽</span>
+		<product-counter @counter="changeQuantityHandler" :countInStock="product.product.countInStock" :quantity="product.quantity"/>
+		<span class="product__price">{{ totalSumm}} сум</span>
 	</div>
 </template>
 

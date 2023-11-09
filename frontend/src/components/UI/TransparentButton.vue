@@ -14,8 +14,7 @@
 <style lang="scss" scoped>
 	.transparent__btn {
          text-decoration: none;
-   		padding: 0.5em 1.2em 0.55em;
-			
+   		padding: 0.5em 1em 0.55em;
 			display: inline-flex;
 			align-items: center;
          font-weight: 400;

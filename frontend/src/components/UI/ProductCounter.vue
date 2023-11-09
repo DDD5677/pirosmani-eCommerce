@@ -21,6 +21,14 @@
 			quantity:{
 				type:Number,
 				default:1
+			},
+			countInStock:{
+				type:Number,
+				default:1
+			},
+			btns:{
+				type:Boolean,
+				default:true
 			}
 		},
 		data(){
@@ -30,13 +38,22 @@
 		},
 		methods:{
 			increment(){
-				this.counter++;
-				this.$emit('counter',this.counter)
+				if(this.btns){
+					if(this.counter<this.countInStock){
+						this.counter++;
+					}else{
+						alert(`сейчас у нас есть только ${this.countInStock} порций`)
+					}
+					this.$emit('counter',this.counter)
+				}
 			},
 			decrement(){
-				if(this.counter>1){
-				this.counter--}
-				this.$emit('counter',this.counter)
+				if(this.btns){
+					if(this.counter>1){
+						this.counter--
+					}
+					this.$emit('counter',this.counter)
+				}
 			}
 		}
 	}

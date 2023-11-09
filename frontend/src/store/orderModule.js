@@ -3,7 +3,7 @@ import OrderService from "@/server/orders";
 export const orderModule = {
    state: () => ({
       userOrder: {
-         //orderNum: Math.floor(Math.random() * 10000000),
+         orderNum: Math.floor(Math.random() * 10000000),
          orderProducts: [],
          totalSumm: 0,
       },
@@ -28,7 +28,6 @@ export const orderModule = {
          state.userOrder.totalSumm = +totalPrice.toFixed(2);
       },
       changeQuantity(state, { id, quantity }) {
-         console.log(id, quantity);
          state.userOrder.orderProducts.forEach((order) => {
             if (order.product.id === id) {
                order.quantity = quantity;

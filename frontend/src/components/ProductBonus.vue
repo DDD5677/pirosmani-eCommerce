@@ -1,9 +1,9 @@
 <template>
 	<div class="product__bonus">
-         <div class="title">Закажите на 3000 RUB и получите</div>
+         <div class="title">Закажите на 3000 сум и получите</div>
             <div class="bonus">
                <img src="@/assets/images/bonus__pig.svg" alt="" />
-					<span><b>30 RUB</b> на бонусный счет</span>
+					<span><b>30 сум</b> на бонусный счет</span>
             </div>
             <div class="product__delivery">
                <img src="@/assets/images/bonus__truck.svg" alt="" />
@@ -28,7 +28,7 @@ import { mapState } from 'vuex';
 			}),
 			beforeContent(){
 				if(this.totalSumm<3000){
-				return `'Осталось ${(3000-this.totalSumm).toFixed(2)} RUB до бесплатной доставки'`
+				return `'Осталось ${(3000-this.totalSumm).toFixed(2)} сум до бесплатной доставки'`
 				}else{
 					return '"Поздравляем, вы получили бонус!"'
 				}

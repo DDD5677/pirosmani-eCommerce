@@ -18,16 +18,16 @@
 					<div class="product__cost">
 						<div>
 							<span>Итого</span>
-							<span>{{ totalSumm }} ₽ </span>
+							<span>{{ totalSumm }} сум </span>
 						</div>
 						<div>
 							<span>Доставка</span>
-							<span class="green__price">{{ tabs.tab1? delivery:calcDelivery }} ₽</span>
+							<span class="green__price">{{ tabs.tab1? delivery:calcDelivery }} сум</span>
 						</div>
 					</div>
 					<div class="total__cost">
 						<span>Итого к оплате</span>
-						<span class="total__price">{{ tabs.tab1? totalSumm-delivery: totalSumm - calcDelivery }} ₽</span>
+						<span class="total__price">{{ tabs.tab1? totalSumm-delivery: totalSumm - calcDelivery }} сум</span>
 					</div>
 				</div>
 			</div>

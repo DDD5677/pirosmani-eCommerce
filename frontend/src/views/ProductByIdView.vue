@@ -16,25 +16,25 @@
                      <h3 class="title">{{ product.name }}</h3>
                      <product-rating :rating="product.ratings"></product-rating>
                      <div class="product__reviews">
-                        Кол-во отзывов: <span>23</span>
+                        Кол-во отзывов: <span v-if="!reviewLoading">{{reviewsShow.length  }}</span>
                      </div>
                   </div>
                   <div class="product__info-right">
                      <div class="product__price">
-                        <span>Цена за уп.</span><span class="num">{{product.price}} ₽</span>
+                        <span>Цена за уп.</span><span class="num">{{product.price}} сум</span>
                      </div>
                      <div class="product__amount">
-                        <span>Кол-во шт в упаковке</span
-                        ><span class="num">{{ product.countInStock }} шт.</span>
+                        <span>Доступен сейчас</span
+                        ><span class="num">{{ product.countInStock }} порц.</span>
                      </div>
                      <div class="amount__calc">
                         <span>Количество</span>
-                        <product-counter @counter="totalSummHandler"/>
+                        <product-counter :countInStock ="product.countInStock" @counter="totalSummHandler"/>
                      </div>
                   </div>
                   <div class="total__price">
                      <span>Итого к оплате</span>
-                     <span class="total__price-num">{{ totalSumm }} ₽</span>
+                     <span class="total__price-num">{{ totalSumm }} сум</span>
                   </div>
                   <div class="product__btns">
                      <green-btn @click.prevent.stop="addProductHandler(product,quantity)" class="product__buy">Купить</green-btn>
@@ -45,7 +45,7 @@
                </div>
             </div>
             <div class="product__bottom">
-               <product-tab :product="product"/>
+               <product-tab v-if="!reviewLoading" :product="product" :reviewsShow="reviewsShow"/>
                <product-bonus />
             </div>
 				</div>
@@ -69,8 +69,13 @@ import {mapActions, mapMutations, mapState} from 'vuex';
 				isLoading: state=>state.singleProduct.isLoading,
 				errors: state=>state.singleProduct.errors,
 				isLogged: state=>state.auth.isLogged,
-
+				reviewsList:state=>state.singleProduct.reviewsList,
+				reviewLoading:state=>state.singleProduct.reviewLoading
 			}),
+			reviewsShow(){
+				const reviews = this.reviewsList.filter(review=>review.status==='Accepted')
+				return reviews
+			}
 		},
 		methods:{
 			...mapMutations({

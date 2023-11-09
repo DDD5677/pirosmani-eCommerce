@@ -39,15 +39,15 @@ export const singleProductModule = {
          state.errors = payload;
       },
       getReviewsStart(state) {
-         //state.isLoading = true;
+         state.reviewLoading = true;
          state.errors = null;
       },
       getReviewsSuccess(state, payload) {
-         //state.isLoading = false;
+         state.reviewLoading = false;
          state.reviewsList = payload.reviewsList;
       },
       getReviewsFailure(state, payload) {
-         //state.isLoading = false;
+         state.reviewLoading = false;
          state.errors = payload;
       },
    },

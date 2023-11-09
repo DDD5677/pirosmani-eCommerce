@@ -6,7 +6,7 @@
 				<option v-for="region in regions">{{ region }}</option>
 			</select>
 		</div>
-		<div class="error__message" v-if="errors&&errors.city">{{ errors.city }}</div>
+		<div class="error__message" :class="{'none':tab2}" v-if="errors&&errors.city">{{ errors.city }}</div>
 		<form-input 
 		:label="'ФИО'" 
 		:type="'text'" 

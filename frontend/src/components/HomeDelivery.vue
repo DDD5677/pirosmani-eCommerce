@@ -3,8 +3,8 @@
          <div class="container">
             <div class="delivery__body">
                <h3 class="title">
-                  Бесплатная доставка по Москве<br />
-                  и Области от 2999 RUB!
+                  Бесплатная доставка по Узбекистану<br/>
+                  и Области от 2999 сум!
                </h3>
 					<green-btn>Оформить</green-btn>
             </div>
@@ -34,7 +34,7 @@
       border-radius: 18.0727px;
       background-image: url(@/assets/images/delivery-bg.png);
       background-repeat: no-repeat;
-      background-position: right center;
+      background-position: right bottom;
 		@media (max-width: 630px){
 			background-size: 70%;
 		}

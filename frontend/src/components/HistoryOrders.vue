@@ -8,7 +8,7 @@
 						@click="showProductHandler(index)"
 						class="status green"
 						id="order__number-open"
-						>№{{ order.id }}
+						><span>№{{ order.id }}</span>
 						<img src="@/assets/images/orders__arrow.svg" alt=""/>
 					</span>
 				</div>
@@ -16,7 +16,7 @@
 					Дата заказа: <span>{{formatDate(order.dateOrdered)}}</span>
 				</div>
 				<div class="delivery__data">
-					Общая сумма: <span>{{ order.totalPrice }} ₽</span>
+					Общая сумма: <span>{{ order.totalPrice }} сум</span>
 				</div>
 				<div class="order__status">
 					Статус заказа:
@@ -40,8 +40,8 @@
 							class="product__img"
 						/>
 						<span class="product__name">{{product.product.name}}</span>
-						<product-counter :quantity="product.quantity"/>
-						<span class="product__price">{{ totalSumm(product)}} ₽</span>
+						<product-counter :quantity="product.quantity" :btns="false"/>
+						<span class="product__price">{{ totalSumm(product)}} сум</span>
 					</div>
 				</div>
 				<div class="order__again">
@@ -99,7 +99,7 @@ import { mapState } from 'vuex'
 
 <style lang="scss" scoped>
 	.history__products {
-      padding: 40px 0 0;
+      padding: 30px 0 0;
 
       .orders {
          display: flex;
@@ -109,7 +109,22 @@ import { mapState } from 'vuex'
          border-radius: 13.0319px;
          padding: 24px;
          margin: 20px 0;
+			.status{
+				display: block;
+				cursor: pointer;
 
+				img {
+					margin-left: 5px;
+					transform: scale(1.3);
+				}
+			}
+			.green {
+				color: $main-color;
+				
+			}
+			.red{
+				color: red;
+			}
          .info {
 
             div {
@@ -122,24 +137,17 @@ import { mapState } from 'vuex'
                   font-weight: 400;
                }
             }
-				.status{
-					display: block;
-               cursor: pointer;
-
-               img {
-                  vertical-align: 4px;
-                  margin-left: 5px;
-                  transform: scale(1.3);
-                  display: none;
-               }
+				.order__number{
+					.status{
+						display: flex;
+						align-items: center;
+						
+					}
+					img{
+						display: none;
+					}
 				}
-            .green {
-               color: $main-color;
-               
-            }
-				.red{
-					color: red;
-				}
+				
          }
 
          .products {
@@ -150,9 +158,7 @@ import { mapState } from 'vuex'
                display: none;
 
                .green {
-                  color: $main-color;
                   font-size: 19px;
-                  cursor: pointer;
                   display: inline-block;
                   padding: 15px;
 
@@ -165,7 +171,7 @@ import { mapState } from 'vuex'
             }
 
             .product {
-					padding: 20px 30px 20px 5px;
+					padding: 20px 5px 20px;
 					display: flex;
 					justify-content: flex-start;
 					align-items: center;
@@ -186,22 +192,6 @@ import { mapState } from 'vuex'
 						line-height: 21px;
 						margin-right: 20px;
 					}
-					// .product__counter {
-               //       .items__control {
-               //          padding: 3px 10px;
-               //          display: none;
-               //       }
-
-               //       &::after {
-               //          display: none;
-               //       }
-
-               //       .items__current {
-               //          padding: 3px 10px;
-               //          font-size: 12px;
-               //          line-height: 25px;
-               //       }
-               //    }
 
 					
 

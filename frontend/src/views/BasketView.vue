@@ -11,15 +11,15 @@
                      <h4 class="order__number">Заказ №<span>{{ orderNumber }}</span></h4>
                      <div class="product__inbasket">
                         <span>Товаров в корзине</span>
-                        <span class="price">{{totalSumm}}₽ </span>
+                        <span class="price">{{totalSumm}} сум</span>
                      </div>
                      <div class="product__discount">
                         <span>Промокод</span>
-                        <span class="discount">- 100 ₽ </span>
+                        <span class="discount">- 10 сум </span>
                      </div>
                      <div class="product__total-price">
                         <span>Итого к оплате</span>
-                        <span class="total-price">{{totalSumm}} ₽</span>
+                        <span class="total-price">{{totalSumm}} сум</span>
                      </div>
                      <green-btn  class="green__btn" @click="registerOrder">
 								Оформить заказ
