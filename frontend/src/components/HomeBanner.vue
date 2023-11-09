@@ -177,7 +177,13 @@ import img1 from '@/assets/images/home__banner-bg.png';
 		}
 	}
 	@media (max-width: 819px){
+		.home__banner {
+			padding-top: 75px;
+			padding-bottom: 8px;
+			
+		}
 		.home__banner-wrapper{
+			
 			height: 230px;
 		}
 	}
@@ -214,18 +220,12 @@ import img1 from '@/assets/images/home__banner-bg.png';
 						line-height: 12px;
 					}
 					.green__btn{
-						font-size: 12px;
+						font-size: 16px;
 					}
 				}
 				height: 120px;
 			}
 		}
 	}
-@media (max-width: 819px){
-	.home__banner {
-		padding-top: 75px;
-		padding-bottom: 8px;
-		
-	}
-}
+
 </style>
