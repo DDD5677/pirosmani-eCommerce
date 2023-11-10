@@ -18,6 +18,9 @@
 				<div class="delivery__data">
 					Общая сумма: <span>{{ order.totalPrice }} сум</span>
 				</div>
+				<div class="delivery__data">
+					Тип заказа: <span>{{ (order.typeOrder==='Deliver')?'Доставка':'Самовывоз' }}</span>
+				</div>
 				<div class="order__status">
 					Статус заказа:
 					<span class ="status" :class="(order.status==='Canceled')?'red':'green'">{{order.status}}</span>
@@ -110,7 +113,6 @@ import { mapState } from 'vuex'
          padding: 24px;
          margin: 20px 0;
 			.status{
-				display: block;
 				cursor: pointer;
 
 				img {

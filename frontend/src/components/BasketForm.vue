@@ -95,6 +95,7 @@ import { mapState } from 'vuex';
 					shippingAdress1:'',
 					shippingAdress2:'',
 					phone:'',
+					typeOrder:'Deliver',
 					orderItems:null,
 					user:'',
 					comment:''
@@ -108,15 +109,37 @@ import { mapState } from 'vuex';
 				user: state=>state.auth.user.user,
 				errors:state=>state.order.errors
 			}),
+			
+			orderProductsIds(){
+				const data = this.orderProducts.map(item=>{
+					return {
+						product:item.product.id,
+						quantity:item.quantity
+					}
+				})
+				return data
+			}
 		},
 		methods:{
 			commentHandler(){
 				this.comment=!this.comment
 				this.customerInfo.comment=''
 			},
+			typeOrder(){
+				if(this.tab2){
+					this.customerInfo.typeOrder='Pickup';
+					this.customerInfo.city='Pickup';
+					this.customerInfo.shippingAdress1='Pickup';
+				}else{
+					this.customerInfo['typeOrder']='Deliver'
+				}
+			},
 			submitHandler(){
+				console.log(this.orderProductsIds)
+				console.log(this.orderProducts)
+				this.typeOrder()
 				const data={
-					...this.customerInfo,user:this.user.id,orderItems:this.orderProducts
+					...this.customerInfo,user:this.user.id,orderItems:this.orderProductsIds
 				}
 				this.$store.dispatch('order/addOrder',data).then(res=>{
 					this.customerInfo.name='';

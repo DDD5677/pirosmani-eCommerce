@@ -103,6 +103,7 @@
 <script>
 import { mapState,mapMutations } from 'vuex';
 import { removeItem } from "@/helpers/localStorage";
+import Compressor from 'compressorjs';
 	export default {
 		name:'personal-info',
 		data(){
@@ -135,10 +136,36 @@ import { removeItem } from "@/helpers/localStorage";
 				this.extraPhone=user.extraPhone;
 			},
 			changeAvatar(event){
-            let inputImage = document.querySelector("input[type=file]").files[0];
+            let inputImage = event.target.files[0];
+				const FILE_TYPE_MAP = {
+					"image/png": "png",
+					"image/jpeg": "jpeg",
+					"image/jpg": "jpg",
+				};
+				if(!inputImage){
+					return
+				}
+				if(!FILE_TYPE_MAP[inputImage.type]){
+					alert('Можно загружать только файлы jpeg, jpg и png')
+					return
+				}
+				if(inputImage.size>10*1024*1024){
+					alert('Размер файла должен быть меньше 10 МБ.')
+					return
+				}else if(inputImage.size>2*1024*1024){
+					new Compressor(inputImage,{
+						quality:0.6,
+						success(result){
+							this.avatar=result
+						},
+						error(err) {
+							console.log(err.message);
+						},
+					})
+				}else{
+					this.avatar=inputImage;
+				}
             this.$refs.imageName.innerText = inputImage.name;
-				console.log(inputImage,event.target.value)
-				this.avatar=inputImage;
 			},
 			submitHandler(){
 				const data={

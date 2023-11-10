@@ -27,7 +27,7 @@
 					</div>
 					<div class="total__cost">
 						<span>Итого к оплате</span>
-						<span class="total__price">{{ tabs.tab1? totalSumm-delivery: totalSumm - calcDelivery }} сум</span>
+						<span class="total__price">{{ tabs.tab1? totalSumm-delivery: (totalSumm - calcDelivery).toFixed(2) }} сум</span>
 					</div>
 				</div>
 			</div>
@@ -54,7 +54,7 @@ import { mapState } from 'vuex';
 				totalSumm: state=>state.order.userOrder.totalSumm,
 			}),
 			calcDelivery(){
-				return (this.totalSumm*0.2).toFixed(2)
+				return +(this.totalSumm*0.2).toFixed(2)
 			}
 		},
 		methods:{

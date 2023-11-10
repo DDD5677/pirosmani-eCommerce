@@ -157,8 +157,10 @@ router.post("/", async (req, res, next) => {
       if (req.body.orderItems.length === 0) {
          return res.status(404).json({ orderItems: "the basket is empty!" });
       }
+      console.log("req", req.body);
       const orderItemsIds = await Promise.all(
          req.body.orderItems.map(async (orderItem) => {
+            console.log(orderItem);
             let newOrderItem = new OrderItem({
                quantity: orderItem.quantity,
                product: orderItem.product,
@@ -181,7 +183,7 @@ router.post("/", async (req, res, next) => {
          })
       );
 
-      const totalPrice = totalPrices.reduce((a, b) => a + b, 0);
+      const totalPrice = +totalPrices.reduce((a, b) => a + b, 0).toFixed(2);
 
       const user = await User.findByIdAndUpdate(req.body.user, {
          $inc: { totalSpent: totalPrice },
@@ -196,6 +198,7 @@ router.post("/", async (req, res, next) => {
          shippingAdress1: req.body.shippingAdress1,
          shippingAdress2: req.body.shippingAdress2,
          city: req.body.city,
+         typeOrder: req.body.typeOrder,
          comment: req.body.comment,
          phone: req.body.phone,
          status: req.body.status,

@@ -135,6 +135,7 @@ import {mapActions, mapMutations, mapState} from 'vuex';
          overflow: hidden;
 
          img {
+				object-fit: cover;
             width: 100%;
             height: 100%;
          }
@@ -317,7 +318,6 @@ import {mapActions, mapMutations, mapState} from 'vuex';
 
       .product__top {
          .product__img {
-            min-height: 300px;
             flex: 0 0 58%;
          }
 
@@ -351,10 +351,9 @@ import {mapActions, mapMutations, mapState} from 'vuex';
 
          .product__img {
             margin-bottom: 20px;
-
-            img {
-               height: 380px;
-            }
+				img{
+					height: 400px;
+				}
          }
 
          .product__info {
@@ -409,7 +408,7 @@ import {mapActions, mapMutations, mapState} from 'vuex';
          .product__img {
 
             img {
-               height: 300px;
+               height: 310px;
             }
          }
 

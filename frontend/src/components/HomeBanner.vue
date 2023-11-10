@@ -24,7 +24,7 @@
 								</div>
 							</div>
 							<div>
-								<green-btn @click="this.$router.push(banner.link)">{{ banner.button }}</green-btn>
+								<green-btn @click.prevent="this.$router.push(banner.link)">{{ banner.button }}</green-btn>
 							</div>
 						</div>
 						<div class="right">
@@ -41,7 +41,6 @@ import { Pagination} from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 
 import { mapState,mapMutations } from 'vuex';
-import img1 from '@/assets/images/home__banner-bg.png';
 	export default {
 		name:'home-banner',
 		components: {
@@ -50,23 +49,7 @@ import img1 from '@/assets/images/home__banner-bg.png';
 		},
 	 	data(){
 			return{
-				home_banner:[
-					{
-						title:'Подарок на первый заказ.',
-						subtitle:'Получите 500 рублей за подписку на рассылку',
-						img:img1
-					},
-					{
-						title:'Подарок на первый заказ.',
-						subtitle:'Получите 500 рублей за подписку на рассылку',
-						img:img1
-					},
-					{
-						title:'Подарок на первый заказ.',
-						subtitle:'Получите 500 рублей за подписку на рассылку',
-						img:img1
-					},
-				]
+				
 			}
 	 	},
 		computed:{
@@ -125,20 +108,21 @@ import img1 from '@/assets/images/home__banner-bg.png';
       border-radius: 18px;
 		overflow: hidden;
       display: flex;
-		height: 300px;
+		height: 400px;
       .left {
          padding: 40px 0 50px 40px;
-         flex: 0 0 60%;
+         flex: 0 0 50%;
 			display: flex;
 			flex-direction: column;
 			justify-content: space-between;
       }
 
       .right {
-         flex: 0 0 40%;
+         flex: 1 0 45%;
          img {
             width: 100%;
             height: 100%;
+				object-fit: cover;
          }
       }
 
@@ -161,6 +145,8 @@ import img1 from '@/assets/images/home__banner-bg.png';
       }
 
       .green__btn {
+			position: relative;
+			z-index: 99;
          font-weight: 500;
          font-size: 25px;
       }
@@ -168,7 +154,7 @@ import img1 from '@/assets/images/home__banner-bg.png';
 
 	@media (max-width: 1019px){
 		.home__banner-wrapper{
-			height: 300px;
+			height: 350px;
 			.left{
 				.subtitle{
 					margin-bottom: 20px;
@@ -184,7 +170,7 @@ import img1 from '@/assets/images/home__banner-bg.png';
 		}
 		.home__banner-wrapper{
 			
-			height: 230px;
+			height: 280px;
 		}
 	}
 	@media (max-width: 619px){
@@ -201,29 +187,29 @@ import img1 from '@/assets/images/home__banner-bg.png';
 						margin-bottom: 10px;
 					}
 				}
-				height: 160px;
+				height: 230px;
 			}
 		}
 	}
 	@media (max-width: 439px){
 		.home__banner{
 			.home__banner-wrapper {
+				height: 180px;
 				.left{
-					padding: 10px 5px 10px 15px ;
+					padding: 10px 5px 15px 15px ;
 					.title{
-						line-height: 15px;
-						font-size: 14px;
+						line-height: 18px;
+						font-size: 18px;
 						margin-bottom: 5px;
 					}
 					.subtitle{
-						font-size: 12px;
-						line-height: 12px;
+						font-size: 14px;
+						line-height: 14px;
 					}
 					.green__btn{
 						font-size: 16px;
 					}
 				}
-				height: 120px;
 			}
 		}
 	}
