@@ -92,7 +92,7 @@
 					v-model="confirmPassword"/>
 
 				</div>
-				<green-btn class="green__btn">Сохранить изменения</green-btn>
+				<green-btn :disabled="!changed||imageCompressing" class="green__btn">Сохранить изменения</green-btn>
 				<transparent-btn @click="logOutHandler">Log out</transparent-btn>
 				
 			</div>
@@ -103,7 +103,8 @@
 <script>
 import { mapState,mapMutations } from 'vuex';
 import { removeItem } from "@/helpers/localStorage";
-import Compressor from 'compressorjs';
+//import Compressor from 'compressorjs';
+import imageCompression from 'browser-image-compression';
 	export default {
 		name:'personal-info',
 		data(){
@@ -116,14 +117,19 @@ import Compressor from 'compressorjs';
 				password:'',
 				newPassword:'',
 				confirmPassword:'',
-				avatar:null
+				avatar:null,
+				imageCompressing:false,
 			}
 		},
 		computed:{
 			...mapState({
 				user:state=>state.auth.user.user,
 				errors:state=>state.auth.updateErrors,
-			})
+			}),
+			changed(){
+				const user = this.user
+				return this.name!==user.name||this.surname!==user.surname||this.email!==user.email||this.avatar||this.phone!==user.phone||this.extraPhone!==user.extraPhone||this.password
+			}
 		},
 		methods:{
 			...mapMutations({
@@ -142,6 +148,8 @@ import Compressor from 'compressorjs';
 					"image/jpeg": "jpeg",
 					"image/jpg": "jpg",
 				};
+
+				console.log("image",inputImage)
 				if(!inputImage){
 					return
 				}
@@ -152,22 +160,32 @@ import Compressor from 'compressorjs';
 				if(inputImage.size>10*1024*1024){
 					alert('Размер файла должен быть меньше 10 МБ.')
 					return
-				}else if(inputImage.size>2*1024*1024){
-					new Compressor(inputImage,{
-						quality:0.6,
-						success(result){
-							this.avatar=result
-						},
-						error(err) {
-							console.log(err.message);
-						},
-					})
-				}else{
-					this.avatar=inputImage;
 				}
+				this.avatar=inputImage
+				// }else if(inputImage.size>1*1024*1024){
+
+				// 	const compressedFile = await imageCompression(imageFile, options);
+    			// 	console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
+    			// 	console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`);
+				// 	// new Compressor(inputImage,{
+				// 	// 	quality:0.6,
+				// 	// 	success(result){
+				// 	// 		const myFile = new File([result],result.name,{type:result.type})
+				// 	// 		this.avatar=myFile;
+				// 	// 		console.log("compress",myFile)
+				// 	// 	},
+				// 	// 	error(err) {
+				// 	// 		console.log(err.message);
+				// 	// 	},
+				// 	// })
+				// }else{
+				// 	this.avatar=inputImage;
+				// 	console.log('real',inputImage)
+				// }
             this.$refs.imageName.innerText = inputImage.name;
 			},
-			submitHandler(){
+			async submitHandler(){
+				this.imageCompressing=true;
 				const data={
 					id:this.user.id,
 					name:this.name,
@@ -179,8 +197,38 @@ import Compressor from 'compressorjs';
 					newPassword:this.newPassword,
 					avatar:this.avatar
 				}
-			
-				this.$store.dispatch('auth/updateUserInfo',data);
+				if(!this.avatar){
+					this.$store.dispatch('auth/updateUserInfo',data).then(user=>{
+						this.imageCompressing=false;
+						this.assignUserData(user)
+					});
+					return
+				}
+				if(this.avatar.size>1024*1024){
+					const options = {
+						maxSizeMB: 1,
+						maxWidthOrHeight: 1920,
+						useWebWorker: true,
+					}
+					try {
+						const compressedFile = await imageCompression(this.avatar, options);
+						console.log('compressed',compressedFile)
+						data.avatar=compressedFile;
+						this.$store.dispatch('auth/updateUserInfo',data).then(user=>{
+							this.imageCompressing=false;
+							this.assignUserData(user)
+						});
+					} catch (error) {
+						console.log(error);
+					}
+				}else{
+					console.log("orginal",this.avatar)
+					this.$store.dispatch('auth/updateUserInfo',data).then(user=>{
+						this.imageCompressing=false;
+						this.assignUserData(user)
+					});
+				}
+				
 			},
 			logOutHandler(){
 				removeItem('token');

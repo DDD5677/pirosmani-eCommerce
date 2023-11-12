@@ -15,7 +15,7 @@
                      </div>
                      <div class="product__discount">
                         <span>Промокод</span>
-                        <span class="discount">- 10 сум </span>
+                        <span class="discount">0 сум </span>
                      </div>
                      <div class="product__total-price">
                         <span>Итого к оплате</span>
@@ -29,7 +29,7 @@
                      <h4 class="title">Промокод</h4>
                      <form action="">
                         <input type="text" placeholder="Введите промокод" />
-                        <green-btn @click.prevent="console.log('ckick')" class="green__btn">Подтвердить</green-btn>
+                        <green-btn @click.prevent="alertMessage" class="green__btn">Подтвердить</green-btn>
                      </form>
                   </div>
                </div>
@@ -50,9 +50,12 @@ import { mapState } from 'vuex';
 			}),
 		},
 		methods:{
+			alertMessage(){
+				alert('Данная услуга находится в разработке')
+			},
 			registerOrder(){
 				if(this.orderProducts.length ===0){
-					alert('Basket is empty')
+					alert('Корзина пуста')
 				}else{
 				this.$router.push('basket-form')}
 			}

@@ -1,7 +1,7 @@
 <template>
 	<div class="basket__products">
 		<h3 class="title">Корзина</h3>
-		<div v-if="orderProducts.length === 0" class="empty-basket">Basket is empty</div>
+		<div v-if="orderProducts.length === 0" class="empty-basket">Корзина пуста</div>
 		<basket-product v-for="product in orderProducts" :product="product" :id="product.product.id"/>
 	</div>
 </template>

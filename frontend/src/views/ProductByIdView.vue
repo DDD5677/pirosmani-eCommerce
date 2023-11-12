@@ -45,7 +45,7 @@
                </div>
             </div>
             <div class="product__bottom">
-               <product-tab v-if="!reviewLoading" :product="product" :reviewsShow="reviewsShow"/>
+               <product-tab :product="product"/>
                <product-bonus />
             </div>
 				</div>

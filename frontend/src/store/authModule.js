@@ -23,7 +23,7 @@ export const authModule = {
       },
       registerSuccess(state, payload) {
          state.isLoading = false;
-         state.user = payload;
+         //state.user = payload;
       },
       registerFailure(state, payload) {
          state.isLoading = false;
@@ -31,7 +31,7 @@ export const authModule = {
       },
       loginStart(state) {
          state.isLoading = true;
-         //state.user = null;
+         state.user = null;
          state.errors = null;
          state.isLogged = null;
       },
@@ -60,7 +60,7 @@ export const authModule = {
    },
    actions: {
       register(context, user) {
-         return new Promise((resolve) => {
+         return new Promise((resolve, reject) => {
             context.commit("registerStart");
             AuthService.register(user)
                .then((response) => {
@@ -69,6 +69,7 @@ export const authModule = {
                })
                .catch((error) => {
                   context.commit("registerFailure", error.response.data);
+                  reject();
                });
          });
       },
@@ -83,6 +84,7 @@ export const authModule = {
                })
                .catch((error) => {
                   context.commit("loginFailure", error.response.data);
+                  reject();
                });
          });
       },
@@ -91,7 +93,6 @@ export const authModule = {
             context.commit("loginStart");
             AuthService.refresh()
                .then((response) => {
-                  setItem("token", response.data.token);
                   context.commit("loginSuccess", response.data);
                })
                .catch((error) => {
@@ -105,9 +106,11 @@ export const authModule = {
             AuthService.updateUserInfo(updateUser)
                .then((response) => {
                   context.commit("updateSuccess", response.data);
+                  resolve(response.data.user);
                })
                .catch((error) => {
                   context.commit("updateFailure", error.response.data);
+                  reject();
                });
          });
       },

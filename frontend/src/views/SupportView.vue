@@ -11,14 +11,18 @@
                   placeholder="Напишите сообщение..."
                ></textarea>
             </form>
-            <green-btn class="green__btn">В каталог</green-btn>
+            <green-btn @click.prevent="alertMessage" class="green__btn">В каталог</green-btn>
          </div>
       </section>
 </template>
 
 <script>
 	export default {
-		
+		methods:{
+			alertMessage(){
+				alert('Данная услуга находится в разработке')
+			},
+		}
 	}
 </script>
 

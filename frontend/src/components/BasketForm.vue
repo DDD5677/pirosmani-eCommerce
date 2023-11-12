@@ -43,9 +43,9 @@
 
 		<div class="select-box" :class="{'none':tab1}" id="delivery-box">
 			<label for="">Когда заберете?</label>
-			<select name="data-del" id="data-del">
-				<option value="volvo">В ближайшее время</option>
-				<option value="saab">Через неделя</option>
+			<select required v-model="customerInfo.datePickup">
+				<option value="В ближайшее время">В ближайшее время</option>
+				<option value="Через неделя">Через неделя</option>
 			</select>
 		</div>
 		<div class="comment" :class="{'none':tab2}">
@@ -59,7 +59,7 @@
 			v-model="customerInfo.comment"/>
 			
 		</div>
-		<green-btn  @click.prevent="submitHandler" class="green__btn">Оформить заказ</green-btn>
+		<green-btn :disabled="reqLoading"  @click.prevent="submitHandler" class="green__btn">Оформить заказ</green-btn>
 	</form>
 </template>
 
@@ -98,9 +98,11 @@ import { mapState } from 'vuex';
 					typeOrder:'Deliver',
 					orderItems:null,
 					user:'',
-					comment:''
+					comment:'',
+					datePickup:'В ближайшее время',
 				},
-				comment:false
+				comment:false,
+				reqLoading:false,
 			}
 		},
 		computed:{
@@ -135,8 +137,11 @@ import { mapState } from 'vuex';
 				}
 			},
 			submitHandler(){
-				console.log(this.orderProductsIds)
-				console.log(this.orderProducts)
+				if(!this.orderProductsIds.length){
+					alert('Корзина пуста')
+					return
+				}
+				this.reqLoading=true;
 				this.typeOrder()
 				const data={
 					...this.customerInfo,user:this.user.id,orderItems:this.orderProductsIds
@@ -148,6 +153,9 @@ import { mapState } from 'vuex';
 					this.customerInfo.shippingAdress2='';
 					this.customerInfo.phone='';
 					this.customerInfo.comment='';
+					this.reqLoading=false
+				}).catch(err=>{
+					this.reqLoading=false
 				});
 				
 			}

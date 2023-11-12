@@ -5,12 +5,12 @@
 		</h5>
 		<form action="">
 			<form-input 
-				:label="''" 
-				:type="'text'" 
-				:placeholder="'Имя'" 
-				:errors="errors" 
-				:error="errors?errors.name:''" 
-				v-model="name"/>
+			:label="''" 
+			:type="'text'" 
+			:placeholder="'Имя'" 
+			:errors="errors" 
+			:error="errors?errors.name:''" 
+			v-model="name"/>
 			<form-input 
 			:label="''" 
 			:type="'tel'" 
@@ -45,7 +45,7 @@
 		</form>
 	</div>
 	<div class="modal__footer">
-		<green-btn @click.prevent="postReservationHandler" class="green__btn">Забронировать</green-btn>
+		<green-btn :disabled="reqLoading" @click.prevent="postReservationHandler" class="green__btn">Забронировать</green-btn>
 	</div>
 			
 </template>
@@ -60,7 +60,8 @@ import { mapState,mapMutations } from 'vuex'
 				phone:'',
 				time:'',
 				date:'',
-				numOfPeople:null
+				numOfPeople:null,
+				reqLoading:false
 			}
 		},
 		computed:{
@@ -74,6 +75,7 @@ import { mapState,mapMutations } from 'vuex'
 				toggleModal:'navbar/toggleModal',
 			}),
 			postReservationHandler(){
+				this.reqLoading=true
 				const data = {
 					user:this.user.id,
 					name:this.name,
@@ -89,7 +91,10 @@ import { mapState,mapMutations } from 'vuex'
 					// this.date='',
 					// this.time='',
 					// this.numOfPeople=null;
+					this.reqLoading=true;
 					this.toggleModal(false)
+				}).catch(err=>{
+					this.reqLoading=false
 				})
 			}
 		}

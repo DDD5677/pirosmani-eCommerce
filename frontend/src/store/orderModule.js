@@ -88,7 +88,7 @@ export const orderModule = {
          context.commit("totalSumm");
       },
       addOrder(context, order) {
-         return new Promise((resolve) => {
+         return new Promise((resolve, reject) => {
             context.commit("orderStart");
             OrderService.order(order)
                .then((response) => {
@@ -97,6 +97,7 @@ export const orderModule = {
                })
                .catch((error) => {
                   context.commit("orderFailure", error.response.data);
+                  reject();
                });
          });
       },
@@ -114,7 +115,7 @@ export const orderModule = {
          });
       },
       postReservation(context, data) {
-         return new Promise((resolve) => {
+         return new Promise((resolve, reject) => {
             context.commit("postReservationStart");
             OrderService.postReservation(data)
                .then((response) => {
@@ -123,6 +124,7 @@ export const orderModule = {
                })
                .catch((error) => {
                   context.commit("postReservationFailure", error.response.data);
+                  reject();
                });
          });
       },

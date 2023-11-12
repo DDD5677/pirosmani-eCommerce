@@ -3,12 +3,12 @@
 		<ul class="nav">
 			<li class="nav-item" role="presentation">
 				<button @click.prevent="Delivery" class="nav-link" :class="{'active':tabs.tab1}">
-					Доставка
+					Доставка ( +10%)
 				</button>
 			</li>
 			<li class="nav-item" role="presentation">
 				<button @click.prevent="selfDelivery" class="nav-link" :class="{'active':tabs.tab2}">
-					Самовывоз (- 20%)
+					Самовывоз
 				</button>
 			</li>
 		</ul>
@@ -22,12 +22,12 @@
 						</div>
 						<div>
 							<span>Доставка</span>
-							<span class="green__price">{{ tabs.tab1? delivery:calcDelivery }} сум</span>
+							<span class="green__price">{{ tabs.tab1? calcDelivery:delivery }} сум</span>
 						</div>
 					</div>
 					<div class="total__cost">
 						<span>Итого к оплате</span>
-						<span class="total__price">{{ tabs.tab1? totalSumm-delivery: (totalSumm - calcDelivery).toFixed(2) }} сум</span>
+						<span class="total__price">{{ tabs.tab1? (totalSumm + calcDelivery).toFixed(2): totalSumm }} сум</span>
 					</div>
 				</div>
 			</div>
@@ -54,7 +54,7 @@ import { mapState } from 'vuex';
 				totalSumm: state=>state.order.userOrder.totalSumm,
 			}),
 			calcDelivery(){
-				return +(this.totalSumm*0.2).toFixed(2)
+				return +(this.totalSumm*0.1).toFixed(2)
 			}
 		},
 		methods:{

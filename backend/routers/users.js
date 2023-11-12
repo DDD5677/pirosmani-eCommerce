@@ -174,7 +174,7 @@ router.get("/get/user", async (req, res, next) => {
          });
       }
 
-      res.status(200).send({ user: user, token: token });
+      res.status(200).send({ user: user });
    } catch (error) {
       next(error);
    }

@@ -20,5 +20,8 @@
    color: #fff;
    border-radius: 5px;
 	cursor: pointer;
-}
+	}
+	button[disabled]{
+		background-color: rgba($color: $main-color, $alpha: .7);
+	}
 </style>

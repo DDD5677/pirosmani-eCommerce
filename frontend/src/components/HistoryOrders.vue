@@ -1,5 +1,6 @@
 <template>
 	<div class="history__products">
+		<div v-if="!orderList.length" class="empty"><span>У вас нет заказов</span></div>
 		<div v-for="(order,index) in orderList" class="orders" id="orders">
 			<div class="info">
 				<div class="order__number">
@@ -103,7 +104,12 @@ import { mapState } from 'vuex'
 <style lang="scss" scoped>
 	.history__products {
       padding: 30px 0 0;
-
+		.empty{
+			margin-top: 30px;
+			color: $main-color;
+			font-size: 25px;
+			text-align: center;
+		}
       .orders {
          display: flex;
          justify-content: space-between;

@@ -27,8 +27,8 @@
                человек.
             </p>
             <div class="links">
-               <green-btn class="green__btn">В каталог</green-btn>
-               <transparent-btn>Об оплате</transparent-btn>
+               <green-btn @click.prevent="alertMessage" class="green__btn">В каталог</green-btn>
+               <transparent-btn @click.prevent="alertMessage">Об оплате</transparent-btn>
             </div>
          </div>
       </section>
@@ -36,7 +36,11 @@
 
 <script>
 	export default {
-		
+		methods:{
+			alertMessage(){
+				alert('Данная услуга находится в разработке')
+			},
+		}
 	}
 </script>
 

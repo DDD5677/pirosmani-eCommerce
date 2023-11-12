@@ -21,6 +21,7 @@ const errorHandler = require("./helpers/error-handler");
 
 app.use(cors());
 app.options("*", cors());
+app.enable("trust proxy");
 mongoose.set("toJSON", { getters: true });
 //*TODO:middleware
 app.use(bodyParser.json());

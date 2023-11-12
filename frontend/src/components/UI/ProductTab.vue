@@ -62,7 +62,7 @@
 				class="tab-pane__reviews"
 			>
 				<h3 class="title">Отзывы</h3>
-				<div class="swiper__hidden">
+				<div v-if="!reviewLoading"  class="swiper__hidden">
 					<swiper
 					:spaceBetween="30"
 					:slidesPerView='2'
@@ -150,10 +150,6 @@ import {mapActions, mapMutations, mapState} from 'vuex';
 				type:Object,
 				required:true
 			},
-			reviewsShow:{
-				type:Array,
-				required:true
-			}
 		},
 		data(){
 			return{
@@ -165,7 +161,13 @@ import {mapActions, mapMutations, mapState} from 'vuex';
 		computed:{
 			...mapState({
 				isLogged: state=>state.auth.isLogged,
+				reviewsList:state=>state.singleProduct.reviewsList,
+				reviewLoading:state=>state.singleProduct.reviewLoading
 			}),
+			reviewsShow(){
+				const reviews = this.reviewsList.filter(review=>review.status==='Accepted')
+				return reviews
+			}
 		},
 		methods:{
 			...mapMutations({

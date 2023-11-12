@@ -50,7 +50,7 @@
 		</div>
 		<green-btn
 			class="green__btn"
-			:disabled="isLoading"
+			:disabled="reqLoading"
 			@click.prevent="submitHandler">
 		Зарегистрироваться
 		</green-btn>
@@ -69,13 +69,13 @@ import { mapMutations, mapState } from 'vuex';
 				email:'',
 				phone:'',
 				password:'',
-				confirmPassword:''
+				confirmPassword:'',
+				reqLoading:false
 			}
 		},
 		computed:{
 			...mapState({
 				errors:state=>state.auth.errors,
-				isLoading:state=>state.auth.isLoading,
 			})
 		},
 		methods:{
@@ -83,6 +83,7 @@ import { mapMutations, mapState } from 'vuex';
 				toggleSignIn:'navbar/toggleSignIn'
 			}),
 			submitHandler(){
+				this.reqLoading = true;
 				const data={
 					name:this.name,
 					email:this.email,
@@ -91,7 +92,10 @@ import { mapMutations, mapState } from 'vuex';
 				}
 			
 				this.$store.dispatch('auth/register',data).then((res)=>{
+					this.reqLoading=false;
 					this.toggleSignIn()
+				}).catch(err=>{
+					this.reqLoading=false
 				});
 			}
 		}

@@ -25,7 +25,7 @@
 					Забыли пароль?
 					</a>
 				</div>
-				<green-btn  class="green__btn enter__profile" @click.prevent="submitHandler" >
+				<green-btn :disabled="reqLoading"  class="green__btn enter__profile" @click.prevent="submitHandler" >
 				Войти
 				</green-btn>
 			</div>
@@ -49,7 +49,8 @@ export default {
 	data(){
 		return{
 			email:'',
-			password:''
+			password:'',
+			reqLoading:false
 		}
 	},
 	computed:{
@@ -64,14 +65,18 @@ export default {
 			toggleForgotPassword:'navbar/toggleForgotPassword'
 		}),
 		submitHandler(){
+			this.reqLoading=true;
 			const data={
 				email:this.email,
 				password:this.password
 			}
 			
 			this.$store.dispatch('auth/login',data).then(user=>{
-				this.$store.dispatch('auth/refresh');
-				this.toggleModal(false)
+				//this.$store.dispatch('auth/refresh');
+				this.toggleModal(false);
+				this.reqLoading=false;
+			}).then(err=>{
+				this.reqLoading=false
 			});
 		}
 	}

@@ -200,6 +200,7 @@ router.post("/", async (req, res, next) => {
          city: req.body.city,
          typeOrder: req.body.typeOrder,
          comment: req.body.comment,
+         datePickup: req.body.datePickup,
          phone: req.body.phone,
          status: req.body.status,
          totalPrice: totalPrice,

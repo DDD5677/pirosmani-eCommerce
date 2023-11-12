@@ -49,9 +49,9 @@ const orderSchema = new mongoose.Schema(
          required: true,
          default: "Deliver", //or 'Pickup'
       },
-      dateOrdered: {
-         type: Date,
-         default: Date.now,
+      datePickup: {
+         type: String,
+         default: "",
       },
    },
    { timestamps: true }

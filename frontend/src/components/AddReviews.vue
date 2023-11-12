@@ -14,7 +14,7 @@
 		</div>
 	</div>
 	<div class="modal__footer">
-		<green-btn @click.prevent="postReviewsHandler" class="green__btn">Добавить отзыв</green-btn>
+		<green-btn :disabled="reqLoading" @click.prevent="postReviewsHandler" class="green__btn">Добавить отзыв</green-btn>
 	</div>
            
    
@@ -27,7 +27,8 @@ export default {
 	data(){
 		return{
 			rating:null,
-			bodyText:null
+			bodyText:null,
+			reqLoading:false
 		}
 	},
 	computed:{
@@ -43,6 +44,7 @@ export default {
 			this.rating=index;
 		},
 		postReviewsHandler(){
+			this.reqLoading=true;
 			const data={
 				product:this.$route.params.id,
 				user:this.user.id,
@@ -54,6 +56,9 @@ export default {
 				this.toggleModal(false)
 				this.bodyText=null;
 				this.rating=null;
+				this.reqLoading=false
+			}).catch(err=>{
+				this.reqLoading=false
 			})
 		}
 	}

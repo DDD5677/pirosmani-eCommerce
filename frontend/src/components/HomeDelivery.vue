@@ -6,7 +6,7 @@
                   Бесплатная доставка по Узбекистану<br/>
                   и Области от 2999 сум!
                </h3>
-					<green-btn>Оформить</green-btn>
+					<green-btn @click.prevent="sumbitHandler">Оформить</green-btn>
             </div>
          </div>
       </section>
@@ -14,7 +14,12 @@
 
 <script>
 	export default {
-		name:'home-delivery'
+		name:'home-delivery',
+		methods:{
+			sumbitHandler(){
+				this.$router.push('/delivery')
+			}
+		}
 	}
 </script>
 
