@@ -131,6 +131,7 @@
 						:label="'Working time from'" 
 						:type="'time'" 
 						:placeholder="'from'" 
+						:step="'3600000'"
 						:errors="infoErrors" 
 						:error="infoErrors?infoErrors.workingTimeFrom:''" 
 						v-model="workingTimeFrom"/>
@@ -139,6 +140,7 @@
 						:label="'Working time to'" 
 						:type="'time'" 
 						:placeholder="'to'" 
+						:step="'3600000'"
 						:errors="errors" 
 						:error="infoErrors?infoErrors.workingTimeTo:''" 
 						v-model="workingTimeTo"/>
