@@ -291,7 +291,9 @@ router.put("/:id", uploadOptions.single("avatar"), async (req, res, next) => {
             img.splice(0, 3);
             const result = path.join(__dirname, "../", ...img);
             console.log("result", result);
-            fs.unlinkSync(result);
+            if (fs.existsSync(result)) {
+               fs.unlinkSync(result);
+            }
          }
          basePath = `${req.protocol}://${req.get("host")}/public/avatars/`;
          fileName = req.file.filename;
@@ -347,7 +349,9 @@ router.delete("/", async (req, res) => {
                   img.splice(0, 3);
                   const result = path.join(__dirname, "../", ...img);
                   console.log("result", result);
-                  fs.unlinkSync(result);
+                  if (fs.existsSync(result)) {
+                     fs.unlinkSync(result);
+                  }
                }
             } else {
                return res.status(404).json({

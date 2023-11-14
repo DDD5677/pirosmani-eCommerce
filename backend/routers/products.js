@@ -239,7 +239,9 @@ router.put("/:id", uploadOptions.single("image"), async (req, res, next) => {
             const img = productInfo.img.split("/");
             img.splice(0, 3);
             const result = path.join(__dirname, "../", ...img);
-            fs.unlinkSync(result);
+            if (fs.existsSync(result)) {
+               fs.unlinkSync(result);
+            }
          }
          basePath = `${req.protocol}://${req.get("host")}/public/uploads/`;
          fileName = file.filename;
@@ -273,7 +275,9 @@ router.delete("/", async (req, res, next) => {
                   img.splice(0, 3);
                   const result = path.join(__dirname, "../", ...img);
                   console.log("result", result);
-                  fs.unlinkSync(result);
+                  if (fs.existsSync(result)) {
+                     fs.unlinkSync(result);
+                  }
                }
             } else {
                return res.status(404).json({

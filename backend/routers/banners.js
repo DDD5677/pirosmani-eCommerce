@@ -118,7 +118,9 @@ router.put("/:id", uploadOptions.single("image"), async (req, res, next) => {
             const img = bannerInfo.image.split("/");
             img.splice(0, 3);
             const result = path.join(__dirname, "../", ...img);
-            fs.unlinkSync(result);
+            if (fs.existsSync(result)) {
+               fs.unlinkSync(result);
+            }
          }
          const fileName = file.filename;
          updateBlock["image"] = `${basePath}${fileName}`;
@@ -146,7 +148,9 @@ router.delete("/:id", (req, res) => {
                const img = banner.image.split("/");
                img.splice(0, 3);
                const result = path.join(__dirname, "../", ...img);
-               fs.unlinkSync(result);
+               if (fs.existsSync(result)) {
+                  fs.unlinkSync(result);
+               }
             }
             return res
                .status(200)

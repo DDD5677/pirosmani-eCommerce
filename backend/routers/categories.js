@@ -127,7 +127,9 @@ router.put(
                img.splice(0, 3);
                const result = path.join(__dirname, "../", ...img);
                console.log("result", result);
-               fs.unlinkSync(result);
+               if (fs.existsSync(result)) {
+                  fs.unlinkSync(result);
+               }
             }
             const fileName = file.image[0].filename;
             updateBlock["image"] = `${basePath}${fileName}`;
@@ -138,7 +140,9 @@ router.put(
                img.splice(0, 3);
                const result = path.join(__dirname, "../", ...img);
                console.log("result", result);
-               fs.unlinkSync(result);
+               if (fs.existsSync(result)) {
+                  fs.unlinkSync(result);
+               }
             }
             const fileName = file.icon[0].filename;
             updateBlock["icon"] = `${basePath}${fileName}`;
@@ -168,14 +172,18 @@ router.delete("/:id", (req, res) => {
                img.splice(0, 3);
                const result = path.join(__dirname, "../", ...img);
                console.log("result", result);
-               fs.unlinkSync(result);
+               if (fs.existsSync(result)) {
+                  fs.unlinkSync(result);
+               }
             }
             if (category.icon) {
                const img = category.icon.split("/");
                img.splice(0, 3);
                const result = path.join(__dirname, "../", ...img);
                console.log("result", result);
-               fs.unlinkSync(result);
+               if (fs.existsSync(result)) {
+                  fs.unlinkSync(result);
+               }
             }
             return res
                .status(200)
