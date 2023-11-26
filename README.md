@@ -1,5 +1,5 @@
 # pirosmani_vue_1
-# Link to see: pirosmani.netlify.app
+Link to see: https://pirosmani.netlify.app
 
 ## Project setup
 ```
