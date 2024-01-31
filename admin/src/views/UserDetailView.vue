@@ -46,7 +46,7 @@
 						<green-btn class="green__btn">Update</green-btn>
 					</div>
 				</form>
-
+				<loading v-else />
 			</div>
 			<div class="operations">
 				<div v-if="!ordersLoading" class="orders">

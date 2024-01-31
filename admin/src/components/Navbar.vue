@@ -10,11 +10,9 @@
 				</div>
 			</div>
 			<div v-if="!isLoading" class="nav-blocks">
-				<div class="profile">
-
+				<div @click="logoutModal" class="profile">
 					<img v-if="user.user.image" :src="user.user.image" alt="">
-					<span v-if="!user.user.image">{{ user.user.name[0] }}</span>
-
+					<span v-else>{{ user.user.name[0] }}</span>
 				</div>
 				<span @click="logoutModal" class="user-name">{{ user.user.name }}</span>
 				<Transition name="fade">
@@ -198,6 +196,14 @@ export default {
 @media(max-width:420px) {
 	.nav {
 		padding: 10px;
+
+		.dropdown {
+			padding: 10px 15px;
+
+			.logout {
+				font-size: 18px;
+			}
+		}
 
 		.user-name {
 			display: none;

@@ -115,6 +115,7 @@
 					</form>
 				</div>
 			</div>
+			<loading v-else />
 		</div>
 
 	</section>

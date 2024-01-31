@@ -8,7 +8,7 @@
 					<div class="order-info">
 						<div class="info">
 							<div class="date">
-								<div><span class="title">Date</span><span>{{ formatDate(order.dateOrdered) }}</span></div>
+								<div><span class="title">Date</span><span>{{ formatDate(order.createdAt) }}</span></div>
 							</div>
 							<div class="status">
 								<select name="status" id="status" v-model="status">
