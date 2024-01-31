@@ -51,6 +51,7 @@ router.get(`/`, async (req, res, next) => {
          (match) => `$${match}`
       );
       filter = JSON.parse(queryStr);
+      //--------------------------------------------
       if (req.query.product) {
          filter["product"] = new mongoose.Types.ObjectId(req.query.product);
       }

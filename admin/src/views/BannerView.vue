@@ -7,7 +7,7 @@
 					<button class="btn"><i class="fa fa-download" aria-hidden="true"></i>Export</button>
 
 				</div>
-				<loading v-if="bannerLoading"/>
+				<loading v-if="bannerLoading" />
 				<div v-if="!bannerLoading" class="tables">
 					<div v-for="banner in banners" :id="banner.id" class="card">
 						<div class="img-box">
@@ -16,83 +16,87 @@
 						<div class="info">
 							<span class="title">{{ banner.title }}</span>
 							<div class="btns">
-								<a @click="productPage(category.id)" class="products"><i class="fa fa-table" aria-hidden="true"></i> Products</a>
-								<a @click.prevent="bannerDetail(banner.id)" class="edit"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
+								<a @click.prevent="bannerDetail(banner.id)" class="edit"><i class="fa fa-pencil"
+										aria-hidden="true"></i> Edit</a>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<banner-detail v-if="bannerDetailShow"  class="category-detail" @close="bannerDetailToggle"/>
-			<banner-create v-if="bannerCreateShow" class="category-detail"  @close="bannerCreateToggle"/>
+			<banner-detail v-if="bannerDetailShow" class="category-detail" @close="bannerDetailToggle" />
+			<banner-create v-if="bannerCreateShow" class="category-detail" @close="bannerCreateToggle" />
 		</div>
 	</section>
 </template>
 
 <script>
-import { mapState,mapMutations } from 'vuex';
-import { setItem,getItem } from '@/helpers/localStorage';
-	export default {
-		data(){
-			return{
-				bannerDetailShow:false,
-				bannerCreateShow:false
-			}
-		},
-		computed:{
-			...mapState({
-				banners:state=>state.banner.banners,
-				bannerLoading:state=>state.banner.isLoading
-			})
-		},
-		methods:{
-			bannerDetailToggle(item){
-				this.bannerDetailShow=item
-			},
-			bannerCreateToggle(item){
-				this.bannerCreateShow = item
-			},
-			bannerDetail(id){
-				this.bannerDetailToggle(true)
-				this.$store.dispatch('banner/getBannerById',id)
-			},
-			bannerCreate(){
-				this.bannerCreateShow=true
-			},
-			productPage(id){
-				const filters=getItem('product-filters');
-				filters[5].show=true;
-				filters[5].source=id;
-				setItem('product-filters',filters)
-				this.$router.push({path:'/products',query:{page:1,limit:10}})
-			}
-		},
-		created(){
-			this.$store.dispatch('banner/getBanner')
+import { mapState, mapMutations } from 'vuex';
+import { setItem, getItem } from '@/helpers/localStorage';
+export default {
+	data() {
+		return {
+			bannerDetailShow: false,
+			bannerCreateShow: false
 		}
+	},
+	computed: {
+		...mapState({
+			banners: state => state.banner.banners,
+			bannerLoading: state => state.banner.isLoading
+		})
+	},
+	methods: {
+		bannerDetailToggle(item) {
+			this.bannerDetailShow = item
+		},
+		bannerCreateToggle(item) {
+			this.bannerCreateShow = item
+		},
+		bannerDetail(id) {
+			this.bannerDetailToggle(true)
+			this.$store.dispatch('banner/getBannerById', id)
+		},
+		bannerCreate() {
+			this.bannerCreateShow = true
+		},
+		productPage(id) {
+			const filters = getItem('product-filters');
+			filters[5].show = true;
+			filters[5].source = id;
+			setItem('product-filters', filters)
+			this.$router.push({ path: '/products', query: { page: 1, limit: 10 } })
+		}
+	},
+	created() {
+		this.$store.dispatch('banner/getBanner')
 	}
+}
 </script>
 
 <style lang="scss" scoped>
-.banners{
+.banners {
+
 	//position: relative;
-	.category-detail{
+	.category-detail {
 		background-color: #fff;
 		width: 500px;
-		position: absolute;
+		position: fixed;
 		z-index: 99;
 		top: 0;
 		right: 0;
 		bottom: 0;
 		height: 100vh;
 		border-left: 1px solid #9d9d9d;
-		padding: 100px 0 50px;
+		padding: 100px 20px 50px;
+		overflow-y: auto;
 	}
-	.buttons{
+
+	.buttons {
 		display: flex;
 		justify-content: flex-end;
 		margin-bottom: 10px;
-		.btn{
+
+		.btn {
 			border-radius: 15px;
 			padding: 10px 15px;
 			color: $main-color;
@@ -102,28 +106,32 @@ import { setItem,getItem } from '@/helpers/localStorage';
 			cursor: pointer;
 			text-transform: uppercase;
 			transition: all 0.5s ease-in-out;
-			&:hover{
+
+			&:hover {
 				background-color: $light-color;
 			}
-			i{
+
+			i {
 				margin-right: 10px;
 			}
 		}
 	}
 
-	.tables{
+	.tables {
 		display: grid;
-		grid-template-columns: 1fr 1fr 1fr;
+		grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 		//grid-template-columns: auto auto auto auto;
 
 		gap: 20px;
-		.card{
-			border:1px solid #9d9d9d;
+
+		.card {
+			border: 1px solid #9d9d9d;
 			border-radius: 10px;
 			display: flex;
 			flex-direction: column;
 			justify-content: space-between;
-			.img-box{
+
+			.img-box {
 				width: 100%;
 				border: 1px solid #C6C6C6;
 				height: 200px;
@@ -132,33 +140,39 @@ import { setItem,getItem } from '@/helpers/localStorage';
 				background-position: center;
 				background-repeat: no-repeat;
 				overflow: hidden;
-				img{
+
+				img {
 					width: 100%;
 					height: 100%;
 					object-fit: cover;
 					transition: all 0.3s ease-in-out;
-					&:hover{
+
+					&:hover {
 						transform: scale(1.05);
 					}
 				}
 			}
-			.info{
+
+			.info {
 				padding: 10px;
 				display: flex;
 				flex-direction: column;
 				justify-content: space-between;
 				flex-grow: 1;
-				.title{
+
+				.title {
 					font-size: 22px;
 					text-transform: capitalize;
 					text-align: center;
 					display: block;
 					margin: 10px 0;
 				}
-				.btns{
+
+				.btns {
 					display: flex;
-					justify-content: space-between;
-					a{
+					justify-content: flex-end;
+
+					a {
 						padding: 10px;
 						display: inline-block;
 						font-size: 14px;
@@ -167,15 +181,61 @@ import { setItem,getItem } from '@/helpers/localStorage';
 						transition: all 0.3s ease-in-out;
 						color: $main-color;
 						cursor: pointer;
-						&:hover{
+
+						&:hover {
 							background-color: $light2-color;
 						}
-						i{
+
+						i {
 							margin-right: 5px;
 						}
 					}
 				}
 			}
+		}
+	}
+}
+
+@media(max-width:820px) {
+	.banners {
+		.category-detail {
+			width: calc(100% - 60px);
+			padding-top: 80px;
+		}
+
+
+	}
+}
+
+@media(max-width:530px) {
+	.banners {
+		.container {
+			box-shadow: none;
+			background-color: transparent;
+			padding: 0;
+			margin-right: 10px;
+		}
+
+		.tables {
+			grid-template-columns: 1fr;
+
+			.card {
+				.info {
+					.title {
+						font-size: 18px;
+					}
+				}
+			}
+		}
+
+	}
+}
+
+@media(max-width:380px) {
+	.banners {
+		.category-detail {
+			padding: 80px 10px 50px;
+			width: 100%;
 		}
 	}
 }

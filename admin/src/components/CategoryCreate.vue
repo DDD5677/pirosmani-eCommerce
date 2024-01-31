@@ -4,7 +4,7 @@
 			<h2 class="title">Category Create</h2>
 			<button class="close-btn" @click.prevent="closeSidebar"><i class="fa fa-times" aria-hidden="true"></i></button>
 		</div>
-		<form  enctype="multipart/form-data">
+		<form enctype="multipart/form-data">
 			<div class="category-info">
 				<div class="name">
 					<span class="title">Category name</span>
@@ -15,100 +15,104 @@
 			<div class="category-img">
 				<label class="custom-file-upload">
 					<span class="upload__title">Upload Image<i class="fa fa-cloud-upload" aria-hidden="true"></i></span>
-					<input class="input_file" type="file" id="image" @change.stop="changeImage"/>
-					
+					<input class="input_file" type="file" id="image" @change.stop="changeImage" />
+
 				</label>
-					<span class="image_name" ref="imageName"></span>
-					<span v-if="errors&&errors.image" class="error">{{ errors.image }}</span>
+				<span class="image_name" ref="imageName"></span>
+				<span v-if="errors && errors.image" class="error">{{ errors.image }}</span>
 			</div>
-			
+
 			<div class="category-img">
 				<label class="custom-file-upload">
 					<span class="upload__title">Upload Icon<i class="fa fa-cloud-upload" aria-hidden="true"></i></span>
-					<input class="input_file" type="file" id="icon" @change.stop="changeIcon"/>
-					
+					<input class="input_file" type="file" id="icon" @change.stop="changeIcon" />
+
 				</label>
-					<span class="image_name" ref="iconName"></span>
-					<span v-if="errors&&errors.icon" class="error">{{ errors.icon }}</span>
+				<span class="image_name" ref="iconName"></span>
+				<span v-if="errors && errors.icon" class="error">{{ errors.icon }}</span>
 			</div>
-			
+
 			<div class="review-btns">
-				<button @click.prevent="submitHandler" class="review-save"><i class="fa fa-save" aria-hidden="true"></i> Save</button>
+				<button @click.prevent="submitHandler" class="review-save"><i class="fa fa-save" aria-hidden="true"></i>
+					Save</button>
 			</div>
 		</form>
 	</div>
 </template>
 
 <script>
-	import { mapState } from 'vuex';
-	export default {
-		name:'category-create',
-		data(){
-			return{
-				name:'',
-				image:null,
-				icon:null,
+import { mapState } from 'vuex';
+export default {
+	name: 'category-create',
+	data() {
+		return {
+			name: '',
+			image: null,
+			icon: null,
+		}
+	},
+	computed: {
+		...mapState({
+			errors: state => state.category.errors
+		}),
+	},
+	methods: {
+		closeSidebar() {
+			this.$emit('close', false)
+		},
+		changeImage(event) {
+			let inputImage = document.querySelector("#image").files[0];
+			if (inputImage) {
+				this.$refs.imageName.innerText = inputImage.name;
 			}
+			console.log("image", inputImage, event.target.value)
+			this.image = inputImage;
 		},
-		computed:{
-			...mapState({
-				errors:state=>state.category.errors
-			}),
-		},
-		methods:{
-			closeSidebar(){
-				this.$emit('close',false)
-			},
-			changeImage(event){
-            let inputImage = document.querySelector("#image").files[0];
-            if(inputImage){
-            	this.$refs.imageName.innerText = inputImage.name;
-				}
-				console.log("image",inputImage,event.target.value)
-				this.image=inputImage;
-			},
-			changeIcon(event){
-            let inputImage = document.querySelector("#icon").files[0];
-            if(inputImage){
-            	this.$refs.iconName.innerText = inputImage.name;
-				}
-				console.log("icon",inputImage,event.target.value)
-				this.icon=inputImage;
-			},
-			submitHandler(){
-				const data={
-					name:this.name,
-					image:this.image,
-					icon:this.icon,
-				}
-				console.log(data)
-				this.$store.dispatch('category/postCategory',data).then((res)=>{
-					this.$store.dispatch('category/getCategory')
-					this.closeSidebar()
-				})
+		changeIcon(event) {
+			let inputImage = document.querySelector("#icon").files[0];
+			if (inputImage) {
+				this.$refs.iconName.innerText = inputImage.name;
 			}
-			
+			console.log("icon", inputImage, event.target.value)
+			this.icon = inputImage;
 		},
-	}
+		submitHandler() {
+			const data = {
+				name: this.name,
+				image: this.image,
+				icon: this.icon,
+			}
+			console.log(data)
+			this.$store.dispatch('category/postCategory', data).then((res) => {
+				this.$store.dispatch('category/getCategory')
+				this.closeSidebar()
+			})
+		}
+
+	},
+}
 </script>
 
 <style lang="scss" scoped>
-.category-detail{
-	.error{
+.category-detail {
+	.error {
 		color: red
 	}
-	.top{
+
+	.top {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 		padding: 20px;
-		h2.title{
+
+		h2.title {
 			font-weight: 500;
 			font-size: 1.25rem;
 			line-height: 1.6;
 			letter-spacing: 0.0075em;
 		}
-		.close-btn{
+
+		.close-btn {
 			width: 40px;
 			height: 40px;
 			border-radius: 50%;
@@ -117,40 +121,46 @@
 			cursor: pointer;
 			background-color: transparent;
 			transition: all 0.2s ease-in-out;
-			&:hover{
+
+			&:hover {
 				background-color: $light-color;
 				color: $main-color;
 			}
 		}
 	}
-	.category-info{
+
+	.category-info {
 		padding: 0 20px;
-		.title{
+
+		.title {
 			margin-bottom: 5px;
 			display: block;
 			font-weight: 500;
 		}
-		input {
-		width: 100%;
-		padding: 12px 20px;
-		background: #FCFCFC;
-		border: 1.1194px solid #EBEBEB;
-		border-radius: 7.11356px;
-		//margin-bottom: 15px;
-		font-size: 16px;
-		&:focus {
-			border: 1.1194px solid $main-color;
-		}
 
-		&::placeholder {
-			font-weight: 400;
+		input {
+			width: 100%;
+			padding: 12px 20px;
+			background: #FCFCFC;
+			border: 1.1194px solid #EBEBEB;
+			border-radius: 7.11356px;
+			//margin-bottom: 15px;
 			font-size: 16px;
-			line-height: 24px;
-			color: #C6C6C6;
+
+			&:focus {
+				border: 1.1194px solid $main-color;
+			}
+
+			&::placeholder {
+				font-weight: 400;
+				font-size: 16px;
+				line-height: 24px;
+				color: #C6C6C6;
+			}
 		}
 	}
-	}
-	.img-box{
+
+	.img-box {
 		margin: 20px;
 		border: 1px solid #C6C6C6;
 		height: 250px;
@@ -159,20 +169,27 @@
 		background-position: center;
 		background-repeat: no-repeat;
 		overflow: hidden;
-		img{
+
+		img {
 			width: 100%;
 			height: 100%;
 			object-fit: cover;
 			transition: all 0.3s ease-in-out;
-			&:hover{
+
+			&:hover {
 				transform: scale(1.05);
 			}
 		}
 	}
 
-	.category-img{
+	.category-img {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		align-items: center;
 		margin-top: 20px;
 		padding: 0 20px;
+
 		.custom-file-upload {
 			border-radius: 5px;
 			border: 1px solid $main-color;
@@ -182,32 +199,35 @@
 			font-weight: 500;
 			padding: 10px;
 			cursor: pointer;
-			.upload__title{
+
+			.upload__title {
 				display: inline-block;
 				line-height: 1;
 				margin-left: 10px;
-				i{
+
+				i {
 					margin-left: 5px;
 				}
 
 			}
-			
+
 			input[type="file"] {
 				display: none;
 			}
 		}
-		.image_name{
-			margin-left: 10px;
+
+		.image_name {
 			font-size: 12px;
 			color: $main-color;
 		}
 	}
-	
-	.review-btns{
+
+	.review-btns {
 		padding: 20px;
 		display: flex;
 		justify-content: flex-end;
-		button{
+
+		button {
 			width: 120px;
 			padding: 10px;
 			border-radius: 5px;
@@ -215,21 +235,22 @@
 			text-transform: uppercase;
 			font-weight: 500;
 			cursor: pointer;
-			i{
+
+			i {
 				margin-right: 5px;
 			}
 		}
-		
-		.review-save{
+
+		.review-save {
 			background-color: transparent;
 			border: 2px solid $main-color;
 			color: $main-color;
-			transition:all 0.4s ease-in-out;
-			&:hover{
+			transition: all 0.4s ease-in-out;
+
+			&:hover {
 				background-color: rgba(172, 255, 172, 0.2);
 			}
 		}
-		
+
 	}
-}
-</style>
+}</style>

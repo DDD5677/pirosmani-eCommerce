@@ -98,7 +98,7 @@ router.get(`/`, async (req, res) => {
          (match) => `$${match}`
       );
       filter = JSON.parse(queryStr);
-
+      //--------------------------------------------
       totalProducts = await Product.countDocuments(filter).exec();
       if (!totalProducts) {
          return res.status(200).send({

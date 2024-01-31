@@ -53,6 +53,16 @@ router.get(`/`, async (req, res, next) => {
          };
       }
       totalUsers = await User.countDocuments(filter).exec();
+      if (!totalUsers) {
+         return res.status(200).send({
+            usersList: [],
+            pagination: {
+               pageSize: pageSize,
+               limit: limit,
+               page: page,
+            },
+         });
+      }
       pageSize = Math.ceil(totalUsers / limit);
       if (page > pageSize) {
          return res.status(404).json({

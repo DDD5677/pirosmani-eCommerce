@@ -1,7 +1,7 @@
 <template>
 	<section class="order-detail">
 		<div class="container">
-			<loading v-if="orderLoading"/>
+			<loading v-if="orderLoading" />
 			<div v-if="!orderLoading" class="order-detail__inner">
 				<h2 class="main-title">Order Information</h2>
 				<div class="order-top">
@@ -21,7 +21,8 @@
 						<div class="address">
 							<div><span class="title">City</span><span>{{ order.city }}</span></div>
 							<div><span class="title">Address 1</span><span>{{ order.shippingAdress1 }}</span></div>
-							<div v-if="order.shippingAdress2"><span class="title">Address 2</span><span>{{ order.shippingAdress2 }}</span></div>
+							<div v-if="order.shippingAdress2"><span class="title">Address 2</span><span>{{ order.shippingAdress2
+							}}</span></div>
 						</div>
 						<div class="phone">
 							<span class="title">Phone</span><span>{{ order.phone }}</span>
@@ -60,12 +61,15 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr v-for="item in order.orderItems" :id="item._id" @click="this.$router.push(`/products/${item.product.id}`)">
-								<td><avatar :info="{image:item.product.img, name:item.product.name}"/> </td>
-								<td>{{item.product.name}}</td>
-								<td>{{item.product.price}}$</td>
-								<td>{{item.quantity}}</td>
-								<td>{{ (item.quantity*item.product.price.toFixed(2)) }}$</td>
+							<tr v-for="item in order.orderItems" :id="item._id"
+								@click="this.$router.push(`/products/${item.product.id}`)">
+								<td>
+									<avatar :info="{ image: item.product.img, name: item.product.name }" />
+								</td>
+								<td>{{ item.product.name }}</td>
+								<td>{{ item.product.price }}$</td>
+								<td>{{ item.quantity }}</td>
+								<td>{{ (item.quantity * item.product.price.toFixed(2)) }}$</td>
 							</tr>
 						</tbody>
 					</table>
@@ -76,7 +80,8 @@
 				</div>
 				<div class="btns">
 					<green-btn :disabled="isDisable" @click.prevent="updateOrder" class="green-btn">Save</green-btn>
-					<button @click.prevent="deleteOrders" class="delete"> <i class="fa fa-trash" aria-hidden="true"></i> Delete</button>
+					<button @click.prevent="deleteOrders" class="delete"> <i class="fa fa-trash" aria-hidden="true"></i>
+						Delete</button>
 				</div>
 			</div>
 		</div>
@@ -85,60 +90,62 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex';
-	export default {
-		data(){
-			return{
-				status:''
-			}
-		},
-		computed:{
-			...mapState({
-				orderLoading:state=>state.order.isLoading,
-				errors:state=>state.order.errors,
-				order:state=>state.order.order,
-			}),
-			isDisable(){
-				return this.status===this.order.status
-			}
-		},
-		methods:{
-			formatDate (dateString){
-  				const options = { year: "numeric", month: "long", day: "numeric" }
-  				return new Date(dateString).toLocaleDateString(undefined, options) +" " + new Date(dateString).toLocaleTimeString('it-IT')
-			},
-			updateOrder(){
-				const data ={
-					id:this.order.id,
-					status:this.status
-				}
-				this.$store.dispatch('order/updateOrder',data)
-			},
-			deleteOrders(){
-				const data= {
-					orders:[this.order.id]
-				}
-				this.$store.dispatch('order/deleteOrders',data).then(()=>{
-					this.$router.push('/orders')
-				});
-
-			},
-		},
-		created(){
-			this.$store.dispatch('order/getOrderById',this.$route.params.id).then(order=>{
-				this.status=order.status
-			})
+export default {
+	data() {
+		return {
+			status: ''
 		}
+	},
+	computed: {
+		...mapState({
+			orderLoading: state => state.order.isLoading,
+			errors: state => state.order.errors,
+			order: state => state.order.order,
+		}),
+		isDisable() {
+			return this.status === this.order.status
+		}
+	},
+	methods: {
+		formatDate(dateString) {
+			const options = { year: "numeric", month: "long", day: "numeric" }
+			return new Date(dateString).toLocaleDateString(undefined, options) + " " + new Date(dateString).toLocaleTimeString('it-IT')
+		},
+		updateOrder() {
+			const data = {
+				id: this.order.id,
+				status: this.status
+			}
+			this.$store.dispatch('order/updateOrder', data)
+		},
+		deleteOrders() {
+			const data = {
+				orders: [this.order.id]
+			}
+			this.$store.dispatch('order/deleteOrders', data).then(() => {
+				this.$router.push('/orders')
+			});
+
+		},
+	},
+	created() {
+		this.$store.dispatch('order/getOrderById', this.$route.params.id).then(order => {
+			this.status = order.status
+		})
 	}
+}
 </script>
 
 <style lang="scss" scoped>
-.order-detail{
-	.order-detail__inner{
+.order-detail {
+	.order-detail__inner {
 		font-size: 16px;
-		.main-title{
+
+		.main-title {
 			margin-bottom: 15px;
 		}
-		.title{
+
+		.title {
 			margin-top: 10px;
 			margin-bottom: 5px;
 			font-size: 20px;
@@ -146,19 +153,26 @@ import { mapMutations, mapState } from 'vuex';
 			display: block;
 
 		}
-		.order-top{
+
+		.order-top {
 			display: flex;
-			gap: 30px;
+			justify-content: space-between;
+			flex-wrap: wrap;
+			gap: 20px;
 			padding: 20px;
 			margin-bottom: 20px;
 			border: 1px solid #c6c6c6;
 			border-radius: 15px;
-			.order-info{
+
+			.order-info {
 				flex: 1 0 48%;
-				.info{
+
+				.info {
 					display: flex;
+					flex-wrap: wrap;
 					justify-content: space-between;
-					select{
+
+					select {
 						width: 150px;
 						margin-top: 10px;
 						display: block;
@@ -167,16 +181,19 @@ import { mapMutations, mapState } from 'vuex';
 						border: 1.1194px solid #EBEBEB;
 						border-radius: 7.11356px;
 						font-size: 16px;
+
 						&:focus {
 							border: 1.1194px solid $main-color;
 						}
 					}
 				}
 			}
-			.customer-info{
+
+			.customer-info {
 				flex: 1 0 48%;
-				.comment{
-					p{
+
+				.comment {
+					p {
 						display: block;
 						padding: 10px 15px;
 						color: #939191;
@@ -189,77 +206,92 @@ import { mapMutations, mapState } from 'vuex';
 			}
 		}
 
-		.order-items{
+		.order-items {
 			margin-bottom: 20px;
 			border: 1px solid #c6c6c6;
 			border-radius: 15px;
-			table{
+
+			table {
 				width: 100%;
 				border-collapse: collapse;
 				border-spacing: 0px;
+
 				tr th:first-child,
-				tr td:first-child{
+				tr td:first-child {
 					padding-left: 15px;
 					text-align: start;
 				}
+
 				tr th:nth-child(2),
-				tr td:nth-child(2){
+				tr td:nth-child(2) {
 					text-align: start;
 				}
-				tr th:first-child{
+
+				tr th:first-child {
 					border-radius: 15px 0 0 0;
 				}
-				tr th:last-child{
+
+				tr th:last-child {
 					border-radius: 0 15px 0 0;
 				}
+
 				tr th:last-child,
-				tr td:last-child{
+				tr td:last-child {
 					padding-right: 15px;
 				}
-				th,td{
+
+				th,
+				td {
 					padding: 5px;
 					border-bottom: 1px solid #d3d3d3;
 					text-align: end;
 				}
-				thead{
+
+				thead {
 					position: sticky;
 					top: 85px;
 					z-index: 50;
-					th{
+
+					th {
 						font-weight: 500;
 						background-color: #fff;
 						padding: 18px 0;
 					}
 				}
-				tbody tr{
+
+				tbody tr {
 					text-align: center;
 					cursor: pointer;
-					&:hover{
+
+					&:hover {
 						background-color: $light-color;
 					}
 				}
 			}
 
-			.total-price{
+			.total-price {
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
 				padding: 10px 15px;
-				.title{
+
+				.title {
 					margin: 0;
 				}
 			}
 		}
 
-		.btns{
+		.btns {
 			display: flex;
 			justify-content: space-between;
-			.green-btn{
+
+			.green-btn {
 				width: 100px;
 				font-size: 16px;
 				text-transform: uppercase;
 			}
-			.delete{
+
+			.delete {
 				font-size: 16px;
 				width: 100px;
 				padding: .5em;
@@ -269,11 +301,50 @@ import { mapMutations, mapState } from 'vuex';
 				font-weight: 500;
 				cursor: pointer;
 				transition: all 0.3s ease-in-out;
-				&:hover{
+
+				&:hover {
 					background-color: rgba(142, 0, 0, 0.3);
 
 				}
 			}
+		}
+	}
+}
+
+@media(max-width:650px) {
+	.order-detail {
+		.order-detail__inner {
+			.order-items {
+				overflow-x: auto;
+
+				.total-price {
+					min-width: 500px;
+				}
+
+				table {
+					min-width: 500px;
+
+					thead {
+						top: 0;
+					}
+				}
+			}
+		}
+	}
+}
+
+@media(max-width:480px) {
+	.order-detail {
+		.main-title {
+			font-size: 20px;
+			margin-bottom: 10px;
+		}
+
+		.container {
+			background-color: transparent;
+			padding: 0;
+			margin-right: 15px;
+			box-shadow: none;
 		}
 	}
 }
