@@ -96,7 +96,7 @@ export const productsModule = {
          });
       },
       postProducts(context, payload) {
-         return new Promise((resolve) => {
+         return new Promise((resolve, reject) => {
             context.commit("postProductStart");
             ProductService.postProducts(payload)
                .then((res) => {
@@ -105,19 +105,21 @@ export const productsModule = {
                })
                .catch((error) => {
                   context.commit("postProductFailure", error.response.data);
+                  reject();
                });
          });
       },
       updateProducts(context, payload) {
-         return new Promise((resolve) => {
+         return new Promise((resolve, reject) => {
             context.commit("postProductStart");
             ProductService.updateProducts(payload)
                .then((res) => {
                   context.commit("postProductSuccess");
-                  resolve();
+                  resolve(res.data);
                })
                .catch((error) => {
                   context.commit("postProductFailure", error.response.data);
+                  reject();
                });
          });
       },

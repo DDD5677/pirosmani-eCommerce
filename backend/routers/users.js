@@ -242,7 +242,7 @@ router.post("/admin/login", async (req, res, next) => {
          );
          res.status(200).send({ user: user, token: token });
       } else {
-         res.status(400).send("password is wrong");
+         res.status(400).send({ auth: "password is wrong" });
       }
    } catch (error) {
       next(error);

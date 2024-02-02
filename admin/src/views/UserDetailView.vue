@@ -6,7 +6,7 @@
 				<form v-if="!userLoading" @submit.prevent="submitHandler" enctype="multipart/form-data">
 					<div class="labels">
 						<div class="img-box">
-							<a :href="image">
+							<a :href="image" target="_blank">
 								<img :src="image" alt="" />
 							</a>
 						</div>
@@ -43,7 +43,7 @@
 					<form-input class="inputs" :label="'Extra phone'" :type="'tel'" :placeholder="'Extra phone'"
 						:errors="errors" :error="errors ? errors.name : ''" v-model="extraPhone" />
 					<div class="btns">
-						<green-btn class="green__btn">Update</green-btn>
+						<green-btn :isLoading="loading" class="green__btn">Update</green-btn>
 					</div>
 				</form>
 				<loading v-else />
@@ -92,6 +92,7 @@
 </template>
 
 <script>
+import { changeImage, compressedImage } from '@/helpers/uploadImage';
 import { mapMutations, mapState } from 'vuex';
 
 export default {
@@ -108,6 +109,7 @@ export default {
 			confirmPassword: '',
 			image: '',
 			avatar: null,
+			loading: false,
 		}
 	},
 	computed: {
@@ -138,15 +140,21 @@ export default {
 			const options = { year: "numeric", month: "long", day: "numeric" }
 			return new Date(dateString).toLocaleDateString(undefined, options) + " " + new Date(dateString).toLocaleTimeString('it-IT')
 		},
-		changeAvatar() {
-			let inputImage = document.querySelector("input[type=file]").files[0];
+		changeAvatar(event) {
+			let inputImage = changeImage(event)
+			if (!inputImage) return
 			this.$refs.imageName.innerText = inputImage.name;
 			this.avatar = inputImage;
 		},
 		isAdminHandler() {
 			this.admin = !this.admin
 		},
-		submitHandler() {
+		async submitHandler() {
+			this.loading = true
+			let avatar = this.avatar;
+			if (avatar) {
+				avatar = await compressedImage(avatar)
+			}
 			const data = {
 				id: this.user.id,
 				name: this.name,
@@ -156,12 +164,15 @@ export default {
 				phone: this.phone,
 				extraPhone: this.extraPhone,
 				password: this.password,
-				avatar: this.avatar,
+				avatar: avatar,
 			}
 			this.$store.dispatch('user/updateUser', data).then((res) => {
 				this.$store.dispatch('user/getUserById', this.$route.params.id).then(user => {
 					this.assignUserData(user)
 				});
+				this.loading = false
+			}).catch((err) => {
+				this.loading = false
 			})
 		}
 	},

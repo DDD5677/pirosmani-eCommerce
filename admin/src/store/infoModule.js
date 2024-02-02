@@ -34,7 +34,7 @@ export const infoModule = {
    },
    actions: {
       getInfo(context) {
-         return new Promise((resolve) => {
+         return new Promise((resolve, reject) => {
             context.commit("getInfoStart");
             InfoService.getInfo()
                .then((res) => {
@@ -43,6 +43,7 @@ export const infoModule = {
                })
                .catch((error) => {
                   context.commit("getInfoFailure", error.response.data);
+                  reject();
                });
          });
       },
@@ -56,6 +57,7 @@ export const infoModule = {
                })
                .catch((error) => {
                   context.commit("updateInfoFailure", error.response.data);
+                  reject();
                });
          });
       },

@@ -33,7 +33,7 @@
 			<div class="category-img">
 				<label class="custom-file-upload">
 					<span class="upload__title">Update Image<i class="fa fa-cloud-upload" aria-hidden="true"></i></span>
-					<input class="input_file" type="file" id="image" @change.stop="changeImage" />
+					<input class="input_file" type="file" id="image" @change.stop="changeAvatar" />
 
 				</label>
 				<span class="image_name" ref="imageName"></span>
@@ -41,8 +41,9 @@
 
 
 			<div class="review-btns">
-				<button @click.prevent="submitHandler" class="review-save"><i class="fa fa-save" aria-hidden="true"></i>
-					Save</button>
+				<green-btn :isLoading="loading" @click.prevent="submitHandler" class="review-save"><i class="fa fa-save"
+						aria-hidden="true"></i>
+					Save</green-btn>
 				<button @click.prevent="deleteBanner" class="review-delete"><i class="fa fa-trash" aria-hidden="true"></i>
 					Delete</button>
 			</div>
@@ -51,6 +52,7 @@
 </template>
 
 <script>
+import { changeImage, compressedImage } from '@/helpers/uploadImage';
 import { mapState } from 'vuex';
 export default {
 	name: 'banner-detail',
@@ -62,6 +64,7 @@ export default {
 				link: '',
 				button: ''
 			},
+			loading: false,
 			image: null,
 		}
 	},
@@ -83,8 +86,8 @@ export default {
 			const options = { year: "numeric", month: "numeric", day: "numeric" }
 			return new Date(dateString).toLocaleDateString(undefined, options)
 		},
-		changeImage(event) {
-			let inputImage = document.querySelector("#image").files[0];
+		changeAvatar(event) {
+			let inputImage = changeImage(event)
 			if (inputImage) {
 				this.$refs.imageName.innerText = inputImage.name;
 			}
@@ -97,16 +100,23 @@ export default {
 			});
 
 		},
-		submitHandler() {
+		async submitHandler() {
+			this.loading = true;
+			let image = this.image;
+			if (image) {
+				image = await compressedImage(image)
+			}
 			const data = {
 				...this.data,
 				id: this.banner.id,
-				image: this.image,
+				image: image,
 			}
-			console.log(data)
 			this.$store.dispatch('banner/updateBanner', data).then((res) => {
 				this.$store.dispatch('banner/getBanner')
 				this.closeSidebar()
+				this.loading = false
+			}).catch((err) => {
+				this.loading = false
 			})
 		}
 	},
@@ -255,8 +265,7 @@ export default {
 		justify-content: space-between;
 
 		button {
-			width: 120px;
-			padding: 10px;
+			padding: 10px 15px;
 			border-radius: 5px;
 			font-size: 18px;
 			text-transform: uppercase;

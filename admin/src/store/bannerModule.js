@@ -94,6 +94,7 @@ export const bannerModule = {
                })
                .catch((error) => {
                   context.commit("postBannerFailure", error.response.data);
+                  reject();
                });
          });
       },
@@ -107,6 +108,7 @@ export const bannerModule = {
                })
                .catch((error) => {
                   context.commit("postBannerFailure", error.response.data);
+                  reject();
                });
          });
       },

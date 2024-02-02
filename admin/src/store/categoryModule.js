@@ -94,6 +94,7 @@ export const categoryModule = {
                })
                .catch((error) => {
                   context.commit("postCategoryFailure", error.response.data);
+                  reject();
                });
          });
       },
@@ -107,6 +108,7 @@ export const categoryModule = {
                })
                .catch((error) => {
                   context.commit("postCategoryFailure", error.response.data);
+                  reject();
                });
          });
       },

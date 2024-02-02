@@ -15,7 +15,7 @@
 			<div class="category-img">
 				<label class="custom-file-upload">
 					<span class="upload__title">Upload Image<i class="fa fa-cloud-upload" aria-hidden="true"></i></span>
-					<input class="input_file" type="file" id="image" @change.stop="changeImage" />
+					<input class="input_file" type="file" id="image" @change.stop="changeAvatar" />
 
 				</label>
 				<span class="image_name" ref="imageName"></span>
@@ -33,14 +33,16 @@
 			</div>
 
 			<div class="review-btns">
-				<button @click.prevent="submitHandler" class="review-save"><i class="fa fa-save" aria-hidden="true"></i>
-					Save</button>
+				<green-btn :isLoading="loading" @click.prevent="submitHandler" class="review-save"><i class="fa fa-save"
+						aria-hidden="true"></i>
+					Save</green-btn>
 			</div>
 		</form>
 	</div>
 </template>
 
 <script>
+import { changeImage, compressedImage } from '@/helpers/uploadImage';
 import { mapState } from 'vuex';
 export default {
 	name: 'category-create',
@@ -49,6 +51,7 @@ export default {
 			name: '',
 			image: null,
 			icon: null,
+			loading: false,
 		}
 	},
 	computed: {
@@ -60,32 +63,41 @@ export default {
 		closeSidebar() {
 			this.$emit('close', false)
 		},
-		changeImage(event) {
-			let inputImage = document.querySelector("#image").files[0];
+		changeAvatar(event) {
+			let inputImage = changeImage(event)
 			if (inputImage) {
 				this.$refs.imageName.innerText = inputImage.name;
 			}
-			console.log("image", inputImage, event.target.value)
 			this.image = inputImage;
 		},
 		changeIcon(event) {
-			let inputImage = document.querySelector("#icon").files[0];
+			let inputImage = changeImage(event)
 			if (inputImage) {
 				this.$refs.iconName.innerText = inputImage.name;
 			}
-			console.log("icon", inputImage, event.target.value)
 			this.icon = inputImage;
 		},
-		submitHandler() {
+		async submitHandler() {
+			this.loading = true;
+			let image = this.image;
+			let icon = this.icon;
+			if (image) {
+				image = await compressedImage(image)
+			}
+			if (icon) {
+				icon = await compressedImage(icon)
+			}
 			const data = {
 				name: this.name,
-				image: this.image,
-				icon: this.icon,
+				image: image,
+				icon: icon,
 			}
-			console.log(data)
 			this.$store.dispatch('category/postCategory', data).then((res) => {
 				this.$store.dispatch('category/getCategory')
 				this.closeSidebar()
+				this.loading = false
+			}).catch((err) => {
+				this.loading = false
 			})
 		}
 
@@ -253,4 +265,5 @@ export default {
 		}
 
 	}
-}</style>
+}
+</style>

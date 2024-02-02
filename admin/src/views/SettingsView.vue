@@ -35,7 +35,7 @@
 								:errors="errors" :error="errors ? errors.extraPhone : ''" v-model="extraPhone" />
 						</div>
 						<div class="btns">
-							<green-btn class="green__btn">Update</green-btn>
+							<green-btn :isLoading="loading" class="green__btn">Update</green-btn>
 							<button @click.prevent="logoutAdmin" class="transp__btn">Log out</button>
 						</div>
 					</form>
@@ -63,7 +63,7 @@
 							v-model="workingTimeTo" />
 					</div>
 					<div class="btn">
-						<green-btn @click.prevent="updateInfo">Update</green-btn>
+						<green-btn :isLoading="infoLoading" @click.prevent="updateInfo">Update</green-btn>
 					</div>
 				</div>
 			</div>
@@ -74,6 +74,7 @@
 
 <script>
 import { removeItem } from '@/helpers/localStorage';
+import { changeImage, compressedImage } from '@/helpers/uploadImage';
 import { mapState } from 'vuex';
 
 export default {
@@ -87,7 +88,7 @@ export default {
 			password: '',
 			confirmPassword: '',
 			avatar: null,
-
+			loading: false,
 			mainPhone: '',
 			orderPhone: '',
 			video: '',
@@ -95,7 +96,8 @@ export default {
 			instagram: '',
 			mainEmail: '',
 			workingTimeFrom: '',
-			workingTimeTo: ''
+			workingTimeTo: '',
+			infoLoading: false
 		}
 	},
 	computed: {
@@ -108,8 +110,9 @@ export default {
 		})
 	},
 	methods: {
-		changeAvatar() {
-			let inputImage = document.querySelector("input[type=file]").files[0];
+		changeAvatar(event) {
+			let inputImage = changeImage(event)
+			if (!inputImage) return
 			this.$refs.imageName.innerText = inputImage.name;
 			this.avatar = inputImage;
 		},
@@ -136,6 +139,7 @@ export default {
 			this.$router.push('/login')
 		},
 		updateInfo() {
+			this.infoLoading = true
 			const data = {
 				id: this.info.id,
 				mainPhone: this.mainPhone,
@@ -147,9 +151,23 @@ export default {
 				workingTimeFrom: this.workingTimeFrom,
 				workingTimeTo: this.workingTimeTo,
 			}
-			this.$store.dispatch('info/updateInfo', data)
+			this.$store.dispatch('info/updateInfo', data).then((res) => {
+				this.$store.dispatch('info/getInfo').then(() => {
+					this.assignInfoData(info[0])
+					this.infoLoading = false
+				}).catch(() => {
+					this.infoLoading = false
+				})
+			}).catch(() => {
+				this.infoLoading = false
+			})
 		},
-		submitHandler() {
+		async submitHandler() {
+			this.loading = true;
+			let avatar = this.avatar;
+			if (avatar) {
+				avatar = await compressedImage(avatar)
+			}
 			const data = {
 				id: this.admin.id,
 				name: this.name,
@@ -158,9 +176,16 @@ export default {
 				phone: this.phone,
 				extraPhone: this.extraPhone,
 				password: this.password,
-				avatar: this.avatar,
+				avatar: avatar,
 			}
-			this.$store.dispatch('user/updateUser', data)
+			this.$store.dispatch('user/updateUser', data).then(() => {
+				this.$store.dispatch('auth/refresh').then(admin => {
+					this.assignUserData(admin)
+				})
+				this.loading = false
+			}).catch(() => {
+				this.loading = false
+			})
 		}
 	},
 	created() {

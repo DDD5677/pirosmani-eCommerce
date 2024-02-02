@@ -80,7 +80,8 @@
 				</div>
 				<div class="btns">
 					<green-btn :disabled="isDisable" @click.prevent="updateOrder" class="green-btn">Save</green-btn>
-					<button @click.prevent="deleteOrders" class="delete"> <i class="fa fa-trash" aria-hidden="true"></i>
+					<button @click.prevent="deleteOrders" :disabled="orderLoading" class="delete"> <i class="fa fa-trash"
+							aria-hidden="true"></i>
 						Delete</button>
 				</div>
 			</div>

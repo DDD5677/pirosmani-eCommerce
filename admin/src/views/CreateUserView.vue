@@ -30,7 +30,7 @@
 						:error="errors ? errors.phone : ''" v-model="phone" />
 					<form-input class="inputs" :label="'Extra phone'" :type="'tel'" :placeholder="'Extra phone'"
 						:errors="errors" v-model="extraPhone" />
-					<green-btn class="green__btn">Create</green-btn>
+					<green-btn :isLoading="loading" class="green__btn">Create</green-btn>
 				</form>
 
 			</div>
@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import { changeImage, compressedImage } from '@/helpers/uploadImage';
 import { mapMutations, mapState } from 'vuex';
 
 export default {
@@ -55,6 +56,7 @@ export default {
 			password: '',
 			confirmPassword: '',
 			avatar: null,
+			loading: false,
 		}
 	},
 	computed: {
@@ -67,15 +69,20 @@ export default {
 			toggleSignIn: 'navbar/toggleSignIn'
 		}),
 		changeAvatar(event) {
-			let inputImage = document.querySelector("input[type=file]").files[0];
+			let inputImage = changeImage(event)
+			if (!inputImage) return
 			this.$refs.imageName.innerText = inputImage.name;
-			console.log(inputImage, event.target.value)
 			this.avatar = inputImage;
 		},
 		isAdminHandler() {
 			this.admin = !this.admin
 		},
-		submitHandler() {
+		async submitHandler() {
+			this.loading = true;
+			let avatar = this.avatar;
+			if (avatar) {
+				avatar = await compressedImage(avatar)
+			}
 			const data = {
 				name: this.name,
 				surname: this.surname,
@@ -84,9 +91,8 @@ export default {
 				phone: this.phone,
 				extraPhone: this.extraPhone,
 				password: this.password,
-				avatar: this.avatar,
+				avatar: avatar,
 			}
-			console.log(data)
 			this.$store.dispatch('user/postUsers', data).then(() => {
 				this.name = '';
 				this.surname = '';
@@ -97,6 +103,10 @@ export default {
 				this.password = ''
 				this.avatar = null
 				this.$refs.imageName.innerText = '';
+				this.loading = false;
+			}).catch((err) => {
+				this.loading = false;
+
 			})
 		}
 	}

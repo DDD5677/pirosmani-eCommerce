@@ -131,8 +131,6 @@ export default {
 				"image/jpeg": "jpeg",
 				"image/jpg": "jpg",
 			};
-
-			console.log("image", inputImage)
 			if (!inputImage) {
 				return
 			}

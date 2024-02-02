@@ -96,7 +96,7 @@ export const usersModule = {
          });
       },
       postUsers(context, payload) {
-         return new Promise((resolve) => {
+         return new Promise((resolve, reject) => {
             context.commit("postUserStart");
             UserService.postUsers(payload)
                .then((res) => {
@@ -105,6 +105,7 @@ export const usersModule = {
                })
                .catch((error) => {
                   context.commit("postUserFailure", error.response.data);
+                  reject();
                });
          });
       },
@@ -118,6 +119,7 @@ export const usersModule = {
                })
                .catch((error) => {
                   context.commit("postUserFailure", error.response.data);
+                  reject();
                });
          });
       },

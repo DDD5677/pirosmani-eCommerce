@@ -6,6 +6,7 @@ export const authModule = {
       isLoading: true,
       user: null,
       errors: null,
+      authError: null,
       isLogged: null,
    }),
    mutations: {
@@ -39,6 +40,22 @@ export const authModule = {
       loginFailure(state, payload) {
          state.isLoading = false;
          state.errors = payload;
+         state.isLogged = false;
+      },
+      refreshStart(state) {
+         state.isLoading = true;
+         state.user = null;
+         state.authError = null;
+         state.isLogged = null;
+      },
+      refreshSuccess(state, payload) {
+         state.isLoading = false;
+         state.user = payload;
+         state.isLogged = true;
+      },
+      refreshFailure(state, payload) {
+         state.isLoading = false;
+         state.authError = payload;
          state.isLogged = false;
       },
       updateStart(state) {
@@ -86,16 +103,16 @@ export const authModule = {
       },
       refresh(context) {
          return new Promise((resolve, reject) => {
-            context.commit("loginStart");
+            context.commit("refreshStart");
             AuthService.refresh()
                .then((response) => {
                   console.log("refresh");
-                  context.commit("loginSuccess", response.data);
+                  context.commit("refreshSuccess", response.data);
                   resolve(response.data.user);
                })
                .catch((error) => {
                   console.log("error refresh", error);
-                  context.commit("loginFailure", error.response.data);
+                  context.commit("refreshFailure", error.response.data);
                   reject();
                });
          });

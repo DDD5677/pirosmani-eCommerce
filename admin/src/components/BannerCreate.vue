@@ -31,7 +31,7 @@
 			<div class="category-img">
 				<label class="custom-file-upload">
 					<span class="upload__title">Upload Image<i class="fa fa-cloud-upload" aria-hidden="true"></i></span>
-					<input class="input_file" type="file" id="image" @change.stop="changeImage" />
+					<input class="input_file" type="file" id="image" @change.stop="changeAvatar" />
 
 				</label>
 				<span class="image_name" ref="imageName"></span>
@@ -40,14 +40,16 @@
 
 
 			<div class="review-btns">
-				<button @click.prevent="submitHandler" class="review-save"><i class="fa fa-save" aria-hidden="true"></i>
-					Save</button>
+				<green-btn :isLoading="loading" @click.prevent="submitHandler" class="review-save"><i class="fa fa-save"
+						aria-hidden="true"></i>
+					Save</green-btn>
 			</div>
 		</form>
 	</div>
 </template>
 
 <script>
+import { changeImage, compressedImage } from '@/helpers/uploadImage';
 import { mapState } from 'vuex';
 export default {
 	name: 'banner-create',
@@ -58,6 +60,7 @@ export default {
 			link: '',
 			button: '',
 			image: null,
+			loading: false,
 		}
 	},
 	computed: {
@@ -69,24 +72,32 @@ export default {
 		closeSidebar() {
 			this.$emit('close', false)
 		},
-		changeImage(event) {
-			let inputImage = document.querySelector("#image").files[0];
+		changeAvatar(event) {
+			let inputImage = changeImage(event)
 			if (inputImage) {
 				this.$refs.imageName.innerText = inputImage.name;
 			}
 			this.image = inputImage;
 		},
-		submitHandler() {
+		async submitHandler() {
+			this.loading = true;
+			let image = this.image;
+			if (image) {
+				image = await compressedImage(image)
+			}
 			const data = {
 				title: this.title,
 				subtitle: this.subtitle,
 				link: this.link,
 				button: this.button,
-				image: this.image,
+				image: image,
 			}
 			this.$store.dispatch('banner/postBanner', data).then((res) => {
 				this.$store.dispatch('banner/getBanner')
 				this.closeSidebar()
+				this.loading = false;
+			}).catch((err) => {
+				this.loading = false
 			})
 		}
 
@@ -219,8 +230,6 @@ export default {
 		justify-content: flex-end;
 
 		button {
-			width: 120px;
-			padding: 10px;
 			border-radius: 5px;
 			font-size: 18px;
 			text-transform: uppercase;
