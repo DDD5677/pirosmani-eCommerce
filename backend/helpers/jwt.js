@@ -1,5 +1,5 @@
 const { expressjwt: jwt } = require("express-jwt");
-const secret = process.env.secret;
+const secret = process.env.ACCESS_SECRET;
 const JWT = require("jsonwebtoken");
 
 function authJwt() {
@@ -16,9 +16,13 @@ function authJwt() {
          { url: /\/api\/v1\/categories(.*)/, methods: ["GET", "OPTIONS"] },
          { url: /\/api\/v1\/banners(.*)/, methods: ["GET", "OPTIONS"] },
          { url: /\/api\/v1\/informations(.*)/, methods: ["GET", "OPTIONS"] },
-         `${api}/users/login`,
-         `${api}/users/admin/login`,
-         `${api}/users/register`,
+         { url: /\/api\/v1\/auth(.*)/, methods: ["GET", "POST", "OPTIONS"] },
+         // `${api}/auth/login`,
+         // `${api}/auth/admin/login`,
+         // `${api}/auth/register`,
+         // `${api}/auth/refresh`,
+         // `${api}/auth/logout`,
+         // `${api}/auth/activation`,
       ],
    });
 }

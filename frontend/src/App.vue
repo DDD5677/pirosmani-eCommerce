@@ -9,13 +9,11 @@ import { getItem } from './helpers/localStorage';
 export default {
 	created() {
 		const token = getItem('token')
-		console.log('created');
 		this.$store.dispatch('product/getCategory');
 		this.$store.dispatch('info/getInfo');
 		if (token) {
 			this.$store.dispatch('auth/refresh');
 		}
-
 	},
 
 }

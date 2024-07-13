@@ -33,6 +33,10 @@ const userSchema = new mongoose.Schema(
          type: Boolean,
          default: false,
       },
+      isActivated: {
+         type: Boolean,
+         default: false,
+      },
       image: {
          type: String,
          default: "",
@@ -51,7 +55,6 @@ const userSchema = new mongoose.Schema(
 //user before saving
 userSchema.pre("save", async function (next) {
    const salt = await bcrypt.genSalt();
-   console.log(salt);
    this.password = bcrypt.hashSync(this.password, salt);
    next();
 });

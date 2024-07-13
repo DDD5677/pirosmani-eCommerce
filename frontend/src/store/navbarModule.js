@@ -22,7 +22,6 @@ export const navbarModule = {
          state.addReviews = false;
       },
       toggleSignIn(state) {
-         console.log("ok google");
          state.signIn = true;
          state.signUp = false;
          state.forgotPassword = false;
