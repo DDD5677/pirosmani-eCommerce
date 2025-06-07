@@ -41,14 +41,14 @@ app.use(`${api}/informations`, infoRouter);
 
 app.use(errorHandler);
 mongoose
-   .connect(process.env.CONNECTING_STRING)
-   .then(() => {
-      console.log("Database connection is ready");
-   })
-   .catch((e) => {
-      console.log(e);
-   });
-
-app.listen(3000, () => {
-   console.log("server is running on http://localhost:3000");
+	.connect(process.env.CONNECTING_STRING)
+	.then(() => {
+		console.log("Database connection is ready");
+	})
+	.catch((e) => {
+		console.log(e);
+	});
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+	console.log(`server is running on http://localhost:${PORT}`);
 });
